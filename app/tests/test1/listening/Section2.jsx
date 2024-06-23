@@ -10,8 +10,8 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-const mapImage = "/images/listening1-section2.jpg";
-const answerImage = "/images/listening1-section2-2.jpg";
+const mapImage = "/images/test1/listening1-section2.jpg";
+const answerImage = "/images/test1/listening1-section2-2.jpg";
 
 export default function Section2({ answers, setAnswers }) {
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];

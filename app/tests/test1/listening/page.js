@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
 import Section1 from "./Section1";
 import Section2 from "./Section2";
+import Section3 from "./Section3";
 import { Box, Button, Typography } from "@mui/material";
 
 const listeningAudio = "/audio/listening.mp3";
@@ -66,6 +66,9 @@ export default function Test() {
           )}
           {currentSection === 1 && (
             <Section2 answers={answers} setAnswers={setAnswers} />
+          )}
+          {currentSection === 2 && (
+            <Section3 answers={answers} setAnswers={setAnswers} />
           )}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
             <Button
