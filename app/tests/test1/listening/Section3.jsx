@@ -12,13 +12,11 @@ import {
   List,
   ListItem,
   TextField,
-  FormLabel,
 } from "@mui/material";
 const answerImage = "/images/test1/listening1-section3-1.jpg";
 
 export default function Section2({ answers, setAnswers }) {
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G"];
-  const radioOptions = ["a", "b", "c"];
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
