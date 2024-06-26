@@ -81,8 +81,8 @@ const Section1 = ({ answers, setAnswers }) => {
           <b>READING PASSAGE 1</b>
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          You should spend about 20 minutes on
-          <b>Questions 1-13</b>, which are based on Reading Passage 1.
+          You should spend about 20 minutes on <b>Questions 1-13</b>, which are
+          based on Reading Passage 1.
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>Questions 1 - 6</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>

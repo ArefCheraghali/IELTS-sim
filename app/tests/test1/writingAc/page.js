@@ -1,9 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Section1 from "./Section1";
-import Section2 from "./Section2";
-import Section3 from "./Section3";
+// import Task1 from "./Task1";
+// import Task2 from "./Task2";
 import {
   Box,
   Button,
@@ -49,7 +48,7 @@ export default function Test() {
 
   const onSubmit = () => {
     console.log("User Answers:", answers);
-    localStorage.setItem("readingAnswers", JSON.stringify(answers));
+    localStorage.setItem("writings", JSON.stringify(answers));
     handleCloseDialog();
     router.push("/tests/test1/writingAc");
   };
@@ -95,13 +94,12 @@ export default function Test() {
           </Typography>
         </Box>
         {currentSection === 0 && (
-          <Section1 answers={answers} setAnswers={setAnswers} />
+          <></>
+          //   <Section1 answers={answers} setAnswers={setAnswers} />
         )}
         {currentSection === 1 && (
-          <Section2 answers={answers} setAnswers={setAnswers} />
-        )}
-        {currentSection === 2 && (
-          <Section3 answers={answers} setAnswers={setAnswers} />
+          <></>
+          //   <Section2 answers={answers} setAnswers={setAnswers} />
         )}
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
           <Button
@@ -116,7 +114,7 @@ export default function Test() {
             variant="contained"
             color="primary"
             onClick={() => handleNavigation("next")}
-            disabled={currentSection === 2}
+            disabled={currentSection === 1}
           >
             Next
           </Button>

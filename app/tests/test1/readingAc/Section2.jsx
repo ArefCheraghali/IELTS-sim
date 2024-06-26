@@ -11,23 +11,13 @@ import {
   Typography,
 } from "@mui/material";
 
-const image1 = "/images/test1/readingAc1-passage1-1.jpg";
-const image2 = "/images/test1/readingAc1-passage1-2.jpg";
-const image3 = "/images/test1/readingAc1-passage1-3.jpg";
-const image4 = "/images/test1/readingAc1-passage1-4.jpg";
+const image1 = "/images/test1/readingAc1-passage2-1.jpg";
+const image2 = "/images/test1/readingAc1-passage2-2.jpg";
+const image3 = "/images/test1/readingAc1-passage2-3.jpg";
 
 const Section1 = ({ answers, setAnswers }) => {
-  const possibleAnswers = [
-    "i",
-    "ii",
-    "iii",
-    "iv",
-    "v",
-    "vi",
-    "vii",
-    "viii",
-    "ix",
-  ];
+  const possibleAnswers = ["TRUE", "FALSE", "NOT GIVEN"];
+  const possibleAnswers2 = ["A", "B", "C", "D", "E", "F", "G"];
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -78,22 +68,19 @@ const Section1 = ({ answers, setAnswers }) => {
         }}
       >
         <Typography sx={{ ml: 5, fontSize: "1.1em", mb: 1 }}>
-          <b>READING PASSAGE 1</b>
+          <b>READING PASSAGE 2</b>
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          You should spend about 20 minutes on
-          <b>Questions 1-13</b>, which are based on Reading Passage 1.
+          You should spend about 20 minutes on <b>Questions 14-26</b>, which are
+          based on Reading Passage 2.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 1 - 6</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>Questions 14 - 17</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>Label the diagrams below.</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          Reading Passage 1 has six paragraphs, <b>A-F</b>.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Choose the correct heading for each paragraph from the list of
-          headings below.
+          Choose <b>NO MORE THAN TWO WORDS</b> from the passage for each answer.
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          Pick the correct number, <b>i-ix</b>, in the boxes below.
+          Write your answers in boxes 14-17.
         </Typography>
         <Box
           sx={{
@@ -105,178 +92,257 @@ const Section1 = ({ answers, setAnswers }) => {
         >
           <Box
             sx={{
-              width: "70%",
+              width: "100%",
             }}
           >
             <img
               src={image3}
-              alt="Reading Passage Part 1"
+              alt="Reading Passage Part 2"
               style={{ width: "100%" }}
             />
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
-                <InputLabel>{`${1 + index}`}</InputLabel>
-                <Select
-                  sx={{ width: "5em" }}
-                  value={answers[index] || ""}
-                  onChange={(e) => handleInputChange(index, e.target.value)}
-                  label={`${1 + index}`}
-                >
-                  {possibleAnswers.map((answer) => (
-                    <MenuItem key={answer} value={answer}>
-                      {answer}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            ))}
+          <Box
+            sx={{
+              mt: 2,
+              mb: 2,
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              justifyItems: "center",
+            }}
+          >
+            <TextField
+              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+              label="14"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(13, e.target.value)}
+              value={answers[13]}
+            />
+            <TextField
+              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+              label="15"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(14, e.target.value)}
+              value={answers[14]}
+            />
+            <TextField
+              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+              label="16"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(15, e.target.value)}
+              value={answers[15]}
+            />
+            <TextField
+              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+              label="17"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(16, e.target.value)}
+              value={answers[16]}
+            />
           </Box>
         </Box>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 7 - 10</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>Questions 18 - 23</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          Complete the flow-chart below.
+          Do the following statements agree with the information given in the
+          passage 2?
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          Choose <b>NO MORE THAN THREE WORDS</b> from the passage for each
-          answer
+          In boxes 18-23 on your answer sheet, write
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Write your answers in boxes 7-10
-        </Typography>
-        <Box
-          sx={{
-            width: "100%",
-          }}
-        >
-          <img
-            src={image4}
-            alt="Reading Passage Part 1"
-            style={{ width: "100%" }}
-          />
-        </Box>
-        <Box
-          sx={{
-            mt: 2,
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            justifyItems: "center",
-          }}
-        >
-          <TextField
-            sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-            label="7"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(6, e.target.value)}
-            value={answers[6]}
-          />
-          <TextField
-            sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-            label="8"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(7, e.target.value)}
-            value={answers[7]}
-          />
-          <TextField
-            sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-            label="9"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(8, e.target.value)}
-            value={answers[8]}
-          />
-          <TextField
-            sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-            label="10"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(9, e.target.value)}
-            value={answers[9]}
-          />
-        </Box>
-        <br />
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 11 - 13</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
           Classify the following characteristics as belonging to
-        </Typography>
-        <List>
-          <ListItem>A) brown seaweed</ListItem>
-          <ListItem>B) green seaweed</ListItem>
-          <ListItem>C) red seaweed</ListItem>
-        </List>
-        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          Pick the correct, A, B or C, in boxes 11-13.
         </Typography>
         <List
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            gap: 2,
             pl: "3rem",
             width: "90%",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>11 </Typography>
-            can survive the heat and dryness at the high-water mark
-            <Box sx={{ minWidth: 120, ml: "1em" }}>
-              <FormControl>
-                <InputLabel>11</InputLabel>
-                <Select
-                  sx={{ width: "5em" }}
-                  value={answers[10] || ""}
-                  label="11"
-                  onChange={(e) => handleInputChange(10, e.target.value)}
-                >
-                  <MenuItem value={"A"}>A</MenuItem>
-                  <MenuItem value={"B"}>B</MenuItem>
-                  <MenuItem value={"C"}>C</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+            <b style={{ marginRight: "4.8em" }}>TRUE</b> if the statement agrees
+            with the information
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>12 </Typography>
-            grow far out in the open sea
-            <Box sx={{ minWidth: 120, ml: "1em" }}>
-              <FormControl>
-                <InputLabel>12</InputLabel>
-                <Select
-                  sx={{ width: "5em" }}
-                  value={answers[11] || ""}
-                  label="12"
-                  onChange={(e) => handleInputChange(11, e.target.value)}
-                >
-                  <MenuItem value={"A"}>A</MenuItem>
-                  <MenuItem value={"B"}>B</MenuItem>
-                  <MenuItem value={"C"}>C</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+            <b style={{ marginRight: "4.5em" }}>FALSE</b> if the statement
+            contradicts the information
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>13 </Typography>
-            can survive the heat and dryness at the high-water mark
-            <Box sx={{ minWidth: 120, ml: "1em" }}>
-              <FormControl>
-                <InputLabel>13</InputLabel>
-                <Select
-                  sx={{ width: "5em" }}
-                  value={answers[12] || ""}
-                  label="13"
-                  onChange={(e) => handleInputChange(12, e.target.value)}
-                >
-                  <MenuItem value={"A"}>A</MenuItem>
-                  <MenuItem value={"B"}>B</MenuItem>
-                  <MenuItem value={"C"}>C</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
+            <b style={{ marginRight: "2em" }}>NOT GIVEN</b> if there is no
+            information on this
           </ListItem>
         </List>
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 0,
+            pl: "3rem",
+            width: "90%",
+          }}
+        >
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>18 </Typography>
+            There appears to be a fixed pattern for the padanus probe's
+            construction.
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>19 </Typography>
+            There is plenty of evidence to indicate how the crows manufacture
+            the padanus probe.
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>20 </Typography>
+            Crows seem to practise a number of times before making a usable
+            padanus probe.
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>21 </Typography>
+            The researchers suspect the crows have a mental image of the padanus
+            probe before they create it.
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>22 </Typography>
+            Research into how the padanus probe is made has helped to explain
+            the toolmaking skills of many other bird species.
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>23 </Typography>
+            The researchers believe the ability to make the padanus probe is
+            passed down to the crows in their genes.
+          </ListItem>
+        </List>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+          }}
+        >
+          {Array.from({ length: 3 }).map((_, index) => (
+            <FormControl sx={{ ml: 5, margin: "1em" }} key={index}>
+              <InputLabel>{`${18 + index}`}</InputLabel>
+              <Select
+                sx={{ width: "10em" }}
+                value={answers[17 + index] || ""}
+                onChange={(e) => handleInputChange(17 + index, e.target.value)}
+                label={`${18 + index}`}
+              >
+                {possibleAnswers.map((answer) => (
+                  <MenuItem key={answer} value={answer}>
+                    {answer}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ))}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+          }}
+        >
+          {Array.from({ length: 3 }).map((_, index) => (
+            <FormControl sx={{ margin: "1em" }} key={index}>
+              <InputLabel>{`${21 + index}`}</InputLabel>
+              <Select
+                sx={{ width: "10em" }}
+                value={answers[20 + index] || ""}
+                onChange={(e) => handleInputChange(20 + index, e.target.value)}
+                label={`${21 + index}`}
+              >
+                {possibleAnswers.map((answer) => (
+                  <MenuItem key={answer} value={answer}>
+                    {answer}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ))}
+        </Box>
+        <Typography sx={{ ml: 2, mb: 1 }}>Questions 24 - 26</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Choose <b>THREE</b> letters, A-G.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Pick the correct letters in boxes 24-26 below.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          According to the information in the passage, which <b>THREE</b> of the
+          following features are probably common to both New Caledonian crows
+          and human beings?
+        </Typography>
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 0,
+            pl: "3rem",
+            width: "90%",
+          }}
+        >
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>A </Typography>
+            keeping the same mate for life
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row", mt: -2 }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>B </Typography>
+            having few natural predators
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row", mt: -2 }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>C </Typography>
+            having a bias to the right when working
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row", mt: -2 }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>D </Typography>
+            being able to process sequential tasks
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row", mt: -2 }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>E </Typography>
+            living in extended family groups
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row", mt: -2 }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>F </Typography>
+            eating a variety of foodstuffs
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row", mt: -2 }}>
+            <Typography sx={{ marginRight: "3rem", ml: -5 }}>G </Typography>
+            being able to adapt to diverse habitats
+          </ListItem>
+        </List>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+          }}
+        >
+          {Array.from({ length: 3 }).map((_, index) => (
+            <FormControl sx={{ margin: "1em" }} key={index}>
+              <InputLabel>{`${24 + index}`}</InputLabel>
+              <Select
+                sx={{ width: "5em" }}
+                value={answers[23 + index] || ""}
+                onChange={(e) => handleInputChange(23 + index, e.target.value)}
+                label={`${24 + index}`}
+              >
+                {possibleAnswers2.map((answer) => (
+                  <MenuItem key={answer} value={answer}>
+                    {answer}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ))}
+        </Box>
       </Box>
     </Box>
   );
