@@ -3,9 +3,6 @@ import {
   Box,
   Typography,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -14,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 
-export default function Section2({ answers, setAnswers }) {
+export default function Section4({ answers, setAnswers }) {
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G"];
 
   const handleInputChange = (index, value) => {

@@ -15,9 +15,8 @@ import {
 const image1 = "/images/test1/readingAc1-passage3-1.jpg";
 const image2 = "/images/test1/readingAc1-passage3-2.jpg";
 const image3 = "/images/test1/readingAc1-passage3-3.jpg";
-const image4 = "/images/test1/readingAc1-passage1-4.jpg";
 
-const Section1 = ({ answers, setAnswers }) => {
+const Section3 = ({ answers, setAnswers }) => {
   const possibleAnswers = ["A", "B", "C", "D", "E"];
 
   const handleInputChange = (index, value) => {
@@ -355,4 +354,4 @@ const Section1 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Section1;
+export default Section3;

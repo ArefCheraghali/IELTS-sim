@@ -15,7 +15,7 @@ const image1 = "/images/test1/readingAc1-passage2-1.jpg";
 const image2 = "/images/test1/readingAc1-passage2-2.jpg";
 const image3 = "/images/test1/readingAc1-passage2-3.jpg";
 
-const Section1 = ({ answers, setAnswers }) => {
+const Section2 = ({ answers, setAnswers }) => {
   const possibleAnswers = ["TRUE", "FALSE", "NOT GIVEN"];
   const possibleAnswers2 = ["A", "B", "C", "D", "E", "F", "G"];
 
@@ -348,4 +348,4 @@ const Section1 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Section1;
+export default Section2;

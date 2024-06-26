@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 const answerImage = "/images/test1/listening1-section3-1.jpg";
 
-export default function Section2({ answers, setAnswers }) {
+export default function Section3({ answers, setAnswers }) {
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G"];
 
   const handleInputChange = (index, value) => {
