@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Section1 from "./Section1";
 import Section2 from "./Section2";
@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Slider,
 } from "@mui/material";
 
 const listeningAudio = "/audio/listening.mp3";
@@ -25,16 +26,20 @@ export default function Test() {
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [timeLeft, setTimeLeft] = useState(27 * 60); // 27 minutes in seconds
   const [openDialog, setOpenDialog] = useState(false);
+  const [volume, setVolume] = useState(1); // Volume control state
 
   const router = useRouter();
+  const audioRef = useRef(new Audio(listeningAudio)); // Create the audio element once
 
   useEffect(() => {
     let audioTimeout;
     let timerInterval;
 
     if (isReady) {
-      const audio = new Audio(listeningAudio);
+      const audio = audioRef.current;
+      audio.volume = volume; // Set initial volume
       audio.play();
+
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
       }, 3000);
@@ -54,8 +59,21 @@ export default function Test() {
     return () => {
       clearTimeout(audioTimeout);
       clearInterval(timerInterval);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
     };
   }, [isReady]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
+
+  const handleVolumeChange = (event, newValue) => {
+    setVolume(newValue);
+  };
 
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
@@ -113,10 +131,51 @@ export default function Test() {
         </Typography>
       )}
       {isReady && showQuestions && (
-        <Box sx={{ mt: 4 }}>
-          <Typography variant="h6" gutterBottom>
-            Time Left: {formatTime(timeLeft)}
-          </Typography>
+        <Box
+          sx={{
+            mt: 4,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography
+              variant="h6"
+              gutterBottom
+              sx={{
+                color: timeLeft <= 120 ? "red" : "inherit",
+                fontWeight: timeLeft <= 120 ? "bold" : "normal",
+              }}
+            >
+              Time Left: {formatTime(timeLeft)}
+            </Typography>
+            <Box
+              sx={{
+                width: "200px",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                mr: 20,
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                Volume:
+              </Typography>
+              <Slider
+                value={volume}
+                onChange={handleVolumeChange}
+                aria-labelledby="volume-slider"
+                min={0}
+                max={1}
+                step={0.01}
+                sx={{ ml: 2, mb: 4, mt: 0.5 }}
+              />
+            </Box>
+          </Box>
           {currentSection === 0 && (
             <Section1 answers={answers} setAnswers={setAnswers} />
           )}

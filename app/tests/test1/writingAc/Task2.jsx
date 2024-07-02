@@ -118,12 +118,12 @@ const Task2 = ({ answers, setAnswers }) => {
           <TextField
             fullWidth
             multiline
-            rows={15}
+            rows={25}
             variant="outlined"
             placeholder="Start writing your essay here..."
             autoComplete="off"
-            onChange={(e) => handleInputChange(0, e.target.value)}
-            value={answers[0]}
+            onChange={(e) => handleInputChange(1, e.target.value)}
+            value={answers[1]}
             sx={{ backgroundColor: "#fff", height: "50vh" }}
           />
         </Box>

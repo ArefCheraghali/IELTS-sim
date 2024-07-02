@@ -50,7 +50,7 @@ export default function Test() {
     console.log("User Answers:", answers);
     localStorage.setItem("writings", JSON.stringify(answers));
     handleCloseDialog();
-    router.push("/tests/test1/writingAc");
+    router.push("/testResult");
   };
 
   const handleNavigation = (direction) => {
