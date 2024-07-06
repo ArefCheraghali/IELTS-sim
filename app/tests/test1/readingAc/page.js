@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Section1 from "./Section1";
+// import Section1 from "./Section1";
 import Section2 from "./Section2";
 import Section3 from "./Section3";
+import Drag from "./Drag";
 import {
   Box,
   Button,
@@ -95,7 +96,8 @@ export default function Test() {
           </Typography>
         </Box>
         {currentSection === 0 && (
-          <Section1 answers={answers} setAnswers={setAnswers} />
+          // <Section1 answers={answers} setAnswers={setAnswers} />
+          <Drag />
         )}
         {currentSection === 1 && (
           <Section2 answers={answers} setAnswers={setAnswers} />

@@ -10,10 +10,12 @@ import {
   Select,
   TextField,
   Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
+import WritingText from "./text/WritingText";
 
-const image1 = "/images/test1/readingAc1-passage3-1.jpg";
-const image2 = "/images/test1/readingAc1-passage3-2.jpg";
 const image3 = "/images/test1/readingAc1-passage3-3.jpg";
 
 const Section3 = ({ answers, setAnswers }) => {
@@ -43,18 +45,8 @@ const Section3 = ({ answers, setAnswers }) => {
           borderRight: "1px solid #ccc",
         }}
       >
-        <img
-          src={image1}
-          alt="Reading Passage Part 1"
-          style={{ width: "100%" }}
-        />
-        <img
-          src={image2}
-          alt="Reading Passage Part 2"
-          style={{ width: "100%" }}
-        />
+        <WritingText />
       </Box>
-
       <Box
         sx={{
           width: "50%",
@@ -89,135 +81,164 @@ const Section3 = ({ answers, setAnswers }) => {
           }}
         >
           <FormControl>
-            <Typography>
-              <b style={{ marginRight: "2em" }}>27</b> The researchers at the
-              symposium regarded the story of the King of Uruk as ridiculous
-              because
-            </Typography>
-            <RadioGroup
-              sx={{ ml: "5em" }}
-              value={answers[26] || ""}
-              onChange={(e) => handleInputChange(26, e.target.value)}
-            >
-              <FormControlLabel
-                value={"A"}
-                control={<Radio />}
-                label="A) writing probably developed independently of speech."
-              ></FormControlLabel>
-              <FormControlLabel
-                value={"B"}
-                control={<Radio />}
-                label="B) clay tablets had not been invented at that time."
-              />
-              <FormControlLabel
-                value={"C"}
-                control={<Radio />}
-                label="C) the distant ruler would have spoken another language."
-              />
-              <FormControlLabel
-                value={"D"}
-                control={<Radio />}
-                label="D) evidence of writing has been discovered from an earlier period."
-              />
-            </RadioGroup>
+            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+              <AccordionSummary
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>
+                  <b style={{ marginRight: "2em" }}>27</b> The researchers at
+                  the symposium regarded the story of the King of Uruk as
+                  ridiculous because
+                </Typography>
+              </AccordionSummary>
+              <RadioGroup
+                sx={{ ml: "5em" }}
+                value={answers[26] || ""}
+                onChange={(e) => handleInputChange(26, e.target.value)}
+              >
+                <FormControlLabel
+                  value={"A"}
+                  control={<Radio />}
+                  label="A) writing probably developed independently of speech."
+                ></FormControlLabel>
+                <FormControlLabel
+                  value={"B"}
+                  control={<Radio />}
+                  label="B) clay tablets had not been invented at that time."
+                />
+                <FormControlLabel
+                  value={"C"}
+                  control={<Radio />}
+                  label="C) the distant ruler would have spoken another language."
+                />
+                <FormControlLabel
+                  value={"D"}
+                  control={<Radio />}
+                  label="D) evidence of writing has been discovered from an earlier period."
+                />
+              </RadioGroup>
+            </Accordion>
           </FormControl>
           <br />
           <FormControl>
-            <Typography>
-              <b style={{ marginRight: "2em", marginLeft: "-11em" }}>28</b>{" "}
-              According to the writer, the story of the King of Uruk
-            </Typography>
-            <RadioGroup
-              sx={{ ml: "5em" }}
-              value={answers[27] || ""}
-              onChange={(e) => handleInputChange(27, e.target.value)}
-            >
-              <FormControlLabel
-                value={"A"}
-                control={<Radio />}
-                label="A) is a probable explanation of the origins of writing."
-              ></FormControlLabel>
-              <FormControlLabel
-                value={"B"}
-                control={<Radio />}
-                label="B) proves that early writing had a different function to writing today."
-              />
-              <FormControlLabel
-                value={"C"}
-                control={<Radio />}
-                label="C) provides an example of symbolic writing."
-              />
-              <FormControlLabel
-                value={"D"}
-                control={<Radio />}
-                label="D) shows some awareness amongst Sumerians of the purpose of writing."
-              />
-            </RadioGroup>
+            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+              <AccordionSummary
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>
+                  <b style={{ marginRight: "2em" }}>28</b> According to the
+                  writer, the story of the King of Uruk
+                </Typography>
+              </AccordionSummary>
+              <RadioGroup
+                sx={{ ml: "5em" }}
+                value={answers[27] || ""}
+                onChange={(e) => handleInputChange(27, e.target.value)}
+              >
+                <FormControlLabel
+                  value={"A"}
+                  control={<Radio />}
+                  label="A) is a probable explanation of the origins of writing."
+                ></FormControlLabel>
+                <FormControlLabel
+                  value={"B"}
+                  control={<Radio />}
+                  label="B) proves that early writing had a different function to writing today."
+                />
+                <FormControlLabel
+                  value={"C"}
+                  control={<Radio />}
+                  label="C) provides an example of symbolic writing."
+                />
+                <FormControlLabel
+                  value={"D"}
+                  control={<Radio />}
+                  label="D) shows some awareness amongst Sumerians of the purpose of writing."
+                />
+              </RadioGroup>
+            </Accordion>
           </FormControl>
           <br />
           <FormControl>
-            <Typography>
-              <b style={{ marginRight: "2em" }}>29</b> There was disagreement
-              among the researchers at the symposium about
-            </Typography>
-            <RadioGroup
-              sx={{ ml: "5em" }}
-              value={answers[28] || ""}
-              onChange={(e) => handleInputChange(28, e.target.value)}
-            >
-              <FormControlLabel
-                value={"A"}
-                control={<Radio />}
-                label="A) the area where writing began."
-              ></FormControlLabel>
-              <FormControlLabel
-                value={"B"}
-                control={<Radio />}
-                label="B) the nature of early writing materials."
-              />
-              <FormControlLabel
-                value={"C"}
-                control={<Radio />}
-                label="C) the writing began."
-              />
-              <FormControlLabel
-                value={"D"}
-                control={<Radio />}
-                label="D) the meaning of certain abstract images."
-              />
-            </RadioGroup>
+            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+              <AccordionSummary
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>
+                  <b style={{ marginRight: "2em" }}>29</b> There was
+                  disagreement among the researchers at the symposium about
+                </Typography>
+              </AccordionSummary>
+              <RadioGroup
+                sx={{ ml: "5em" }}
+                value={answers[28] || ""}
+                onChange={(e) => handleInputChange(28, e.target.value)}
+              >
+                <FormControlLabel
+                  value={"A"}
+                  control={<Radio />}
+                  label="A) the area where writing began."
+                ></FormControlLabel>
+                <FormControlLabel
+                  value={"B"}
+                  control={<Radio />}
+                  label="B) the nature of early writing materials."
+                />
+                <FormControlLabel
+                  value={"C"}
+                  control={<Radio />}
+                  label="C) the writing began."
+                />
+                <FormControlLabel
+                  value={"D"}
+                  control={<Radio />}
+                  label="D) the meaning of certain abstract images."
+                />
+              </RadioGroup>
+            </Accordion>
           </FormControl>
+          <br />
           <FormControl>
-            <Typography>
-              <b style={{ marginRight: "2em" }}>30</b> The opponents of the
-              theory that writing developed from tokens believe that it
-            </Typography>
-            <RadioGroup
-              sx={{ ml: "5em" }}
-              value={answers[29] || ""}
-              onChange={(e) => handleInputChange(29, e.target.value)}
-            >
-              <FormControlLabel
-                value={"A"}
-                control={<Radio />}
-                label="A) grew out of accountancy."
-              ></FormControlLabel>
-              <FormControlLabel
-                value={"B"}
-                control={<Radio />}
-                label="B) evolved from pictures."
-              />
-              <FormControlLabel
-                value={"C"}
-                control={<Radio />}
-                label="C) was initially intended as decoration."
-              />
-              <FormControlLabel
-                value={"D"}
-                control={<Radio />}
-                label="D) was unlikely to have been connected with commerce."
-              />
-            </RadioGroup>
+            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+              <AccordionSummary
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography>
+                  <b style={{ marginRight: "2em" }}>30</b> The opponents of the
+                  theory that writing developed from tokens believe that it
+                </Typography>
+              </AccordionSummary>
+              <RadioGroup
+                sx={{ ml: "5em" }}
+                value={answers[29] || ""}
+                onChange={(e) => handleInputChange(29, e.target.value)}
+              >
+                <FormControlLabel
+                  value={"A"}
+                  control={<Radio />}
+                  label="A) grew out of accountancy."
+                ></FormControlLabel>
+                <FormControlLabel
+                  value={"B"}
+                  control={<Radio />}
+                  label="B) evolved from pictures."
+                />
+                <FormControlLabel
+                  value={"C"}
+                  control={<Radio />}
+                  label="C) was initially intended as decoration."
+                />
+                <FormControlLabel
+                  value={"D"}
+                  control={<Radio />}
+                  label="D) was unlikely to have been connected with commerce."
+                />
+              </RadioGroup>
+            </Accordion>
           </FormControl>
         </Box>
         <br />

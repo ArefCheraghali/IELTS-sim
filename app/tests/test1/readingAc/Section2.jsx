@@ -11,8 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const image1 = "/images/test1/readingAc1-passage2-1.jpg";
-const image2 = "/images/test1/readingAc1-passage2-2.jpg";
+import CrowText from "./text/CrowText";
 const image3 = "/images/test1/readingAc1-passage2-3.jpg";
 
 const Section2 = ({ answers, setAnswers }) => {
@@ -43,16 +42,7 @@ const Section2 = ({ answers, setAnswers }) => {
           borderRight: "1px solid #ccc",
         }}
       >
-        <img
-          src={image1}
-          alt="Reading Passage Part 1"
-          style={{ width: "100%" }}
-        />
-        <img
-          src={image2}
-          alt="Reading Passage Part 2"
-          style={{ width: "100%" }}
-        />
+        <CrowText />
       </Box>
 
       <Box

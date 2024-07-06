@@ -1,8 +1,6 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const image1 = "/images/test1/writingAc1-task1.jpg";
-
 const Task2 = ({ answers, setAnswers }) => {
   const wordLimit = 250;
 
@@ -112,7 +110,7 @@ const Task2 = ({ answers, setAnswers }) => {
         }}
       >
         <Typography variant="body2">
-          Word Count: {getWordCount(answers[0])} / {wordLimit}
+          Word Count: {getWordCount(answers[1])} / {wordLimit}
         </Typography>
         <Box sx={{ mt: 4, width: "100%", height: "100%" }}>
           <TextField

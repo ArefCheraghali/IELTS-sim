@@ -11,8 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 
-const image1 = "/images/test1/readingAc1-passage1-1.jpg";
-const image2 = "/images/test1/readingAc1-passage1-2.jpg";
+import SeaweedText from "./text/seaweedText";
 const image3 = "/images/test1/readingAc1-passage1-3.jpg";
 const image4 = "/images/test1/readingAc1-passage1-4.jpg";
 
@@ -53,16 +52,7 @@ const Section1 = ({ answers, setAnswers }) => {
           borderRight: "1px solid #ccc",
         }}
       >
-        <img
-          src={image1}
-          alt="Reading Passage Part 1"
-          style={{ width: "100%" }}
-        />
-        <img
-          src={image2}
-          alt="Reading Passage Part 2"
-          style={{ width: "100%" }}
-        />
+        <SeaweedText />
       </Box>
 
       <Box

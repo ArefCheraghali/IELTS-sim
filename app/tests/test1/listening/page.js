@@ -17,7 +17,7 @@ import {
   Slider,
 } from "@mui/material";
 
-const listeningAudio = "/audio/listening.mp3";
+const listeningAudio = "/audio/listening2.mp3";
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
@@ -29,7 +29,7 @@ export default function Test() {
   const [volume, setVolume] = useState(1); // Volume control state
 
   const router = useRouter();
-  const audioRef = useRef(new Audio(listeningAudio)); // Create the audio element once
+  const audioRef = useRef(new Audio(listeningAudio));
 
   useEffect(() => {
     let audioTimeout;
@@ -42,7 +42,7 @@ export default function Test() {
 
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
-      }, 3000);
+      }, 25000);
 
       timerInterval = setInterval(() => {
         setTimeLeft((prevTime) => {
@@ -55,7 +55,6 @@ export default function Test() {
         });
       }, 1000);
     }
-
     return () => {
       clearTimeout(audioTimeout);
       clearInterval(timerInterval);
