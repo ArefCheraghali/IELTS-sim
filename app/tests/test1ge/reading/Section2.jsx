@@ -1,0 +1,316 @@
+import React from "react";
+import {
+  Box,
+  Divider,
+  FormControl,
+  InputLabel,
+  List,
+  ListItem,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+
+import KeyboardText from "./text/KeyboardText";
+const image1 = "/images/test1/readingGe1-passage2-1.jpg";
+const image2 = "/images/test1/readingGe1-passage2-2.jpg";
+
+const Section2 = ({ answers, setAnswers }) => {
+  const possibleAnswers = ["A", "B", "C", "D", "E"];
+  const possibleAnswers2 = [
+    "i",
+    "ii",
+    "iii",
+    "iv",
+    "v",
+    "vi",
+    "vii",
+    "viii",
+    "ix",
+    "x",
+  ];
+
+  const handleInputChange = (index, value) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = value;
+    setAnswers(newAnswers);
+    console.log(newAnswers);
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        height: "75vh",
+        marginLeft: "-200px",
+        marginRight: "-200px",
+      }}
+    >
+      <Box
+        sx={{
+          width: "50%",
+          overflowY: "auto",
+          padding: 2,
+          borderRight: "1px solid #ccc",
+        }}
+      >
+        <KeyboardText />
+      </Box>
+
+      <Box
+        sx={{
+          width: "50%",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-start",
+          alignContent: "flex-start",
+          alignItems: "flex-start",
+          padding: 2,
+        }}
+      >
+        <Typography sx={{ ml: 5, fontSize: "1.1em", mb: 1 }}>
+          <b>Part 2</b>
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          You should spend about 20 minutes on <b>Questions 14-28</b>, which are
+          based on Reading Part 2.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>Questions 15 - 21</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          The text on the left (BENEFICIAL WORK PRACTICES FOR THE KEYBOARD
+          OPERATOR) has seven sections, <b>A-G</b>.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Choose the correct heading for each section from the list of headings
+          below.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Write the correct number, i–x, in boxes 15–21.
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "100%",
+            maxWidth: "60rem",
+          }}
+        >
+          <Box
+            sx={{
+              width: "70%",
+            }}
+          >
+            <img
+              src={image1}
+              alt="Reading Passage Part 1"
+              style={{ width: "80%", ml: 5 }}
+            />
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+            {Array.from({ length: 7 }).map((_, index) => (
+              <FormControl sx={{ mt: 2, margin: "1em" }} key={15 + index}>
+                <InputLabel>{`${15 + index}`}</InputLabel>
+                <Select
+                  sx={{ width: "5em" }}
+                  value={answers[14 + index] || ""}
+                  onChange={(e) =>
+                    handleInputChange(14 + index, e.target.value)
+                  }
+                  label={`${15 + index}`}
+                >
+                  {possibleAnswers2.map((answer) => (
+                    <MenuItem key={answer} value={answer}>
+                      {answer}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ))}
+          </Box>
+        </Box>
+        <Divider sx={{ mb: 3 }} />
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          <b>Questions 22 - 28</b>
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 3 }}>
+          Read the second text (Workplace dismissals) and answer Questions
+          22–28.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>Questions 22 and 23</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Complete the sentences below.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Choose <b>NO MORE THAN THREE WORDS</b> from the text for each answer
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Write your answers in boxes 22 and 23
+        </Typography>
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 2,
+            pl: "3rem",
+            width: "100%",
+          }}
+        >
+          <ListItem
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              maxWidth: "40em",
+            }}
+          >
+            <Typography sx={{ marginRight: "3rem" }}>22 </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box>
+                If an employee receives a
+                <TextField
+                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  label="22"
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleInputChange(21, e.target.value)}
+                  value={answers[21]}
+                />
+                , this means he
+              </Box>
+              <Box sx={{ mt: 1 }}>
+                will lose his job if his work does not get better.
+              </Box>
+            </Box>
+          </ListItem>
+          <ListItem
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              maxWidth: "40em",
+            }}
+          >
+            <Typography sx={{ marginRight: "3rem" }}>23 </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box>
+                If an employee does not accept the reasons for his dismissal,
+              </Box>
+              <Box sx={{ mt: 3 }}>
+                a
+                <TextField
+                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  label="23"
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleInputChange(22, e.target.value)}
+                  value={answers[22]}
+                />
+                can be arranged.
+              </Box>
+            </Box>
+          </ListItem>
+        </List>
+        <Typography sx={{ ml: 2, mb: 1 }}>Questions 24 - 28</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Look at the following descriptions (Questions 24–28) and the list of
+          terms in the box below.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Match each description with the correct term <b>A-E</b>.
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>
+          Pick the correct letter in boxes 24-28.
+        </Typography>
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            pl: "3rem",
+            width: "90%",
+          }}
+        >
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem" }}>
+              <b>24</b>{" "}
+            </Typography>
+            <Typography sx={{ ml: 2 }}>
+              An employee is asked to leave work straight away because he has
+              done something really bad.
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem" }}>
+              <b>25</b>{" "}
+            </Typography>
+            <Typography sx={{ ml: 2, mb: 1 }}>
+              An employee is pressured to leave his job unless he accepts
+              conditions that are very different from those agreed to in the
+              beginning.
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem" }}>
+              <b>26</b>{" "}
+            </Typography>
+            <Typography sx={{ ml: 2, mb: 1 }}>
+              An employer gets rid of an employee without keeping to conditions
+              in the contract.
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem" }}>
+              <b>27</b>{" "}
+            </Typography>
+            <Typography sx={{ ml: 2, mb: 1 }}>
+              The reason for an employee’s dismissal is not considered good
+              enough.
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ marginRight: "3rem" }}>
+              <b>28</b>{" "}
+            </Typography>
+            <Typography sx={{ ml: 2, mb: 1 }}>
+              The reasons for an employee’s dismissal are acceptable by law and
+              the terms of the employment contract.
+            </Typography>
+          </ListItem>
+        </List>
+        <Box
+          sx={{
+            width: "100%",
+          }}
+        >
+          <img
+            src={image2}
+            alt="Reading Passage Part 1"
+            style={{ width: "30%" }}
+          />
+        </Box>
+        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
+              <InputLabel>{`${24 + index}`}</InputLabel>
+              <Select
+                sx={{ width: "5em" }}
+                value={answers[23 + index] || ""}
+                onChange={(e) => handleInputChange(23 + index, e.target.value)}
+                label={`${24 + index}`}
+              >
+                {possibleAnswers.map((answer) => (
+                  <MenuItem key={answer} value={answer}>
+                    {answer}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ))}
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default Section2;

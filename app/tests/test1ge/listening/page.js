@@ -83,7 +83,7 @@ export default function Test() {
     console.log("User Answers:", answers);
     localStorage.setItem("listeningAnswers", JSON.stringify(answers));
     handleCloseDialog();
-    router.push("/tests/test1ac/reading");
+    router.push("/tests/test1ge/reading");
   };
 
   const handleNavigation = (direction) => {

@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-// import Section1 from "./Section1";
+import Section1 from "./Section1";
 import Section2 from "./Section2";
 import Section3 from "./Section3";
-import Drag from "./Drag";
+// import Drag from "./Drag";
 import {
   Box,
   Button,
@@ -52,7 +52,7 @@ export default function Test() {
     console.log("User Answers:", answers);
     localStorage.setItem("readingAnswers", JSON.stringify(answers));
     handleCloseDialog();
-    router.push("/tests/test1/writingAc");
+    router.push("/tests/test1ac/writing");
   };
 
   const handleNavigation = (direction) => {
@@ -96,8 +96,8 @@ export default function Test() {
           </Typography>
         </Box>
         {currentSection === 0 && (
-          // <Section1 answers={answers} setAnswers={setAnswers} />
-          <Drag />
+          <Section1 answers={answers} setAnswers={setAnswers} />
+          // <Drag />
         )}
         {currentSection === 1 && (
           <Section2 answers={answers} setAnswers={setAnswers} />

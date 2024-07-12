@@ -22,11 +22,11 @@ export default function Tests() {
         Select a Test
       </Typography>
       <Link href="/tests/test1ac/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
           test 1 Academic
         </Button>
       </Link>
-      <Link href="/tests/test1gen/listening" passHref>
+      <Link href="/tests/test1ge/listening" passHref>
         <Button variant="contained" color="primary" sx={{ mt: 2 }}>
           test 1 general
         </Button>
