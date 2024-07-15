@@ -2,54 +2,52 @@ import { Typography } from "@mui/material";
 import React, { useState } from "react";
 
 const initialQuestions = [
-  { id: "q1", text: "11 Superheroes ", answer: "" },
-  { id: "q2", text: "12 Just do it", answer: "" },
-  { id: "q3", text: "13 Count on me", answer: "" },
-  { id: "q4", text: "14 Speak up", answer: "" },
-  { id: "q5", text: "15 Jump for joy", answer: "" },
-  // { id: "q6", text: "16 Sticks and stones", answer: "" },
+  { id: "10", text: "11 Superheroes", answerId: null },
+  { id: "11", text: "12 Just do it", answerId: null },
+  { id: "12", text: "13 Count on me", answerId: null },
+  { id: "13", text: "14 Speak up", answerId: null },
+  { id: "14", text: "15 Jump for joy", answerId: null },
+  { id: "15", text: "16 Sticks and stones", answerId: null },
 ];
 
 const initialAnswers = [
-  { id: "a1", text: "A) involves painting and drawing" },
-  { id: "a2", text: "B) will be led by a prize-winning author" },
-  { id: "a3", text: "C) is aimed at children with a disability" },
-  { id: "a4", text: "D) involves a drama activity" },
-  { id: "a5", text: "E) focuses on new relationships" },
-  // { id: "a6", text: "F) is aimed at a specific age group" },
-  // { id: "a7", text: "G) explores an unhappy feeling" },
-  // { id: "a8", text: "H) raises awareness of a particular culture" },
+  { id: "A", text: "A) involves painting and drawing" },
+  { id: "B", text: "B) will be led by a prize-winning author" },
+  { id: "C", text: "C) is aimed at children with a disability" },
+  { id: "D", text: "D) involves a drama activity" },
+  { id: "E", text: "E) focuses on new relationships" },
+  { id: "F", text: "F) is aimed at a specific age group" },
+  { id: "G", text: "G) explores an unhappy feeling" },
+  { id: "H", text: "H) raises awareness of a particular culture" },
 ];
 
 const DragDropComponent = () => {
   const [questions, setQuestions] = useState(initialQuestions);
   const [answers, setAnswers] = useState(initialAnswers);
 
-  const handleDragStart = (e, text) => {
-    e.dataTransfer.setData("text/plain", text);
+  const handleDragStart = (e, id) => {
+    e.dataTransfer.setData("answerId", id);
   };
 
-  const handleDrop = (e, index) => {
-    const text = e.dataTransfer.getData("text/plain");
-    const newQuestions = questions.map((question, i) => {
-      if (i === index) {
-        return { ...question, answer: text };
-      } else if (question.answer === text) {
-        return { ...question, answer: "" };
-      }
-      return question;
-    });
+  const handleDrop = (e, questionId) => {
+    const answerId = e.dataTransfer.getData("answerId");
+    const droppedAnswer = answers.find((a) => a.id === answerId);
+    const oldAnswerId = questions.find((q) => q.id === questionId).answerId;
+    console.log(questions);
 
-    const newAnswers = answers.filter((answer) => answer.text !== text);
-    if (questions[index].answer) {
-      newAnswers.push({
-        id: `a${newAnswers.length + 1}`,
-        text: questions[index].answer,
-      });
-    }
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) => (q.id === questionId ? { ...q, answerId } : q))
+    );
 
-    setQuestions(newQuestions);
-    setAnswers(newAnswers);
+    setAnswers((prevAnswers) =>
+      oldAnswerId
+        ? [
+            ...prevAnswers.filter((a) => a.id !== answerId),
+            initialAnswers.find((a) => a.id === oldAnswerId),
+          ]
+        : prevAnswers.filter((a) => a.id !== answerId)
+    );
+
     e.preventDefault();
   };
 
@@ -57,21 +55,18 @@ const DragDropComponent = () => {
     e.preventDefault();
   };
 
-  const handleReset = (index) => {
-    const answerToReset = questions[index].answer;
-    const newQuestions = questions.map((question, i) => {
-      if (i === index) {
-        return { ...question, answer: "" };
-      }
-      return question;
-    });
+  const handleReset = (questionId) => {
+    const answerToReset = questions.find((q) => q.id === questionId).answerId;
+    setQuestions((prevQuestions) =>
+      prevQuestions.map((q) =>
+        q.id === questionId ? { ...q, answerId: null } : q
+      )
+    );
 
-    const newAnswers = [
-      ...answers,
-      { id: `a${answers.length + 1}`, text: answerToReset },
-    ];
-    setQuestions(newQuestions);
-    setAnswers(newAnswers);
+    setAnswers((prevAnswers) => [
+      ...prevAnswers,
+      initialAnswers.find((a) => a.id === answerToReset),
+    ]);
   };
 
   return (
@@ -86,10 +81,10 @@ const DragDropComponent = () => {
       >
         <Typography>Festival workshops</Typography>
 
-        {questions.map((question, index) => (
+        {questions.map((question) => (
           <div
             key={question.id}
-            onDrop={(e) => handleDrop(e, index)}
+            onDrop={(e) => handleDrop(e, question.id)}
             onDragOver={handleDragOver}
             style={{
               marginBottom: "8px",
@@ -100,11 +95,16 @@ const DragDropComponent = () => {
               position: "relative",
             }}
           >
-            {question.text}
-            <span style={{ color: "blue" }}> {question.answer}</span>
-            {question.answer && (
+            <Typography sx={{ mr: 2 }}>{question.text}</Typography>
+
+            <span style={{ color: "blue" }}>
+              {question.answerId
+                ? initialAnswers.find((a) => a.id === question.answerId).text
+                : ""}
+            </span>
+            {question.answerId && (
               <button
-                onClick={() => handleReset(index)}
+                onClick={() => handleReset(question.id)}
                 style={{ position: "absolute", right: "10px", top: "10px" }}
               >
                 x
@@ -127,7 +127,7 @@ const DragDropComponent = () => {
           <div
             key={answer.id}
             draggable
-            onDragStart={(e) => handleDragStart(e, answer.text)}
+            onDragStart={(e) => handleDragStart(e, answer.id)}
             style={{
               userSelect: "none",
               padding: 16,
