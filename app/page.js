@@ -47,6 +47,7 @@ export default function Home() {
               label="Name"
               variant="outlined"
               margin="normal"
+              // autoComplete="off"
               fullWidth
               error={!!errors.name}
               helperText={errors.name ? errors.name.message : ""}
@@ -62,6 +63,7 @@ export default function Home() {
               {...field}
               label="Phone Number"
               variant="outlined"
+              // autoComplete="off"
               margin="normal"
               fullWidth
               error={!!errors.phone}

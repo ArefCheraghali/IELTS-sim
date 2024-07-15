@@ -1,0 +1,22 @@
+/* styles/print.css */
+@media print {
+  @page {
+    margin: 20mm; /* Adjust the margin to your desired padding size */
+  }
+
+  body {
+    -webkit-print-color-adjust: exact; /* Ensure colors are printed accurately */
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .page-container {
+    page-break-inside: avoid;
+  }
+
+  .print-content {
+    padding: 20mm; /* Add padding to the content */
+  }
+}
