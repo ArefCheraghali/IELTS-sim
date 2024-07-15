@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Section1 from "./Section1";
-import Section2 from "./Section2";
+import Part1 from "./Part1";
+import Part2 from "./Part2";
 import Section3 from "./Section3";
 import Section4 from "./Section4";
 import {
@@ -24,9 +24,9 @@ export default function Test() {
   const [showQuestions, setShowQuestions] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
   const [answers, setAnswers] = useState(Array(40).fill(""));
-  const [timeLeft, setTimeLeft] = useState(27 * 60); // 27 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(28 * 60);
   const [openDialog, setOpenDialog] = useState(false);
-  const [volume, setVolume] = useState(1); // Volume control state
+  const [volume, setVolume] = useState(1);
 
   const router = useRouter();
   const audioRef = useRef(new Audio(listeningAudio));
@@ -37,12 +37,12 @@ export default function Test() {
 
     if (isReady) {
       const audio = audioRef.current;
-      audio.volume = volume; // Set initial volume
+      audio.volume = volume;
       audio.play();
 
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
-      }, 25000);
+      }, 1000);
 
       timerInterval = setInterval(() => {
         setTimeLeft((prevTime) => {
@@ -176,10 +176,10 @@ export default function Test() {
             </Box>
           </Box>
           {currentSection === 0 && (
-            <Section1 answers={answers} setAnswers={setAnswers} />
+            <Part1 answers={answers} setAnswers={setAnswers} />
           )}
           {currentSection === 1 && (
-            <Section2 answers={answers} setAnswers={setAnswers} />
+            <Part2 answers={answers} setAnswers={setAnswers} />
           )}
           {currentSection === 2 && (
             <Section3 answers={answers} setAnswers={setAnswers} />

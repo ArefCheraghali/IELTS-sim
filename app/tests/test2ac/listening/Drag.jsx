@@ -1,14 +1,24 @@
-// components/DragDropComponent.js
+import { Typography } from "@mui/material";
 import React, { useState } from "react";
 
 const initialQuestions = [
-  { id: "q1", text: "The capital of France is", answer: "" },
-  { id: "q2", text: "The largest ocean is", answer: "" },
+  { id: "q1", text: "11 Superheroes ", answer: "" },
+  { id: "q2", text: "12 Just do it", answer: "" },
+  { id: "q3", text: "13 Count on me", answer: "" },
+  { id: "q4", text: "14 Speak up", answer: "" },
+  { id: "q5", text: "15 Jump for joy", answer: "" },
+  // { id: "q6", text: "16 Sticks and stones", answer: "" },
 ];
 
 const initialAnswers = [
-  { id: "a1", text: "Paris" },
-  { id: "a2", text: "Pacific" },
+  { id: "a1", text: "A) involves painting and drawing" },
+  { id: "a2", text: "B) will be led by a prize-winning author" },
+  { id: "a3", text: "C) is aimed at children with a disability" },
+  { id: "a4", text: "D) involves a drama activity" },
+  { id: "a5", text: "E) focuses on new relationships" },
+  // { id: "a6", text: "F) is aimed at a specific age group" },
+  // { id: "a7", text: "G) explores an unhappy feeling" },
+  // { id: "a8", text: "H) raises awareness of a particular culture" },
 ];
 
 const DragDropComponent = () => {
@@ -69,20 +79,20 @@ const DragDropComponent = () => {
       <div
         style={{
           margin: 8,
-          border: "1px solid lightgrey",
           borderRadius: 4,
-          width: 300,
+          width: 500,
           padding: 16,
         }}
       >
-        <h3>Questions</h3>
+        <Typography>Festival workshops</Typography>
+
         {questions.map((question, index) => (
           <div
             key={question.id}
             onDrop={(e) => handleDrop(e, index)}
             onDragOver={handleDragOver}
             style={{
-              marginBottom: "16px",
+              marginBottom: "8px",
               padding: "8px",
               border: "1px solid lightgrey",
               minHeight: "50px",
@@ -107,13 +117,12 @@ const DragDropComponent = () => {
       <div
         style={{
           margin: 8,
-          border: "1px solid lightgrey",
           borderRadius: 4,
-          width: 200,
+          width: 500,
           padding: 16,
         }}
       >
-        <h3>Answers</h3>
+        <Typography>Information</Typography>
         {answers.map((answer) => (
           <div
             key={answer.id}
@@ -123,7 +132,7 @@ const DragDropComponent = () => {
               userSelect: "none",
               padding: 16,
               margin: "0 0 8px 0",
-              minHeight: "50px",
+              minHeight: "30px",
               backgroundColor: "white",
               border: "1px solid lightgrey",
             }}

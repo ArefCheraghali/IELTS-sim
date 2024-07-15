@@ -10,12 +10,11 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
+import Drag from "./Drag";
 const mapImage = "/images/test1/listening1-section2.jpg";
 const answerImage = "/images/test1/listening1-section2-2.jpg";
 
-export default function Section2({ answers, setAnswers }) {
-  const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
-
+const Part2 = ({ answers, setAnswers }) => {
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
@@ -48,63 +47,17 @@ export default function Section2({ answers, setAnswers }) {
           Questions 11-20
         </Typography>
       </Box>
-      <Typography>Questions 11-17</Typography>
-      <Typography>Label the plan of the rock festival site below.</Typography>
+      <Typography>Questions 11-16</Typography>
       <Typography>
-        Choose <b>SEVEN</b> answers from the box and write the correct letter,{" "}
+        What information is given about each of the following festival
+        workshops?
+      </Typography>
+      <Typography>
+        Choose <b>SIX</b> answers from the box and write the correct letter,{" "}
         <b>A-I</b>, next to the questions 11-17.
       </Typography>
-      <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
-        <Box
-          component="img"
-          sx={{
-            width: "60%",
-            maxWidth: "60rem",
-            mt: 2,
-          }}
-          alt="Map"
-          src={mapImage}
-        />
-        <Box>
-          <Box
-            component="img"
-            sx={{
-              width: "80%",
-              maxWidth: "60rem",
-              mt: 20,
-            }}
-            alt="Map"
-            src={answerImage}
-          />
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          maxWidth: "60rem",
-          mt: 2,
-        }}
-      >
-        {Array.from({ length: 7 }).map((_, index) => (
-          <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
-            <InputLabel>{`${11 + index}`}</InputLabel>
-            <Select
-              sx={{ width: "5em" }}
-              value={answers[10 + index] || ""}
-              onChange={(e) => handleInputChange(10 + index, e.target.value)}
-              label={`${11 + index}`}
-            >
-              {possibleAnswers.map((answer) => (
-                <MenuItem key={answer} value={answer}>
-                  {answer}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        ))}
-      </Box>
+      <Drag />
+
       <Box
         sx={{
           display: "flex",
@@ -172,4 +125,6 @@ export default function Section2({ answers, setAnswers }) {
       </Box>
     </Box>
   );
-}
+};
+
+export default Part2;
