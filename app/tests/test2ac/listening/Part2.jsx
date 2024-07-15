@@ -56,8 +56,7 @@ const Part2 = ({ answers, setAnswers }) => {
         Choose <b>SIX</b> answers from the box and write the correct letter,{" "}
         <b>A-I</b>, next to the questions 11-17.
       </Typography>
-      <Drag />
-
+      <Drag answers={answers} setAnswers={setAnswers} />
       <Box
         sx={{
           display: "flex",

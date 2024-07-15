@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const initialQuestions = [
   { id: "10", text: "11 Superheroes", answerId: null },
@@ -21,9 +21,27 @@ const initialAnswers = [
   { id: "H", text: "H) raises awareness of a particular culture" },
 ];
 
-const DragDropComponent = () => {
+const DragDropComponent = ({ answers, setAnswers }) => {
   const [questions, setQuestions] = useState(initialQuestions);
-  const [answers, setAnswers] = useState(initialAnswers);
+  const [availableAnswers, setAvailableAnswers] = useState(initialAnswers);
+
+  // Initialize questions based on the answers prop
+  useEffect(() => {
+    const updatedQuestions = initialQuestions.map((question) => ({
+      ...question,
+      answerId: answers[question.id] || null,
+    }));
+
+    setQuestions(updatedQuestions);
+
+    const usedAnswerIds = new Set(
+      updatedQuestions.map((q) => q.answerId).filter((id) => id !== null)
+    );
+    const updatedAvailableAnswers = initialAnswers.filter(
+      (answer) => !usedAnswerIds.has(answer.id)
+    );
+    setAvailableAnswers(updatedAvailableAnswers);
+  }, [answers]);
 
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData("answerId", id);
@@ -31,15 +49,13 @@ const DragDropComponent = () => {
 
   const handleDrop = (e, questionId) => {
     const answerId = e.dataTransfer.getData("answerId");
-    const droppedAnswer = answers.find((a) => a.id === answerId);
     const oldAnswerId = questions.find((q) => q.id === questionId).answerId;
-    console.log(questions);
 
     setQuestions((prevQuestions) =>
       prevQuestions.map((q) => (q.id === questionId ? { ...q, answerId } : q))
     );
 
-    setAnswers((prevAnswers) =>
+    setAvailableAnswers((prevAnswers) =>
       oldAnswerId
         ? [
             ...prevAnswers.filter((a) => a.id !== answerId),
@@ -47,6 +63,12 @@ const DragDropComponent = () => {
           ]
         : prevAnswers.filter((a) => a.id !== answerId)
     );
+
+    setAnswers((prevAnswers) => {
+      const newAnswers = [...prevAnswers];
+      newAnswers[parseInt(questionId)] = answerId;
+      return newAnswers;
+    });
 
     e.preventDefault();
   };
@@ -57,16 +79,23 @@ const DragDropComponent = () => {
 
   const handleReset = (questionId) => {
     const answerToReset = questions.find((q) => q.id === questionId).answerId;
+
     setQuestions((prevQuestions) =>
       prevQuestions.map((q) =>
         q.id === questionId ? { ...q, answerId: null } : q
       )
     );
 
-    setAnswers((prevAnswers) => [
+    setAvailableAnswers((prevAnswers) => [
       ...prevAnswers,
       initialAnswers.find((a) => a.id === answerToReset),
     ]);
+
+    setAnswers((prevAnswers) => {
+      const newAnswers = [...prevAnswers];
+      newAnswers[parseInt(questionId)] = null;
+      return newAnswers;
+    });
   };
 
   return (
@@ -123,7 +152,7 @@ const DragDropComponent = () => {
         }}
       >
         <Typography>Information</Typography>
-        {answers.map((answer) => (
+        {availableAnswers.map((answer) => (
           <div
             key={answer.id}
             draggable
