@@ -1,26 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  List,
-  ListItem,
-  TextField,
 } from "@mui/material";
 import Drag from "./Drag";
-const mapImage = "/images/test1/listening1-section2.jpg";
-const answerImage = "/images/test1/listening1-section2-2.jpg";
+
+const options = [
+  "their financial situation",
+  "their level of commitment",
+  "their work experience",
+  "their ambition",
+  "their availability",
+];
+const questionIndexes = [13, 14];
 
 const Part2 = ({ answers, setAnswers }) => {
-  const handleInputChange = (index, value) => {
-    const newAnswers = [...answers];
-    newAnswers[index] = value;
-    setAnswers(newAnswers);
-    console.log(newAnswers);
+  const handleCheckboxChange = (event) => {
+    const selectedOptions = options
+      .map((option, i) =>
+        document.getElementById(`checkbox-${i}`).checked ? option : null
+      )
+      .filter((option) => option !== null);
+
+    selectedOptions.sort(); // Sort alphabetically
+
+    const updatedAnswers = [...answers];
+    questionIndexes.forEach((questionIndex, i) => {
+      updatedAnswers[questionIndex] = selectedOptions[i] || "";
+    });
+    console.log(updatedAnswers);
+    // setAnswers(updatedAnswers);
   };
+
+  useEffect(() => {
+    options.forEach((option, index) => {
+      document.getElementById(`checkbox-${index}`).checked =
+        questionIndexes.some(
+          (questionIndex) => answers[questionIndex] === option
+        );
+    });
+  }, [answers, options, questionIndexes]);
 
   return (
     <Box
@@ -66,61 +88,30 @@ const Part2 = ({ answers, setAnswers }) => {
           maxWidth: "60rem",
         }}
       >
-        <Typography>Questions 18-20</Typography>
-        <Typography>Complete the sentences below.</Typography>
+        <Typography>Questions 17 and 18</Typography>
         <Typography>
-          Write <b>NO MORE THAN TWO WORDS</b> for each answer.
+          Choose <b>TWO</b> letters, <b>A-E</b>.
         </Typography>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 2,
-            pl: "3rem",
-            width: "100%",
-          }}
-        >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>18 </Typography>
-            To show you are an official visitor, you have to wear the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="18"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(17, e.target.value)}
-              value={answers[17]}
-            />
-            provided.
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>19 </Typography>
-            Cars blocing paths could prevent access by
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="19"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(18, e.target.value)}
-              value={answers[18]}
-            />
-            in an emergency.
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>20 </Typography>
-            To reclaim items from storage, you must show your
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="20"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(19, e.target.value)}
-              value={answers[19]}
-            />
-            .
-          </ListItem>
-        </List>
+        <Typography>
+          Which <b>TWO</b> reasons does the speaker give for recommending
+          <i>Alive and Kicking</i>?
+        </Typography>
+        <Box sx={{ mb: 4 }}>
+          <FormGroup>
+            {options.map((option, index) => (
+              <FormControlLabel
+                key={index}
+                control={
+                  <Checkbox
+                    id={`checkbox-${index}`}
+                    onChange={handleCheckboxChange}
+                  />
+                }
+                label={option}
+              />
+            ))}
+          </FormGroup>
+        </Box>
       </Box>
     </Box>
   );
