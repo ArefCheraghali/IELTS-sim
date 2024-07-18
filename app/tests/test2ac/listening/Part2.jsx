@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Checkbox,
@@ -9,40 +9,49 @@ import {
 import Drag from "./Drag";
 
 const options = [
-  "their financial situation",
-  "their level of commitment",
-  "their work experience",
-  "their ambition",
-  "their availability",
+  { label: "their financial situation", value: "A" },
+  { label: "their level of commitment", value: "B" },
+  { label: "their work experience", value: "C" },
+  { label: "their ambition", value: "D" },
+  { label: "their availability", value: "E" },
 ];
-const questionIndexes = [13, 14];
+const questionIndexes = [16, 17];
 
 const Part2 = ({ answers, setAnswers }) => {
-  const handleCheckboxChange = (event) => {
-    const selectedOptions = options
-      .map((option, i) =>
-        document.getElementById(`checkbox-${i}`).checked ? option : null
-      )
-      .filter((option) => option !== null);
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
-    selectedOptions.sort(); // Sort alphabetically
+  const handleCheckboxChange = (event, option) => {
+    const newSelectedOptions = event.target.checked
+      ? [...selectedOptions, option.value]
+      : selectedOptions.filter(
+          (selectedOption) => selectedOption !== option.value
+        );
+
+    if (newSelectedOptions.length > 2) {
+      event.target.checked = false;
+      return;
+    }
+
+    setSelectedOptions(newSelectedOptions.sort());
 
     const updatedAnswers = [...answers];
     questionIndexes.forEach((questionIndex, i) => {
-      updatedAnswers[questionIndex] = selectedOptions[i] || "";
+      updatedAnswers[questionIndex] = newSelectedOptions[i] || "";
     });
-    console.log(updatedAnswers);
-    // setAnswers(updatedAnswers);
+
+    setAnswers(updatedAnswers);
   };
 
   useEffect(() => {
-    options.forEach((option, index) => {
-      document.getElementById(`checkbox-${index}`).checked =
+    const initialSelectedOptions = options
+      .filter((option) =>
         questionIndexes.some(
-          (questionIndex) => answers[questionIndex] === option
-        );
-    });
-  }, [answers, options, questionIndexes]);
+          (questionIndex) => answers[questionIndex] === option.value
+        )
+      )
+      .map((option) => option.value);
+    setSelectedOptions(initialSelectedOptions);
+  }, [answers]);
 
   return (
     <Box
@@ -93,7 +102,7 @@ const Part2 = ({ answers, setAnswers }) => {
           Choose <b>TWO</b> letters, <b>A-E</b>.
         </Typography>
         <Typography>
-          Which <b>TWO</b> reasons does the speaker give for recommending
+          Which <b>TWO</b> reasons does the speaker give for recommending{" "}
           <i>Alive and Kicking</i>?
         </Typography>
         <Box sx={{ mb: 4 }}>
@@ -104,10 +113,15 @@ const Part2 = ({ answers, setAnswers }) => {
                 control={
                   <Checkbox
                     id={`checkbox-${index}`}
-                    onChange={handleCheckboxChange}
+                    onChange={(e) => handleCheckboxChange(e, option)}
+                    disabled={
+                      !selectedOptions.includes(option.value) &&
+                      selectedOptions.length >= 2
+                    }
+                    checked={selectedOptions.includes(option.value)}
                   />
                 }
-                label={option}
+                label={`${option.value}. ${option.label}`}
               />
             ))}
           </FormGroup>

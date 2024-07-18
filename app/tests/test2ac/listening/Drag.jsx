@@ -25,7 +25,6 @@ const DragDropComponent = ({ answers, setAnswers }) => {
   const [questions, setQuestions] = useState(initialQuestions);
   const [availableAnswers, setAvailableAnswers] = useState(initialAnswers);
 
-  // Initialize questions based on the answers prop
   useEffect(() => {
     const updatedQuestions = initialQuestions.map((question) => ({
       ...question,
@@ -128,15 +127,23 @@ const DragDropComponent = ({ answers, setAnswers }) => {
 
             <span style={{ color: "blue" }}>
               {question.answerId
-                ? initialAnswers.find((a) => a.id === question.answerId).text
+                ? initialAnswers.find((a) => a.id === question.answerId)
+                    ?.text || ""
                 : ""}
             </span>
             {question.answerId && (
               <button
+                style={{
+                  position: "absolute",
+                  right: 3,
+                  top: 3,
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                }}
                 onClick={() => handleReset(question.id)}
-                style={{ position: "absolute", right: "10px", top: "10px" }}
               >
-                x
+                ✖
               </button>
             )}
           </div>
@@ -158,12 +165,12 @@ const DragDropComponent = ({ answers, setAnswers }) => {
             draggable
             onDragStart={(e) => handleDragStart(e, answer.id)}
             style={{
-              userSelect: "none",
-              padding: 16,
-              margin: "0 0 8px 0",
-              minHeight: "30px",
-              backgroundColor: "white",
+              marginBottom: "8px",
+              padding: "8px",
               border: "1px solid lightgrey",
+              borderRadius: 4,
+              cursor: "pointer",
+              backgroundColor: "white",
             }}
           >
             {answer.text}
