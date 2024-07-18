@@ -10,7 +10,7 @@ export default function Layout({ children }) {
           <AppBar position="static">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                IELTS Simulator
+                Shayegan The Test Helper IELTS Simulator
               </Typography>
               {/* <Link href="/" passHref>
                 <Typography variant="button" color="white" sx={{ mx: 2 }}>
@@ -35,7 +35,7 @@ export default function Layout({ children }) {
             }}
           >
             <Typography variant="body2" color="textSecondary">
-              © 2024 IELTS Simulator
+              Shayegan The Test Helper © 2024
             </Typography>
           </Box>
         </>

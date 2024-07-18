@@ -1,58 +1,8 @@
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Typography,
-} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Drag from "./Drag";
-
-const options = [
-  { label: "their financial situation", value: "A" },
-  { label: "their level of commitment", value: "B" },
-  { label: "their work experience", value: "C" },
-  { label: "their ambition", value: "D" },
-  { label: "their availability", value: "E" },
-];
-const questionIndexes = [16, 17];
+import MultipleChoiceQuestion from "../../../components/MultipleChoiceQuestion";
 
 const Part2 = ({ answers, setAnswers }) => {
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  const handleCheckboxChange = (event, option) => {
-    const newSelectedOptions = event.target.checked
-      ? [...selectedOptions, option.value]
-      : selectedOptions.filter(
-          (selectedOption) => selectedOption !== option.value
-        );
-
-    if (newSelectedOptions.length > 2) {
-      event.target.checked = false;
-      return;
-    }
-
-    setSelectedOptions(newSelectedOptions.sort());
-
-    const updatedAnswers = [...answers];
-    questionIndexes.forEach((questionIndex, i) => {
-      updatedAnswers[questionIndex] = newSelectedOptions[i] || "";
-    });
-
-    setAnswers(updatedAnswers);
-  };
-
-  useEffect(() => {
-    const initialSelectedOptions = options
-      .filter((option) =>
-        questionIndexes.some(
-          (questionIndex) => answers[questionIndex] === option.value
-        )
-      )
-      .map((option) => option.value);
-    setSelectedOptions(initialSelectedOptions);
-  }, [answers]);
-
   return (
     <Box
       sx={{
@@ -105,27 +55,58 @@ const Part2 = ({ answers, setAnswers }) => {
           Which <b>TWO</b> reasons does the speaker give for recommending{" "}
           <i>Alive and Kicking</i>?
         </Typography>
-        <Box sx={{ mb: 4 }}>
-          <FormGroup>
-            {options.map((option, index) => (
-              <FormControlLabel
-                key={index}
-                control={
-                  <Checkbox
-                    id={`checkbox-${index}`}
-                    onChange={(e) => handleCheckboxChange(e, option)}
-                    disabled={
-                      !selectedOptions.includes(option.value) &&
-                      selectedOptions.length >= 2
-                    }
-                    checked={selectedOptions.includes(option.value)}
-                  />
-                }
-                label={`${option.value}. ${option.label}`}
-              />
-            ))}
-          </FormGroup>
-        </Box>
+        <MultipleChoiceQuestion
+          options={[
+            { label: "their financial situation", value: "A" },
+            { label: "their level of commitment", value: "B" },
+            { label: "their work experience", value: "C" },
+            { label: "their ambition", value: "D" },
+            { label: "their availability", value: "E" },
+          ]}
+          questionIndexes={[16, 17]}
+          answers={answers}
+          setAnswers={setAnswers}
+        />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          width: "100%",
+          maxWidth: "60rem",
+        }}
+      >
+        <Typography>Questions 19 and 20</Typography>
+        <Typography>
+          Choose <b>TWO</b> letters, <b>A-E</b>.
+        </Typography>
+        <Typography>
+          Which <b>TWO</b> pieces of advice does the speaker give to parents
+          about reading?
+        </Typography>
+        <MultipleChoiceQuestion
+          options={[
+            {
+              label: "Encourage children to write down new vocabulary.",
+              value: "A",
+            },
+            { label: "Allow children to listen to audio books.", value: "B" },
+            { label: "Get reommendations from librarians.", value: "C" },
+            {
+              label: "Give children a choice about what they read.",
+              value: "D",
+            },
+            {
+              label:
+                "Only read aloud to children until they can read independently.",
+              value: "E",
+            },
+          ]}
+          questionIndexes={[18, 19]}
+          answers={answers}
+          setAnswers={setAnswers}
+        />
       </Box>
     </Box>
   );

@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Part1 from "./Part1";
 import Part2 from "./Part2";
-import Section3 from "./Section3";
+import Section3 from "./Part3";
 import Section4 from "./Section4";
 import {
   Box,

@@ -1,11 +1,5 @@
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Typography,
-} from "@mui/material";
-import { useEffect } from "react";
+import { Box, Checkbox, FormControlLabel, FormGroup } from "@mui/material";
+import { useEffect, useState } from "react";
 
 const MultipleChoiceQuestion = ({
   options,
@@ -13,32 +7,40 @@ const MultipleChoiceQuestion = ({
   setAnswers,
   questionIndexes,
 }) => {
-  const handleCheckboxChange = (event) => {
-    const selectedOptions = options
-      .map((option, i) =>
-        document.getElementById(`checkbox-${i}`).checked ? option : null
-      )
-      .filter((option) => option !== null);
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
-    selectedOptions.sort(); // Sort alphabetically
+  const handleCheckboxChange = (event, option) => {
+    const newSelectedOptions = event.target.checked
+      ? [...selectedOptions, option.value]
+      : selectedOptions.filter(
+          (selectedOption) => selectedOption !== option.value
+        );
+
+    if (newSelectedOptions.length > 2) {
+      event.target.checked = false;
+      return;
+    }
+
+    setSelectedOptions(newSelectedOptions.sort());
 
     const updatedAnswers = [...answers];
     questionIndexes.forEach((questionIndex, i) => {
-      updatedAnswers[questionIndex] = selectedOptions[i] || "";
+      updatedAnswers[questionIndex] = newSelectedOptions[i] || "";
     });
 
     setAnswers(updatedAnswers);
   };
 
-  // Initialize checkboxes based on the answers prop
   useEffect(() => {
-    options.forEach((option, index) => {
-      document.getElementById(`checkbox-${index}`).checked =
+    const initialSelectedOptions = options
+      .filter((option) =>
         questionIndexes.some(
-          (questionIndex) => answers[questionIndex] === option
-        );
-    });
-  }, [answers, options, questionIndexes]);
+          (questionIndex) => answers[questionIndex] === option.value
+        )
+      )
+      .map((option) => option.value);
+    setSelectedOptions(initialSelectedOptions);
+  }, [answers]);
 
   return (
     <Box sx={{ mb: 4 }}>
@@ -49,10 +51,15 @@ const MultipleChoiceQuestion = ({
             control={
               <Checkbox
                 id={`checkbox-${index}`}
-                onChange={handleCheckboxChange}
+                onChange={(e) => handleCheckboxChange(e, option)}
+                disabled={
+                  !selectedOptions.includes(option.value) &&
+                  selectedOptions.length >= 2
+                }
+                checked={selectedOptions.includes(option.value)}
               />
             }
-            label={option}
+            label={`${option.value}. ${option.label}`}
           />
         ))}
       </FormGroup>
