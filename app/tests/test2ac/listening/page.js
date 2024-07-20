@@ -3,8 +3,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Part1 from "./Part1";
 import Part2 from "./Part2";
-import Section3 from "./Part3";
-import Section4 from "./Section4";
+import Part3 from "./Part3";
+import Part4 from "./Part4";
 import {
   Box,
   Button,
@@ -182,10 +182,10 @@ export default function Test() {
             <Part2 answers={answers} setAnswers={setAnswers} />
           )}
           {currentSection === 2 && (
-            <Section3 answers={answers} setAnswers={setAnswers} />
+            <Part3 answers={answers} setAnswers={setAnswers} />
           )}
           {currentSection === 3 && (
-            <Section4 answers={answers} setAnswers={setAnswers} />
+            <Part4 answers={answers} setAnswers={setAnswers} />
           )}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
             <Button

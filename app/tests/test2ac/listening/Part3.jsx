@@ -112,9 +112,8 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <FormControl sx={{ mt: 2 }}>
             <Typography>
-              <b style={{ marginRight: "2em", marginLeft: "-3em" }}>22</b> How
-              does Jake react to Clare's suggestion about an experiment based on
-              children's diet?
+              <b style={{ marginRight: "2em" }}>22</b> How does Jake react to
+              Clare's suggestion about an experiment based on children's diet?
             </Typography>
             <RadioGroup
               sx={{ ml: "5em" }}
@@ -167,8 +166,8 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <FormControl sx={{ mt: 2 }}>
             <Typography>
-              <b style={{ marginRight: "2em" }}>24</b> What question do they
-              decide the experiment should address?
+              <b style={{ marginRight: "2em", marginLeft: "-4em" }}>24</b> What
+              question do they decide the experiment should address?
             </Typography>
             <RadioGroup
               sx={{ ml: "5em" }}
