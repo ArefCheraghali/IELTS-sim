@@ -42,7 +42,7 @@ const Task2 = ({ answers, setAnswers }) => {
           You should spend about 40 minutes on this task.
         </Typography>
         <Typography sx={{ ml: 4, mb: 2 }}>
-          Write about the following topic:
+          You have been asked to write about the following topic.
         </Typography>
         <Box
           sx={{
@@ -66,8 +66,8 @@ const Task2 = ({ answers, setAnswers }) => {
             }}
           >
             <b>
-              In many countries today insufficient respect is shown to older
-              people.
+              Some people think that instead of preventing climate change, we
+              need to find a way to live with it.
             </b>
           </Typography>
           <Typography
@@ -76,15 +76,7 @@ const Task2 = ({ answers, setAnswers }) => {
               mb: 1,
             }}
           >
-            <b>What do you think may be the reasons for this?</b>
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "1.1em",
-              mb: 1,
-            }}
-          >
-            <b>What problems might this cause in society?</b>
+            <b>To what extent do you agree or disagree?</b>
           </Typography>
         </Box>
         <Typography sx={{ ml: 4, mb: 2, textAlign: "left" }}>

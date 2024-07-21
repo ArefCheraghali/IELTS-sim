@@ -42,7 +42,7 @@ export default function Test() {
 
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
-      }, 1000);
+      }, 1000); //27
 
       timerInterval = setInterval(() => {
         setTimeLeft((prevTime) => {
@@ -83,7 +83,7 @@ export default function Test() {
     console.log("User Answers:", answers);
     localStorage.setItem("listeningAnswers", JSON.stringify(answers));
     handleCloseDialog();
-    router.push("/tests/test1ac/reading");
+    router.push("/tests/test2ac/reading");
   };
 
   const handleNavigation = (direction) => {

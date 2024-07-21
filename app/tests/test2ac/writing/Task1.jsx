@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const image1 = "/images/test1/writingAc1-task1.jpg";
+const image1 = "/images/test2/test2ac writing task1.jpg";
 
 const Task1 = ({ answers, setAnswers }) => {
   const wordLimit = 150;
@@ -64,9 +64,9 @@ const Task1 = ({ answers, setAnswers }) => {
             }}
           >
             <b>
-              The charts below show the proportions of the world’s oil resources
-              held in different areas, together with the proportions consumed
-              annually in the same areas.
+              The diagrams below show the main reasons workers chose to work
+              from home and the hours males and females worked at home for the
+              year 2019.
             </b>
           </Typography>
           <Typography

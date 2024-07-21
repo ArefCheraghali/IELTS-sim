@@ -1,34 +1,20 @@
-import { Button, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import { Button, Typography } from "@mui/material";
 
-const initialQuestions = [
-  { id: "10", text: "11 Superheroes", answerId: null },
-  { id: "11", text: "12 Just do it", answerId: null },
-  { id: "12", text: "13 Count on me", answerId: null },
-  { id: "13", text: "14 Speak up", answerId: null },
-  { id: "14", text: "15 Jump for joy", answerId: null },
-  { id: "15", text: "16 Sticks and stones", answerId: null },
-];
-
-const initialAnswers = [
-  { id: "A", text: "A) involves painting and drawing" },
-  { id: "B", text: "B) will be led by a prize-winning author" },
-  { id: "C", text: "C) is aimed at children with a disability" },
-  { id: "D", text: "D) involves a drama activity" },
-  { id: "E", text: "E) focuses on new relationships" },
-  { id: "F", text: "F) is aimed at a specific age group" },
-  { id: "G", text: "G) explores an unhappy feeling" },
-  { id: "H", text: "H) raises awareness of a particular culture" },
-];
-
-const DragDropComponent = ({ answers, setAnswers }) => {
+const DragDrop = ({
+  questions: initialQuestions,
+  answers: initialAnswers,
+  setAnswers,
+  title,
+  infoTitle,
+}) => {
   const [questions, setQuestions] = useState(initialQuestions);
   const [availableAnswers, setAvailableAnswers] = useState(initialAnswers);
 
   useEffect(() => {
     const updatedQuestions = initialQuestions.map((question) => ({
       ...question,
-      answerId: answers[question.id] || null,
+      answerId: setAnswers[question.id] || null,
     }));
 
     setQuestions(updatedQuestions);
@@ -40,7 +26,7 @@ const DragDropComponent = ({ answers, setAnswers }) => {
       (answer) => !usedAnswerIds.has(answer.id)
     );
     setAvailableAnswers(updatedAvailableAnswers);
-  }, [answers]);
+  }, [initialQuestions, initialAnswers, setAnswers]);
 
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData("answerId", id);
@@ -101,13 +87,10 @@ const DragDropComponent = ({ answers, setAnswers }) => {
     <div style={{ display: "flex", justifyContent: "center" }}>
       <div
         style={{
-          margin: 8,
-          borderRadius: 4,
-          width: 500,
           padding: 16,
         }}
       >
-        <Typography>Festival workshops</Typography>
+        <Typography>{title}</Typography>
 
         {questions.map((question) => (
           <div
@@ -158,7 +141,7 @@ const DragDropComponent = ({ answers, setAnswers }) => {
           padding: 16,
         }}
       >
-        <Typography>Information</Typography>
+        <Typography>{infoTitle}</Typography>
         {availableAnswers.map((answer) => (
           <div
             key={answer.id}
@@ -181,4 +164,4 @@ const DragDropComponent = ({ answers, setAnswers }) => {
   );
 };
 
-export default DragDropComponent;
+export default DragDrop;

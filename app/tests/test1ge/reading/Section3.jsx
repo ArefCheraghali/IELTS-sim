@@ -132,7 +132,6 @@ const Section3 = ({ answers, setAnswers }) => {
         <Typography sx={{ ml: 2, mb: 1 }}>
           Choose <b>NO MORE THAN TWO WORDS</b> from the text for each answer.
         </Typography>
-
         <Typography sx={{ ml: 2, mb: 1 }}>
           Write your answers in boxes 36-40.
         </Typography>

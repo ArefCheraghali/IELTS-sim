@@ -42,7 +42,7 @@ export default function Test() {
 
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
-      }, 25000);
+      }, 27000);
 
       timerInterval = setInterval(() => {
         setTimeLeft((prevTime) => {
