@@ -29,13 +29,19 @@ export default function Test() {
   const [volume, setVolume] = useState(1);
 
   const router = useRouter();
-  const audioRef = useRef(new Audio(listeningAudio));
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      audioRef.current = new Audio(listeningAudio);
+    }
+  }, []);
 
   useEffect(() => {
     let audioTimeout;
     let timerInterval;
 
-    if (isReady) {
+    if (isReady && audioRef.current) {
       const audio = audioRef.current;
       audio.volume = volume;
       audio.play();
