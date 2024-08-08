@@ -28,8 +28,6 @@ const Part1 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -224,17 +222,19 @@ const Part1 = ({ answers, setAnswers }) => {
               />
               .
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
+            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
               At the Palazzo Medici there was a hidden ‘studio’ which had no
-              <TextField
-                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-                label="8"
-                variant="standard"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(7, e.target.value)}
-                value={answers[7]}
-              />
-              .
+              <Typography sx={{ mt: 3 }}>
+                <TextField
+                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  label="8"
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleInputChange(7, e.target.value)}
+                  value={answers[7]}
+                />
+                .
+              </Typography>
             </ListItem>
             <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
               Ole Worm liked to show when other scientists had made mistakes.
@@ -287,27 +287,31 @@ const Part1 = ({ answers, setAnswers }) => {
             </Typography>
             <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
               Beatrix Potter did not give away her collection of
-              <TextField
-                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-                label="12"
-                variant="standard"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(11, e.target.value)}
-                value={answers[11]}
-              />
-              .
+              <Typography sx={{ mt: 3 }}>
+                <TextField
+                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  label="12"
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleInputChange(11, e.target.value)}
+                  value={answers[11]}
+                />
+                .
+              </Typography>
             </ListItem>
             <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
               Franklin D. Roosevelt believed collecting helped him deal with the
-              <TextField
-                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-                label="13"
-                variant="standard"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(12, e.target.value)}
-                value={answers[12]}
-              />
-              of this job.
+              <Typography sx={{ mt: 3 }}>
+                <TextField
+                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  label="13"
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleInputChange(12, e.target.value)}
+                  value={answers[12]}
+                />
+                of this job.
+              </Typography>
             </ListItem>
           </List>
         </Box>

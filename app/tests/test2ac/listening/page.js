@@ -17,7 +17,7 @@ import {
   Slider,
 } from "@mui/material";
 
-const listeningAudio = "/audio/listening2.mp3";
+const listeningAudio = "/audio/Listening2.mp3";
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
@@ -30,6 +30,7 @@ export default function Test() {
 
   const router = useRouter();
   const audioRef = useRef(null);
+  const answersRef = useRef(answers);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -48,7 +49,7 @@ export default function Test() {
 
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
-      }, 1000); //27
+      }, 28000); //27
 
       timerInterval = setInterval(() => {
         setTimeLeft((prevTime) => {
@@ -68,13 +69,17 @@ export default function Test() {
         audioRef.current.pause();
       }
     };
-  }, [isReady]);
+  }, [isReady, volume]);
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [volume]);
+
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
 
   const handleVolumeChange = (event, newValue) => {
     setVolume(newValue);
@@ -86,13 +91,17 @@ export default function Test() {
   };
 
   const onSubmit = () => {
-    console.log("User Answers:", answers);
-    localStorage.setItem("listeningAnswers", JSON.stringify(answers));
+    console.log("User Answers:", answersRef.current);
+    localStorage.setItem(
+      "listeningAnswers",
+      JSON.stringify(answersRef.current)
+    );
     handleCloseDialog();
     router.push("/tests/test2ac/reading");
   };
 
   const handleNavigation = (direction) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (direction === "next" && currentSection < 3) {
       setCurrentSection(currentSection + 1);
     } else if (direction === "prev" && currentSection > 0) {
@@ -136,11 +145,7 @@ export default function Test() {
         </Typography>
       )}
       {isReady && showQuestions && (
-        <Box
-          sx={{
-            mt: 4,
-          }}
-        >
+        <Box sx={{ mt: 4 }}>
           <Box
             sx={{
               display: "flex",

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button, Typography } from "@mui/material";
 
 const DragDrop = ({
-  questions: initialQuestions,
-  answers: initialAnswers,
+  initialQuestions,
+  initialAnswers,
+  answers,
   setAnswers,
   title,
   infoTitle,
@@ -14,7 +15,7 @@ const DragDrop = ({
   useEffect(() => {
     const updatedQuestions = initialQuestions.map((question) => ({
       ...question,
-      answerId: setAnswers[question.id] || null,
+      answerId: answers[question.id] || null,
     }));
 
     setQuestions(updatedQuestions);
@@ -26,7 +27,7 @@ const DragDrop = ({
       (answer) => !usedAnswerIds.has(answer.id)
     );
     setAvailableAnswers(updatedAvailableAnswers);
-  }, [initialQuestions, initialAnswers, setAnswers]);
+  }, [initialQuestions, initialAnswers, answers]);
 
   const handleDragStart = (e, id) => {
     e.dataTransfer.setData("answerId", id);
@@ -87,11 +88,11 @@ const DragDrop = ({
     <div style={{ display: "flex", justifyContent: "center" }}>
       <div
         style={{
-          padding: 16,
+          padding: 8,
+          width: "50%",
         }}
       >
         <Typography>{title}</Typography>
-
         {questions.map((question) => (
           <div
             key={question.id}
@@ -118,8 +119,8 @@ const DragDrop = ({
               <Button
                 style={{
                   position: "absolute",
-                  right: -5,
-                  top: 3,
+                  right: -18,
+                  top: -3,
                   border: "none",
                   background: "none",
                   cursor: "pointer",
@@ -137,8 +138,8 @@ const DragDrop = ({
         style={{
           margin: 8,
           borderRadius: 4,
-          width: 500,
-          padding: 16,
+          padding: 8,
+          width: "50%",
         }}
       >
         <Typography>{infoTitle}</Typography>
@@ -156,7 +157,7 @@ const DragDrop = ({
               backgroundColor: "white",
             }}
           >
-            {answer.text}
+            <Typography>{answer.text}</Typography>
           </div>
         ))}
       </div>

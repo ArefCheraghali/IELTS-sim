@@ -65,7 +65,7 @@ const initialAnswers = [
 ];
 
 const Part3 = ({ answers, setAnswers }) => {
-  const possibleAnswers = ["TRUE", "FALSE", "NOT GIVEN"];
+  const possibleAnswers = ["YES", "NO", "NOT GIVEN"];
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -79,8 +79,6 @@ const Part3 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -245,7 +243,7 @@ const Part3 = ({ answers, setAnswers }) => {
           }}
         >
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "#ebebeb" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -285,7 +283,7 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "#ebebeb" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -325,7 +323,7 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "#ebebeb" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -336,7 +334,7 @@ const Part3 = ({ answers, setAnswers }) => {
                 </Typography>
               </AccordionSummary>
               <RadioGroup
-                sx={{ ml: "5em" }}
+                sx={{ ml: "4.5em" }}
                 value={answers[34] || ""}
                 onChange={(e) => handleInputChange(34, e.target.value)}
               >
@@ -365,7 +363,7 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "#ebebeb" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -413,9 +411,10 @@ const Part3 = ({ answers, setAnswers }) => {
           Drag the correct letter <b>A-F</b> in boxes 37-40.
         </Typography>
         <DragDrop
-          questions={initialQuestions}
-          answers={initialAnswers}
+          initialQuestions={initialQuestions}
+          initialAnswers={initialAnswers}
           setAnswers={setAnswers}
+          answers={answers}
           title=""
           infoTitle=""
         />

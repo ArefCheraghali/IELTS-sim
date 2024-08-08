@@ -58,8 +58,6 @@ const Part2 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -119,7 +117,7 @@ const Part2 = ({ answers, setAnswers }) => {
             <img
               src={image1}
               alt="Reading Passage Part 2"
-              style={{ width: "85%" }}
+              style={{ width: "95%" }}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -163,9 +161,10 @@ const Part2 = ({ answers, setAnswers }) => {
           Match each statement with the correct person, A-E.
         </Typography>
         <DragDrop
-          questions={initialQuestions}
-          answers={initialAnswers}
+          initialQuestions={initialQuestions}
+          initialAnswers={initialAnswers}
           setAnswers={setAnswers}
+          answers={answers}
           title=""
           infoTitle="List of People"
         />
@@ -183,14 +182,12 @@ const Part2 = ({ answers, setAnswers }) => {
         <Box sx={{ textAlign: "left" }}>
           <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
             There are many festivals for documentary makers. For example,
-            Canada’s Hot Docs festival has
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-            screened documentaries from more than 50 countries. Meanwhile, the
-            Hamburg Short Film
+            Canada’s Hot Docs festival has screened documentaries from more than
+            50 countries. Meanwhile, the Hamburg Short Film Festival lives up to
+            its name by
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            Festival lives up to its name by accepting films no more than
+            accepting films no more than
             <TextField
               sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
               label="24"
@@ -203,10 +200,10 @@ const Part2 = ({ answers, setAnswers }) => {
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
             its categories. The Short and Sweet Film Festival is especially good
-            for documentary makers who
+            for
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            are
+            documentary makers who are
             <TextField
               sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
               label="25"

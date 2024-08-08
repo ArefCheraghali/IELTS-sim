@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Task1 from "./Task1";
 import Task2 from "./Task2";
@@ -21,6 +21,7 @@ export default function Test() {
   const [openDialog, setOpenDialog] = useState(false);
 
   const router = useRouter();
+  const answersRef = useRef(answers);
 
   useEffect(() => {
     let timerInterval;
@@ -41,14 +42,18 @@ export default function Test() {
     };
   }, []);
 
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
     onSubmit();
   };
 
   const onSubmit = () => {
-    console.log("User Answers:", answers);
-    localStorage.setItem("writings", JSON.stringify(answers));
+    console.log("User Answers:", answersRef.current);
+    localStorage.setItem("writings", JSON.stringify(answersRef.current));
     handleCloseDialog();
     router.push("/testResult");
   };

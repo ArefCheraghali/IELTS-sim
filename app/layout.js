@@ -5,6 +5,9 @@ import Link from "next/link";
 export default function Layout({ children }) {
   return (
     <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body>
         <>
           <AppBar position="static">
@@ -24,7 +27,7 @@ export default function Layout({ children }) {
               </Link> */}
             </Toolbar>
           </AppBar>
-          <Container sx={{ my: 4 }}>{children}</Container>
+          <Container sx={{ my: 4, minWidth: "1300px" }}>{children}</Container>
           <Box
             component="footer"
             sx={{

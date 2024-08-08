@@ -7,6 +7,7 @@ const Task1 = ({ answers, setAnswers }) => {
   const getWordCount = (text) => {
     return text.trim().split(/\s+/).length;
   };
+
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
@@ -60,9 +61,8 @@ const Task1 = ({ answers, setAnswers }) => {
             }}
           >
             <b>
-              You have been invited to attend an interview for a place studying
-              a course in a college. Unfortunately because of a previous
-              appointment you cannot come at the time they wish.
+              You recently took part in a training course. The organiser of the
+              course has asked you for some feedback.
             </b>
           </Typography>
           <Typography
@@ -71,23 +71,23 @@ const Task1 = ({ answers, setAnswers }) => {
             }}
           >
             <b>
-              Write a letter to the admissions tutor and explain your position.
-              Apologise and offer to come on another day or later the same day.
-              Ask also how long the interview will be and whether there will be
-              any tests during it.
+              Write a letter to the organiser of the course. In your letter:
+              <ul>
+                <li> give details of the course you took part in</li>
+                <li> say what you found useful on the course</li>
+                <li> suggest ways the course could be improved</li>
+                {/* • */}
+              </ul>
             </b>
           </Typography>
         </Box>
+        <Typography sx={{ ml: 4, mb: 1 }}>Write at least 150 words.</Typography>
         <Typography sx={{ ml: 4, mb: 1 }}>
-          {" "}
-          Write at least 150 words.
-        </Typography>
-        <Typography sx={{ ml: 4, mb: 1 }}>
-          You do <b>NOT</b> need to write your own address. Begin your letter as
+          You do <b>NOT</b> need to write any addresses. Begin your letter as
           follows:
         </Typography>
         <Typography sx={{ ml: 12, mb: 1, mt: 3 }}>
-          <b>Dear Sir,</b>
+          <b>Dear ...... ,</b>
         </Typography>
       </Box>
 
@@ -114,6 +114,7 @@ const Task1 = ({ answers, setAnswers }) => {
             variant="outlined"
             placeholder="Start writing your letter here..."
             autoComplete="off"
+            spellCheck={false}
             onChange={(e) => handleInputChange(0, e.target.value)}
             value={answers[0]}
             sx={{ backgroundColor: "#fff", height: "50vh" }}

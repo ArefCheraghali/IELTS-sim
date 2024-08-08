@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Task1 from "./Task1";
-import Task2 from "./Task2";
+import Part1 from "./Part1";
+import Part2 from "./Part2";
+import Part3 from "./Part3";
 import {
   Box,
   Button,
@@ -16,8 +17,8 @@ import {
 
 export default function Test() {
   const [currentSection, setCurrentSection] = useState(0);
-  const [answers, setAnswers] = useState(Array(2).fill(""));
-  const [timeLeft, setTimeLeft] = useState(60 * 60);
+  const [answers, setAnswers] = useState(Array(40).fill(""));
+  const [timeLeft, setTimeLeft] = useState(61 * 60);
   const [openDialog, setOpenDialog] = useState(false);
 
   const router = useRouter();
@@ -53,9 +54,9 @@ export default function Test() {
 
   const onSubmit = () => {
     console.log("User Answers:", answersRef.current);
-    localStorage.setItem("writings", JSON.stringify(answersRef.current));
+    localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
     handleCloseDialog();
-    router.push("/testResult");
+    router.push("/tests/test2ge/writing");
   };
 
   const handleNavigation = (direction) => {
@@ -92,17 +93,20 @@ export default function Test() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            Writing Test
+            Reading Test
           </Typography>
           <Typography variant="h6" gutterBottom>
             Time Left: {formatTime(timeLeft)}
           </Typography>
         </Box>
         {currentSection === 0 && (
-          <Task1 answers={answers} setAnswers={setAnswers} />
+          <Part1 answers={answers} setAnswers={setAnswers} />
         )}
         {currentSection === 1 && (
-          <Task2 answers={answers} setAnswers={setAnswers} />
+          <Part2 answers={answers} setAnswers={setAnswers} />
+        )}
+        {currentSection === 2 && (
+          <Part3 answers={answers} setAnswers={setAnswers} />
         )}
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
           <Button
@@ -117,12 +121,12 @@ export default function Test() {
             variant="contained"
             color="primary"
             onClick={() => handleNavigation("next")}
-            disabled={currentSection === 1}
+            disabled={currentSection === 2}
           >
             Next
           </Button>
         </Box>
-        {currentSection === 1 && (
+        {currentSection === 2 && (
           <Button
             onClick={handleOpenDialog}
             variant="contained"

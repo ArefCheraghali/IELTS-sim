@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Part1 from "./Part1";
 import Part2 from "./Part2";
@@ -18,10 +18,11 @@ import {
 export default function Test() {
   const [currentSection, setCurrentSection] = useState(0);
   const [answers, setAnswers] = useState(Array(40).fill(""));
-  const [timeLeft, setTimeLeft] = useState(60 * 60);
+  const [timeLeft, setTimeLeft] = useState(61 * 60);
   const [openDialog, setOpenDialog] = useState(false);
 
   const router = useRouter();
+  const answersRef = useRef(answers);
 
   useEffect(() => {
     let timerInterval;
@@ -42,20 +43,24 @@ export default function Test() {
     };
   }, []);
 
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
     onSubmit();
   };
 
   const onSubmit = () => {
-    console.log("User Answers:", answers);
-    localStorage.setItem("readingAnswers", JSON.stringify(answers));
+    console.log("User Answers:", answersRef.current);
+    localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
     handleCloseDialog();
     router.push("/tests/test2ac/writing");
   };
 
   const handleNavigation = (direction) => {
-    if (direction === "next" && currentSection < 3) {
+    if (direction === "next" && currentSection < 2) {
       setCurrentSection(currentSection + 1);
     } else if (direction === "prev" && currentSection > 0) {
       setCurrentSection(currentSection - 1);

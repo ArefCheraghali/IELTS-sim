@@ -33,8 +33,6 @@ const Section3 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -333,7 +331,6 @@ const Section3 = ({ answers, setAnswers }) => {
           />
           invented writing in
           <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            {" "}
             around 3,300 BC. Their script was written on
             <TextField
               sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
@@ -357,7 +354,6 @@ const Section3 = ({ answers, setAnswers }) => {
             . Their script originally showed images related to political power
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            {" "}
             and business, and later developed to become more
             <TextField
               sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}

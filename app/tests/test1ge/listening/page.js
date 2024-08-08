@@ -17,7 +17,7 @@ import {
   Slider,
 } from "@mui/material";
 
-const listeningAudio = "/audio/listening1.mp3";
+const listeningAudio = "/audio/Listening1.mp3";
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
@@ -30,6 +30,7 @@ export default function Test() {
 
   const router = useRouter();
   const audioRef = useRef(null);
+  const answersRef = useRef(answers);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -80,14 +81,21 @@ export default function Test() {
     setVolume(newValue);
   };
 
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
     onSubmit();
   };
 
   const onSubmit = () => {
-    console.log("User Answers:", answers);
-    localStorage.setItem("listeningAnswers", JSON.stringify(answers));
+    console.log("User Answers:", answersRef.current);
+    localStorage.setItem(
+      "listeningAnswers",
+      JSON.stringify(answersRef.current)
+    );
     handleCloseDialog();
     router.push("/tests/test1ge/reading");
   };
