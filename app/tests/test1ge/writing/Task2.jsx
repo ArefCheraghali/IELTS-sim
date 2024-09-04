@@ -95,6 +95,7 @@ const Task2 = ({ answers, setAnswers }) => {
             placeholder="Start writing your essay here..."
             autoComplete="off"
             onChange={(e) => handleInputChange(1, e.target.value)}
+            spellCheck={false}
             value={answers[1]}
             sx={{ backgroundColor: "#fff", height: "50vh" }}
           />

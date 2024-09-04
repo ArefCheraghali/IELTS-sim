@@ -101,6 +101,7 @@ export default function Test() {
   };
 
   const handleNavigation = (direction) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     if (direction === "next" && currentSection < 3) {
       setCurrentSection(currentSection + 1);
     } else if (direction === "prev" && currentSection > 0) {

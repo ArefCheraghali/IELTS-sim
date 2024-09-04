@@ -1,80 +1,18 @@
-import React, { useState, useRef } from "react";
-import { Box, Typography, Menu, MenuItem } from "@mui/material";
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import useTextHighlight from "app/hooks/useTextHighlight";
+import HighlightContextMenu from "app/components/HighlightContextMenu";
 
 const MakingDocumentaryFilmText = () => {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedRange, setSelectedRange] = useState(null);
-  const [menuPosition, setMenuPosition] = useState({
-    mouseX: null,
-    mouseY: null,
-  });
-  const textRef = useRef(null);
-
-  const handleContextMenu = (event) => {
-    event.preventDefault();
-    const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-
-      if (!isRangeValid(range)) {
-        alert("Please select text only.");
-        return;
-      }
-
-      setSelectedRange(range);
-      setAnchorEl(event.currentTarget);
-      setMenuPosition({
-        mouseX: event.clientX,
-        mouseY: event.clientY,
-      });
-    }
-  };
-
-  const isRangeValid = (range) => {
-    const commonAncestor = range.commonAncestorContainer;
-    return (
-      commonAncestor.nodeType === Node.TEXT_NODE ||
-      commonAncestor.nodeType === Node.ELEMENT_NODE
-    );
-  };
-
-  const handleHighlight = () => {
-    if (selectedRange) {
-      const span = document.createElement("span");
-      span.style.backgroundColor = "yellow";
-
-      try {
-        selectedRange.surroundContents(span);
-      } catch (error) {
-        alert("Please select not highlighted text only!");
-      }
-
-      setSelectedRange(null);
-      setAnchorEl(null);
-      window.getSelection().removeAllRanges();
-    }
-  };
-
-  const handleClearHighlights = () => {
-    const textContainer = textRef.current;
-    if (textContainer) {
-      const highlightedSpans = textContainer.querySelectorAll(
-        "span[style='background-color: yellow;']"
-      );
-      highlightedSpans.forEach((span) => {
-        const parent = span.parentNode;
-        while (span.firstChild) {
-          parent.insertBefore(span.firstChild, span);
-        }
-        parent.removeChild(span);
-        parent.normalize();
-      });
-    }
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const {
+    anchorEl,
+    menuPosition,
+    textRef,
+    handleContextMenu,
+    handleHighlight,
+    handleClearHighlights,
+    handleClose,
+  } = useTextHighlight();
 
   return (
     <Box sx={{ userSelect: "text" }}>
@@ -83,28 +21,13 @@ const MakingDocumentaryFilmText = () => {
         ref={textRef}
         sx={{ userSelect: "text" }}
       >
-        <Menu
+        <HighlightContextMenu
           anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            menuPosition.mouseY !== null && menuPosition.mouseX !== null
-              ? { top: menuPosition.mouseY, left: menuPosition.mouseX }
-              : undefined
-          }
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "left",
-          }}
-        >
-          <MenuItem onClick={handleHighlight}>Highlight</MenuItem>
-          <MenuItem onClick={handleClearHighlights}>Clear Highlights</MenuItem>
-        </Menu>
+          menuPosition={menuPosition}
+          handleClose={handleClose}
+          handleHighlight={handleHighlight}
+          handleClearHighlights={handleClearHighlights}
+        />
         <Typography variant="h6" gutterBottom>
           <b>Making Documentary Films</b>
         </Typography>
