@@ -17,14 +17,14 @@ import {
   Slider,
 } from "@mui/material";
 
-const listeningAudio = "/audio/Listening2.mp3";
+const listeningAudio = "/audio/Listening3.mp3";
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
   const [answers, setAnswers] = useState(Array(40).fill(""));
-  const [timeLeft, setTimeLeft] = useState(28 * 60);
+  const [timeLeft, setTimeLeft] = useState(33 * 60);
   const [openDialog, setOpenDialog] = useState(false);
   const [volume, setVolume] = useState(1);
 
@@ -49,7 +49,7 @@ export default function Test() {
 
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
-      }, 28000); //27
+      }, 27000); //27
 
       timerInterval = setInterval(() => {
         setTimeLeft((prevTime) => {

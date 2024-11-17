@@ -107,7 +107,9 @@ const DragDrop = ({
               position: "relative",
             }}
           >
-            <Typography sx={{ mr: 2 }}>{question.text}</Typography>
+            <Typography sx={{ mr: 2, fontSize: "0.9rem" }}>
+              {question.text}
+            </Typography>
 
             <span style={{ color: "#1976d2" }}>
               {question.answerId
