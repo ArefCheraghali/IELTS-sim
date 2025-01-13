@@ -63,7 +63,7 @@ export default function Section3({ answers, setAnswers }) {
           component="img"
           sx={{
             width: "40%",
-            height: "25vh",
+            height: "30vh",
             maxWidth: "60rem",
             mt: 5,
           }}
@@ -258,6 +258,7 @@ export default function Section3({ answers, setAnswers }) {
             gap: 2,
             pl: "3rem",
             width: "100%",
+            fontSize: "19px",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>

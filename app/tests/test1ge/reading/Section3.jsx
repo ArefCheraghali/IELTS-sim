@@ -135,9 +135,9 @@ const Section3 = ({ answers, setAnswers }) => {
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
           During the sixties and seventies, attaining huge muscles became more
-          important than
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
+          important than
           <TextField
             sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
             label="36"
@@ -146,15 +146,16 @@ const Section3 = ({ answers, setAnswers }) => {
             onChange={(e) => handleInputChange(35, e.target.value)}
             value={answers[35]}
           />
-          or having an attractive-looking body. The first people to take up this
-          new
+          or having an attractive-looking body.
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          sport of body building had a background in calisthenics but the most
-          famous practitioners became
+          The first people to take up this new sport of body building had a
+          background
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-          known as
+          in calisthenics but the most famous practitioners became known as
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
           <TextField
             sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
             label="37"
@@ -163,18 +164,18 @@ const Section3 = ({ answers, setAnswers }) => {
             onChange={(e) => handleInputChange(36, e.target.value)}
             value={answers[36]}
           />
-          on account of the impressive size of their muscles. Drugs and
+          on account of the impressive size of their muscles.
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          mechanical devices were used to develop individual muscles to a
-          monstrous size.
+          Drugs and mechanical devices were used to develop individual muscles
+          to
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          Calisthenics then became the domain of ‘weaker’ people: females,
-          children and those recovering
+          a monstrous size. Calisthenics then became the domain of ‘weaker’
+          people:
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-          from
+          females, children and those recovering from
           <TextField
             sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
             label="38"
@@ -183,16 +184,20 @@ const Section3 = ({ answers, setAnswers }) => {
             onChange={(e) => handleInputChange(37, e.target.value)}
             value={answers[37]}
           />
-          . Much of the advanced knowledge about calisthenics was lost
+          . Much
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          and the method was subsequently downgraded to the status of a simple,
-          userfriendly activity.
+          of the advanced knowledge about calisthenics was lost and the method
+          was
+        </Typography>
+        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
+          subsequently downgraded to the status of a simple, userfriendly
+          activity.
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
           Once a person became skilled at this, he would progress to
           <TextField
-            sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+            sx={{ mt: -3, ml: 1, width: "7em" }}
             label="39"
             variant="standard"
             autoComplete="off"
@@ -203,18 +208,19 @@ const Section3 = ({ answers, setAnswers }) => {
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
           Currently a revival of calisthenics is under way as extreme muscle
-          building can harm the
+          building
         </Typography>
         <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-          body leaving it sore, out of balance, and in poor
+          can harm the body leaving it sore, out of balance, and in poor
           <TextField
-            sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+            sx={{ mt: -3, ml: 1, width: "6em" }}
             label="40"
             variant="standard"
             autoComplete="off"
             onChange={(e) => handleInputChange(39, e.target.value)}
             value={answers[39]}
           />
+          .
         </Typography>
       </Box>
     </Box>
