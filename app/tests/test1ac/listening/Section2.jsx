@@ -69,11 +69,11 @@ export default function Section2({ answers, setAnswers }) {
           <Box
             component="img"
             sx={{
-              width: "80%",
+              width: "100%",
               maxWidth: "60rem",
               mt: 20,
             }}
-            alt="Map"
+            alt="Answers"
             src={answerImage}
           />
         </Box>
@@ -127,46 +127,53 @@ export default function Section2({ answers, setAnswers }) {
             gap: 2,
             pl: "3rem",
             width: "100%",
+            fontSize: "18px",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>18 </Typography>
-            To show you are an official visitor, you have to wear the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="18"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(17, e.target.value)}
-              value={answers[17]}
-            />
-            provided.
+            <Typography>
+              <b>18 - </b> To show you are an official visitor, you have to wear
+              the
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="18"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(17, e.target.value)}
+                value={answers[17]}
+              />
+              provided.
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>19 </Typography>
-            Cars blocing paths could prevent access by
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="19"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(18, e.target.value)}
-              value={answers[18]}
-            />
-            in an emergency.
+            <Typography>
+              <b>19 - </b>
+              Cars blocing paths could prevent access by
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="19"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(18, e.target.value)}
+                value={answers[18]}
+              />
+              in an emergency.
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>20 </Typography>
-            To reclaim items from storage, you must show your
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="20"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(19, e.target.value)}
-              value={answers[19]}
-            />
-            .
+            <Typography>
+              <b>20 - </b>
+              To reclaim items from storage, you must show your
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="20"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(19, e.target.value)}
+                value={answers[19]}
+              />
+              .
+            </Typography>
           </ListItem>
         </List>
       </Box>

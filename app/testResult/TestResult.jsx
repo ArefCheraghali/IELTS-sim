@@ -91,8 +91,22 @@ const TestResults = () => {
           <Typography sx={{ mb: 1 }}>Writing task 1:</Typography>
           <Typography>{writingAnswers[0]}</Typography>
         </Paper>
+        <Box
+          sx={{
+            mt: 3,
+            padding: 2,
+            bgcolor: "lightgray",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}
+        >
+          <Typography>TR:</Typography>
+          <Typography>CC:</Typography>
+          <Typography>LR:</Typography>
+          <Typography>GRA:</Typography>
+        </Box>
         <Typography sx={{ mt: 2, padding: 2 }}>Total:</Typography>
-        <Typography sx={{ mt: 2, padding: 2 }}>Score:</Typography>
         <Divider
           variant="middle"
           sx={{
@@ -111,8 +125,22 @@ const TestResults = () => {
           <Typography sx={{ mb: 1 }}>Writing task 2:</Typography>
           <Typography>{writingAnswers[1]}</Typography>
         </Paper>
+        <Box
+          sx={{
+            mt: 3,
+            padding: 2,
+            bgcolor: "lightgray",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}
+        >
+          <Typography>TR:</Typography>
+          <Typography>CC:</Typography>
+          <Typography>LR:</Typography>
+          <Typography>GRA:</Typography>
+        </Box>
         <Typography sx={{ mt: 2, padding: 2 }}>Total:</Typography>
-        <Typography sx={{ mt: 2, padding: 2 }}>Score:</Typography>
       </Box>
       <Button
         variant="contained"

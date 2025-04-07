@@ -21,8 +21,6 @@ const Task1 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -115,6 +113,7 @@ const Task1 = ({ answers, setAnswers }) => {
             placeholder="Start writing your essay here..."
             autoComplete="off"
             onChange={(e) => handleInputChange(0, e.target.value)}
+            spellCheck={false}
             value={answers[0]}
             sx={{ backgroundColor: "#fff", height: "50vh" }}
           />

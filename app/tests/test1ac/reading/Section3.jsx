@@ -12,11 +12,11 @@ import {
   Typography,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
 } from "@mui/material";
 import WritingText from "./text/WritingText";
 
 const image3 = "/images/test1/readingAc1-passage3-3.jpg";
+const image4 = "/images/test1/readingAc1-passage3-5.jpg";
 
 const Section3 = ({ answers, setAnswers }) => {
   const possibleAnswers = ["A", "B", "C", "D", "E"];
@@ -33,8 +33,6 @@ const Section3 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -81,19 +79,21 @@ const Section3 = ({ answers, setAnswers }) => {
           }}
         >
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
                 <Typography>
-                  <b style={{ marginRight: "2em" }}>27</b> The researchers at
-                  the symposium regarded the story of the King of Uruk as
-                  ridiculous because
+                  <b style={{ marginRight: "2em" }}>27</b>
+                </Typography>
+                <Typography>
+                  The researchers at the symposium regarded the story of the
+                  King of Uruk as ridiculous because
                 </Typography>
               </AccordionSummary>
               <RadioGroup
-                sx={{ ml: "5em" }}
+                sx={{ ml: "1em" }}
                 value={answers[26] || ""}
                 onChange={(e) => handleInputChange(26, e.target.value)}
               >
@@ -122,7 +122,7 @@ const Section3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -133,7 +133,7 @@ const Section3 = ({ answers, setAnswers }) => {
                 </Typography>
               </AccordionSummary>
               <RadioGroup
-                sx={{ ml: "5em" }}
+                sx={{ ml: "1em" }}
                 value={answers[27] || ""}
                 onChange={(e) => handleInputChange(27, e.target.value)}
               >
@@ -162,18 +162,21 @@ const Section3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
                 <Typography>
-                  <b style={{ marginRight: "2em" }}>29</b> There was
-                  disagreement among the researchers at the symposium about
+                  <b style={{ marginRight: "2em" }}>29</b>
+                </Typography>
+                <Typography>
+                  There was disagreement among the researchers at the symposium
+                  about
                 </Typography>
               </AccordionSummary>
               <RadioGroup
-                sx={{ ml: "5em" }}
+                sx={{ ml: "1em" }}
                 value={answers[28] || ""}
                 onChange={(e) => handleInputChange(28, e.target.value)}
               >
@@ -202,18 +205,21 @@ const Section3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ minWidth: "45.5em", bgcolor: "lightgray" }}>
+            <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
                 <Typography>
-                  <b style={{ marginRight: "2em" }}>30</b> The opponents of the
-                  theory that writing developed from tokens believe that it
+                  <b style={{ marginRight: "2em" }}>30</b>
+                </Typography>
+                <Typography>
+                  The opponents of the theory that writing developed from tokens
+                  believe that it
                 </Typography>
               </AccordionSummary>
               <RadioGroup
-                sx={{ ml: "5em" }}
+                sx={{ ml: "1em" }}
                 value={answers[29] || ""}
                 onChange={(e) => handleInputChange(29, e.target.value)}
               >
@@ -288,15 +294,15 @@ const Section3 = ({ answers, setAnswers }) => {
           <img
             src={image3}
             alt="Reading Passage Part 1"
-            style={{ width: "40%" }}
+            style={{ width: "50%" }}
           />
         </Box>
         <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
           {Array.from({ length: 6 }).map((_, index) => (
-            <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
+            <FormControl sx={{ mt: 2, margin: "3px" }} key={index}>
               <InputLabel>{`${31 + index}`}</InputLabel>
               <Select
-                sx={{ width: "5em" }}
+                sx={{ width: "6em" }}
                 value={answers[30 + index] || ""}
                 onChange={(e) => handleInputChange(30 + index, e.target.value)}
                 label={`${31 + index}`}
@@ -318,25 +324,27 @@ const Section3 = ({ answers, setAnswers }) => {
         <Typography sx={{ ml: 2, mb: 1 }}>
           Write the correct letter <b>A-N</b> in boxes 37-40.
         </Typography>
-        <Typography sx={{ fontSize: "1.1em", ml: 30, mt: 1 }}>
+        <Typography sx={{ fontSize: "1.1em", ml: 20, mt: 1 }}>
           <b>The earliest form of writing</b>
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-          Most archeological evidence shows that the people of
-          <TextField
-            sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-            label="37"
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(36, e.target.value)}
-            value={answers[36]}
-          />
-          invented writing in
+        <Box sx={{ textAlign: "left" }}>
           <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            {" "}
-            around 3,300 BC. Their script was written on
+            Most archeological evidence shows that the people of
             <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+              sx={{ mt: -2.5, ml: 1, mr: 1, width: "9em" }}
+              label="37"
+              variant="standard"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(36, e.target.value)}
+              value={answers[36]}
+            />
+          </Typography>
+          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
+            invented writing in around 3,300 BC. Their script was written on
+          </Typography>
+          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
+            <TextField
+              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
               label="38"
               variant="standard"
               autoComplete="off"
@@ -344,23 +352,24 @@ const Section3 = ({ answers, setAnswers }) => {
               value={answers[37]}
             />
             and was called
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
             <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
               label="39"
               variant="standard"
               autoComplete="off"
               onChange={(e) => handleInputChange(38, e.target.value)}
               value={answers[38]}
-            />
-            . Their script originally showed images related to political power
+            />{" "}
+            .
           </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            {" "}
-            and business, and later developed to become more
+          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
+            Their script originally showed images related to political power and
+            business,
+          </Typography>
+          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
+            and later developed to become more
             <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
               label="40"
               variant="standard"
               autoComplete="off"
@@ -369,7 +378,19 @@ const Section3 = ({ answers, setAnswers }) => {
             />
             .
           </Typography>
-        </Typography>
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            mt: 2,
+          }}
+        >
+          <img
+            src={image4}
+            alt="Reading Passage Part 3"
+            style={{ width: "100%" }}
+          />
+        </Box>
       </Box>
     </Box>
   );

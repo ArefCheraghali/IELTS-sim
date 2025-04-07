@@ -43,8 +43,6 @@ const Section2 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -105,7 +103,7 @@ const Section2 = ({ answers, setAnswers }) => {
             <img
               src={image1}
               alt="Reading Passage Part 1"
-              style={{ width: "80%", ml: 5 }}
+              style={{ width: "100%", ml: 5 }}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
@@ -227,12 +225,12 @@ const Section2 = ({ answers, setAnswers }) => {
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            pl: "3rem",
+            pl: "1rem",
             width: "90%",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>
+            <Typography sx={{ marginRight: "1rem" }}>
               <b>24</b>{" "}
             </Typography>
             <Typography sx={{ ml: 2 }}>
@@ -241,7 +239,7 @@ const Section2 = ({ answers, setAnswers }) => {
             </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>
+            <Typography sx={{ marginRight: "1rem" }}>
               <b>25</b>{" "}
             </Typography>
             <Typography sx={{ ml: 2, mb: 1 }}>
@@ -251,7 +249,7 @@ const Section2 = ({ answers, setAnswers }) => {
             </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>
+            <Typography sx={{ marginRight: "1rem" }}>
               <b>26</b>{" "}
             </Typography>
             <Typography sx={{ ml: 2, mb: 1 }}>
@@ -260,7 +258,7 @@ const Section2 = ({ answers, setAnswers }) => {
             </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>
+            <Typography sx={{ marginRight: "1rem" }}>
               <b>27</b>{" "}
             </Typography>
             <Typography sx={{ ml: 2, mb: 1 }}>
@@ -269,7 +267,7 @@ const Section2 = ({ answers, setAnswers }) => {
             </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>
+            <Typography sx={{ marginRight: "1rem" }}>
               <b>28</b>{" "}
             </Typography>
             <Typography sx={{ ml: 2, mb: 1 }}>
@@ -286,7 +284,7 @@ const Section2 = ({ answers, setAnswers }) => {
           <img
             src={image2}
             alt="Reading Passage Part 1"
-            style={{ width: "30%" }}
+            style={{ width: "40%" }}
           />
         </Box>
         <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
