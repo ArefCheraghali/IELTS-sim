@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { VolumeContext } from "../../../layout";
-import Section1 from "./Section1";
-import Section2 from "./Section2";
-import Section3 from "./Section3";
-import Section4 from "./Section4";
+import Part1 from "./Part1";
+import Part2 from "./Part2";
+import Part3 from "./Part3";
+import Part4 from "./Part4";
 import {
   Box,
   Button,
@@ -18,21 +17,27 @@ import {
 } from "@mui/material";
 import useTextHighlight from "app/hooks/useTextHighlight";
 import HighlightContextMenu from "app/components/HighlightContextMenu";
+import ExamLayout from "../../../components/ExamLayout";
+import { useVolume } from "../../../contexts/VolumeContext";
+import { useTimer } from "../../../contexts/TimerContext";
+import { TEST_DURATIONS } from "../../../config/testDurations";
 
 const listeningAudio = "/audio/Listening1.mp3";
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ac.listening;
+const QUESTIONS_DELAY_MS = 27000; // Time before showing questions (27 seconds)
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
   const [answers, setAnswers] = useState(Array(40).fill(""));
-  const [timeLeft, setTimeLeft] = useState(27 * 60); // 27 minutes in seconds
   const [openDialog, setOpenDialog] = useState(false);
 
   const router = useRouter();
   const audioRef = useRef(null);
   const answersRef = useRef(answers);
-  const volume = useContext(VolumeContext);
+  const { volume } = useVolume();
+  const { timeLeft, startTimer } = useTimer();
 
   const {
     anchorEl,
@@ -44,60 +49,88 @@ export default function Test() {
     handleClose,
   } = useTextHighlight();
 
+  // Initialize audio
   useEffect(() => {
     if (typeof window !== "undefined") {
       audioRef.current = new Audio(listeningAudio);
+      if (audioRef.current) {
+        audioRef.current.volume = volume;
+      }
     }
-  }, []);
 
-  useEffect(() => {
-    let audioTimeout;
-    let timerInterval;
-
-    if (isReady && audioRef.current) {
-      const audio = audioRef.current;
-      audio.play();
-
-      audioTimeout = setTimeout(() => {
-        setShowQuestions(true);
-      }, 27000);
-
-      timerInterval = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(timerInterval);
-            handleAutoSubmit();
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
+    // Cleanup function to stop and remove audio when component unmounts
     return () => {
-      clearTimeout(audioTimeout);
-      clearInterval(timerInterval);
       if (audioRef.current) {
         audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
       }
     };
-  }, [isReady]);
+  }, []); // Initialize audio only once
 
+  // Handle volume changes
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = volume;
     }
   }, [volume]);
 
+  // Handle test start
+  const handleStart = () => {
+    setIsReady(true);
+    startTimer(TEST_DURATION_MINUTES);
+
+    // Play audio
+    if (audioRef.current) {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.error("Audio playback failed:", error);
+        });
+      }
+    }
+
+    // Show questions after intro
+    setTimeout(() => {
+      setShowQuestions(true);
+    }, QUESTIONS_DELAY_MS);
+  };
+
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
 
+  // Auto-submit when time is up
+  useEffect(() => {
+    let autoSubmitTimeout;
+    if (timeLeft === 0 && isReady) {
+      // Add a small delay to ensure state updates are complete
+      autoSubmitTimeout = setTimeout(() => {
+        handleAutoSubmit();
+      }, 100);
+    }
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft, isReady]);
+
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
+    // Stop audio if it's still playing
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
     onSubmit();
   };
 
   const onSubmit = () => {
+    if (!isReady) return; // Don't submit if test hasn't started
+
+    // Stop audio before saving answers and navigating
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+
     console.log("User Answers:", answersRef.current);
     localStorage.setItem(
       "listeningAnswers",
@@ -108,18 +141,15 @@ export default function Test() {
   };
 
   const handleNavigation = (direction) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
     if (direction === "next" && currentSection < 3) {
-      setCurrentSection(currentSection + 1);
+      setCurrentSection(currentSection + 1, () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
     } else if (direction === "prev" && currentSection > 0) {
-      setCurrentSection(currentSection - 1);
+      setCurrentSection(currentSection - 1, () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
     }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   const handleOpenDialog = () => {
@@ -131,116 +161,83 @@ export default function Test() {
   };
 
   return (
-    <Box sx={{ textAlign: "center", mt: 4, userSelect: "text" }}>
-      <Box
-        onContextMenu={handleContextMenu}
-        ref={textRef}
-        sx={{ userSelect: "text" }}
-      >
-        <HighlightContextMenu
-          anchorEl={anchorEl}
-          menuPosition={menuPosition}
-          handleClose={handleClose}
-          handleHighlight={handleHighlight}
-          handleClearHighlights={handleClearHighlights}
-        />
-        {!showQuestions ? (
-          <Typography variant="h4" gutterBottom>
-            Listening Test
-          </Typography>
-        ) : null}
-        {!isReady && (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setIsReady(true)}
-          >
-            I'm Ready
-          </Button>
-        )}
-        {isReady && !showQuestions && (
-          <Typography variant="h6" sx={{ mt: 4 }}>
-            Audio Started...
-          </Typography>
-        )}
-        {isReady && showQuestions && (
-          <Box
-            sx={{
-              mt: 4,
-            }}
-          >
-            <Typography
-              variant="h6"
-              gutterBottom
-              sx={{
-                color: timeLeft <= 120 ? "red" : "inherit",
-                fontWeight: timeLeft <= 120 ? "bold" : "normal",
-              }}
-            >
-              Time Left: {formatTime(timeLeft)}
+    <ExamLayout sectionName="Listening" onSubmit={() => setOpenDialog(true)}>
+      <Box sx={{ height: "100%", overflow: "hidden" }}>
+        <Box
+          onContextMenu={handleContextMenu}
+          ref={textRef}
+          sx={{ userSelect: "text" }}
+        >
+          <HighlightContextMenu
+            anchorEl={anchorEl}
+            menuPosition={menuPosition}
+            handleClose={handleClose}
+            handleHighlight={handleHighlight}
+            handleClearHighlights={handleClearHighlights}
+          />
+          {!showQuestions ? (
+            <Typography variant="h4" gutterBottom>
+              Listening Test
             </Typography>
-            {currentSection === 0 && (
-              <Section1 answers={answers} setAnswers={setAnswers} />
-            )}
-            {currentSection === 1 && (
-              <Section2 answers={answers} setAnswers={setAnswers} />
-            )}
-            {currentSection === 2 && (
-              <Section3 answers={answers} setAnswers={setAnswers} />
-            )}
-            {currentSection === 3 && (
-              <Section4 answers={answers} setAnswers={setAnswers} />
-            )}
-            <Box
-              sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}
-            >
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => handleNavigation("prev")}
-                disabled={currentSection === 0}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleNavigation("next")}
-                disabled={currentSection === 3}
-              >
-                Next
-              </Button>
+          ) : null}
+          {!isReady && (
+            <Button variant="contained" color="primary" onClick={handleStart}>
+              I'm Ready
+            </Button>
+          )}
+          {isReady && !showQuestions && (
+            <Typography variant="h6" sx={{ mt: 4 }}>
+              Audio Started...
+            </Typography>
+          )}
+          {isReady && showQuestions && (
+            <Box sx={{ mt: 4, pb: 8 }}>
+              {currentSection === 0 && (
+                <Part1 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+              )}
+              {currentSection === 1 && (
+                <Part2 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+              )}
+              {currentSection === 2 && (
+                <Part3 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+              )}
+              {currentSection === 3 && (
+                <Part4 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+              )}
+              <TestBottomNavigation
+                currentSection={currentSection}
+                setCurrentSection={setCurrentSection}
+                currentQuestion={currentQuestion}
+                setCurrentQuestion={setCurrentQuestion}
+                sections={["Part 1", "Part 2", "Part 3", "Part 4"]}
+                questionRanges={[
+                  { start: 1, end: 10 },
+                  { start: 11, end: 20 },
+                  { start: 21, end: 30 },
+                  { start: 31, end: 40 },
+                ]}
+              />
             </Box>
-            {currentSection === 3 && (
-              <Button
-                onClick={handleOpenDialog}
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-              >
+          )}
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>{"Submit Answers?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to submit your answers? You will not be
+                able to change them after submission.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={onSubmit} color="primary">
                 Submit
               </Button>
-            )}
-          </Box>
-        )}
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>{"Submit Answers?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to submit your answers? You will not be able
-              to change them after submission.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="secondary">
-              Cancel
-            </Button>
-            <Button onClick={onSubmit} color="primary">
-              Submit
-            </Button>
-          </DialogActions>
-        </Dialog>
+            </DialogActions>
+          </Dialog>
+        </Box>
       </Box>
-    </Box>
+    </ExamLayout>
   );
 }

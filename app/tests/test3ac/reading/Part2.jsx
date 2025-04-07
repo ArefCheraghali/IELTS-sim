@@ -45,8 +45,16 @@ const initialAnswers = [
   { id: "E", text: "E) Jake Gottlieb" },
 ];
 
-const Part2 = ({ answers, setAnswers }) => {
+const Part2 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = ["A", "B", "C", "D", "E"];
+  const questionRefs = React.useRef(Array(13).fill(null));
+
+  React.useEffect(() => {
+    if (currentQuestion >= 14 && currentQuestion <= 26) {
+      const index = currentQuestion - 14;
+      questionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [currentQuestion]);
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -114,7 +122,7 @@ const Part2 = ({ answers, setAnswers }) => {
             width: "90%",
           }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem ref={(el) => (questionRefs.current[0] = el)} sx={{ display: "flex", flexDirection: "row" }}>
             <Typography sx={{ marginRight: "3rem" }}>
               <b>14</b>
             </Typography>
@@ -122,7 +130,7 @@ const Part2 = ({ answers, setAnswers }) => {
               the claim that it is very hard for people to pretend to laugh
             </Typography>
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem ref={(el) => (questionRefs.current[1] = el)} sx={{ display: "flex", flexDirection: "row" }}>
             <Typography sx={{ marginRight: "3rem" }}>
               <b>15</b>
             </Typography>
@@ -131,7 +139,7 @@ const Part2 = ({ answers, setAnswers }) => {
               they laugh
             </Typography>
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem ref={(el) => (questionRefs.current[2] = el)} sx={{ display: "flex", flexDirection: "row" }}>
             <Typography sx={{ marginRight: "3rem" }}>
               <b>16</b>
             </Typography>
@@ -139,7 +147,7 @@ const Part2 = ({ answers, setAnswers }) => {
               the reason why people can sometimes stop themselves laughing
             </Typography>
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem ref={(el) => (questionRefs.current[3] = el)} sx={{ display: "flex", flexDirection: "row" }}>
             <Typography sx={{ marginRight: "3rem" }}>
               <b>17</b>
             </Typography>
@@ -148,7 +156,7 @@ const Part2 = ({ answers, setAnswers }) => {
               laughing
             </Typography>
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem ref={(el) => (questionRefs.current[4] = el)} sx={{ display: "flex", flexDirection: "row" }}>
             <Typography sx={{ marginRight: "3rem" }}>
               <b>18</b>
             </Typography>
@@ -191,6 +199,8 @@ const Part2 = ({ answers, setAnswers }) => {
           answers={answers}
           title=""
           infoTitle="List of People"
+          questionRefs={questionRefs}
+          startIndex={5}
         />
         <Typography sx={{ ml: 2, mb: 1 }}>Questions 23 - 26</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
@@ -216,6 +226,7 @@ const Part2 = ({ answers, setAnswers }) => {
               autoComplete="off"
               onChange={(e) => handleInputChange(22, e.target.value)}
               value={answers[22]}
+              ref={(el) => (questionRefs.current[9] = el)}
             />
             does not change shape.
           </Typography>
@@ -228,6 +239,7 @@ const Part2 = ({ answers, setAnswers }) => {
               autoComplete="off"
               onChange={(e) => handleInputChange(23, e.target.value)}
               value={answers[23]}
+              ref={(el) => (questionRefs.current[10] = el)}
             />
             that was produced in ancient Rome contains early examples of
             attempts to be funny.
@@ -245,6 +257,7 @@ const Part2 = ({ answers, setAnswers }) => {
               autoComplete="off"
               onChange={(e) => handleInputChange(24, e.target.value)}
               value={answers[24]}
+              ref={(el) => (questionRefs.current[11] = el)}
             />
             in Tanzania.
           </Typography>
@@ -257,6 +270,7 @@ const Part2 = ({ answers, setAnswers }) => {
               autoComplete="off"
               onChange={(e) => handleInputChange(25, e.target.value)}
               value={answers[25]}
+              ref={(el) => (questionRefs.current[12] = el)}
             />
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>

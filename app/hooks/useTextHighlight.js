@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const useTextHighlight = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -9,11 +9,18 @@ const useTextHighlight = () => {
   });
   const textRef = useRef(null);
 
-  const handleContextMenu = (event) => {
-    event.preventDefault();
+  const handleTextSelection = (event) => {
     const selection = window.getSelection();
-    if (selection.rangeCount > 0) {
+    if (selection.rangeCount > 0 && !selection.isCollapsed) {
       const range = selection.getRangeAt(0);
+      const selectedText = range.toString().trim();
+
+      // Only show menu if selected text is longer than 1 character
+      if (selectedText.length <= 1) {
+        return;
+      }
+
+      const rect = range.getBoundingClientRect();
 
       if (!isRangeValid(range)) {
         alert("Please select text only.");
@@ -21,13 +28,42 @@ const useTextHighlight = () => {
       }
 
       setSelectedRange(range);
-      setAnchorEl(event.currentTarget);
+      setAnchorEl(textRef.current);
+      
+      // Position menu at mouse position for right-click, otherwise at the bottom of selection
+      const menuX = event?.type === 'contextmenu' ? event.clientX : rect.left + rect.width / 2;
+      const menuY = event?.type === 'contextmenu' ? event.clientY : rect.bottom + 10;
+      
       setMenuPosition({
-        mouseX: event.clientX,
-        mouseY: event.clientY,
+        mouseX: menuX,
+        mouseY: menuY,
       });
+    } else {
+      setAnchorEl(null);
     }
   };
+
+  // Add event listeners for text selection
+  useEffect(() => {
+    const handleMouseUp = (event) => {
+      if (event.button === 0) { // Left mouse button
+        handleTextSelection();
+      }
+    };
+
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+      handleTextSelection(event);
+    };
+
+    document.addEventListener("mouseup", handleMouseUp);
+    textRef.current?.addEventListener("contextmenu", handleContextMenu);
+
+    return () => {
+      document.removeEventListener("mouseup", handleMouseUp);
+      textRef.current?.removeEventListener("contextmenu", handleContextMenu);
+    };
+  }, []);
 
   const isRangeValid = (range) => {
     const commonAncestor = range.commonAncestorContainer;
@@ -79,7 +115,7 @@ const useTextHighlight = () => {
     anchorEl,
     menuPosition,
     textRef,
-    handleContextMenu,
+
     handleHighlight,
     handleClearHighlights,
     handleClose,

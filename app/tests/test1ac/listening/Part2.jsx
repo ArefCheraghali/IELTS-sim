@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -13,7 +13,19 @@ import {
 const mapImage = "/images/test1/listening1-section2.jpg";
 const answerImage = "/images/test1/listening1-section2-2.jpg";
 
-export default function Section2({ answers, setAnswers }) {
+export default function Part2({ answers, setAnswers, currentQuestion }) {
+  // Create refs for each text field
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    // Focus on the text field corresponding to the current question
+    if (currentQuestion >= 11 && currentQuestion <= 20) {
+      const index = currentQuestion - 11;
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].focus();
+      }
+    }
+  }, [currentQuestion]);
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 
   const handleInputChange = (index, value) => {
@@ -93,6 +105,7 @@ export default function Section2({ answers, setAnswers }) {
             <Select
               sx={{ width: "5em" }}
               value={answers[10 + index] || ""}
+              inputRef={(el) => (inputRefs.current[index] = el)}
               onChange={(e) => handleInputChange(10 + index, e.target.value)}
               label={`${11 + index}`}
             >
@@ -127,46 +140,53 @@ export default function Section2({ answers, setAnswers }) {
             gap: 2,
             pl: "3rem",
             width: "100%",
+            fontSize: "18px",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>18 </Typography>
-            To show you are an official visitor, you have to wear the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="18"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(17, e.target.value)}
-              value={answers[17]}
-            />
-            provided.
+            <Typography>
+              <b>18 - </b> To show you are an official visitor, you have to wear
+              the
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="18"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(17, e.target.value)}
+                value={answers[17]}
+              />
+              provided.
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>19 </Typography>
-            Cars blocing paths could prevent access by
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="19"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(18, e.target.value)}
-              value={answers[18]}
-            />
-            in an emergency.
+            <Typography>
+              <b>19 - </b>
+              Cars blocing paths could prevent access by
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="19"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(18, e.target.value)}
+                value={answers[18]}
+              />
+              in an emergency.
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>20 </Typography>
-            To reclaim items from storage, you must show your
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="20"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(19, e.target.value)}
-              value={answers[19]}
-            />
-            .
+            <Typography>
+              <b>20 - </b>
+              To reclaim items from storage, you must show your
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="20"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(19, e.target.value)}
+                value={answers[19]}
+              />
+              .
+            </Typography>
           </ListItem>
         </List>
       </Box>

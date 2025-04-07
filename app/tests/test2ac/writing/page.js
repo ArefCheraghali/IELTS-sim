@@ -1,8 +1,6 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Task1 from "./Task1";
-import Task2 from "./Task2";
 import {
   Box,
   Button,
@@ -13,63 +11,42 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import Task1 from "./Task1";
+import Task2 from "./Task2";
+import ExamLayout from "../../../components/ExamLayout";
+import { useExam } from "../../../contexts/ExamContext";
 
 export default function Test() {
-  const [currentSection, setCurrentSection] = useState(0);
+  const [currentTask, setCurrentTask] = useState(0);
   const [answers, setAnswers] = useState(Array(2).fill(""));
-  const [timeLeft, setTimeLeft] = useState(61 * 60);
   const [openDialog, setOpenDialog] = useState(false);
-
-  const router = useRouter();
   const answersRef = useRef(answers);
+  const router = useRouter();
+  const { startTimer, timeLeft } = useExam();
 
   useEffect(() => {
-    let timerInterval;
-
-    timerInterval = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timerInterval);
-          handleAutoSubmit();
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, []);
+    // Start 60-minute timer when component mounts
+    startTimer(60);
+  }, [startTimer]);
 
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
 
-  const handleAutoSubmit = () => {
-    console.log("Time is up! Test submitted automatically.");
-    onSubmit();
-  };
-
-  const onSubmit = () => {
-    console.log("User Answers:", answersRef.current);
-    localStorage.setItem("writings", JSON.stringify(answersRef.current));
-    handleCloseDialog();
-    router.push("/testResult");
-  };
+  // Auto-submit when time is up
+  useEffect(() => {
+    if (timeLeft === 0) {
+      onSubmit();
+    }
+  }, [timeLeft]);
 
   const handleNavigation = (direction) => {
-    if (direction === "next" && currentSection < 2) {
-      setCurrentSection(currentSection + 1);
-    } else if (direction === "prev" && currentSection > 0) {
-      setCurrentSection(currentSection - 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (direction === "next" && currentTask < 1) {
+      setCurrentTask(currentTask + 1);
+    } else if (direction === "prev" && currentTask > 0) {
+      setCurrentTask(currentTask - 1);
     }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   const handleOpenDialog = () => {
@@ -80,28 +57,19 @@ export default function Test() {
     setOpenDialog(false);
   };
 
-  return (
+  const onSubmit = () => {
+    localStorage.setItem("writingAnswers", JSON.stringify(answersRef.current));
+    handleCloseDialog();
+    router.push("/tests"); // Return to test selection
+  };
+
+  const content = (
     <Box sx={{ textAlign: "center", mt: 4 }}>
       <Box sx={{ mt: 4 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            Writing Test
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            Time Left: {formatTime(timeLeft)}
-          </Typography>
-        </Box>
-        {currentSection === 0 && (
+        {currentTask === 0 && (
           <Task1 answers={answers} setAnswers={setAnswers} />
         )}
-        {currentSection === 1 && (
+        {currentTask === 1 && (
           <Task2 answers={answers} setAnswers={setAnswers} />
         )}
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
@@ -109,7 +77,7 @@ export default function Test() {
             variant="contained"
             color="secondary"
             onClick={() => handleNavigation("prev")}
-            disabled={currentSection === 0}
+            disabled={currentTask === 0}
           >
             Previous
           </Button>
@@ -117,12 +85,12 @@ export default function Test() {
             variant="contained"
             color="primary"
             onClick={() => handleNavigation("next")}
-            disabled={currentSection === 1}
+            disabled={currentTask === 1}
           >
             Next
           </Button>
         </Box>
-        {currentSection === 1 && (
+        {currentTask === 1 && (
           <Button
             onClick={handleOpenDialog}
             variant="contained"
@@ -152,4 +120,6 @@ export default function Test() {
       </Dialog>
     </Box>
   );
+
+  return <ExamLayout sectionName="Writing Test">{content}</ExamLayout>;
 }

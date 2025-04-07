@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -15,7 +15,19 @@ import {
 } from "@mui/material";
 const answerImage = "/images/test1/listening1-section3-1.jpg";
 
-export default function Section3({ answers, setAnswers }) {
+export default function Part3({ answers, setAnswers, currentQuestion }) {
+  // Create refs for each text field
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    // Focus on the text field corresponding to the current question
+    if (currentQuestion >= 21 && currentQuestion <= 30) {
+      const index = currentQuestion - 21;
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].focus();
+      }
+    }
+  }, [currentQuestion]);
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G"];
 
   const handleInputChange = (index, value) => {
@@ -62,7 +74,7 @@ export default function Section3({ answers, setAnswers }) {
         <Box
           component="img"
           sx={{
-            width: "35%",
+            width: "40%",
             height: "30vh",
             maxWidth: "60rem",
             mt: 5,
@@ -85,7 +97,8 @@ export default function Section3({ answers, setAnswers }) {
               <Select
                 sx={{ width: "5em" }}
                 value={answers[20 + index] || ""}
-                onChange={(e) => handleInputChange(20 + index, e.target.value)}
+                inputRef={(el) => (inputRefs.current[index] = el)}
+              onChange={(e) => handleInputChange(20 + index, e.target.value)}
                 label={`${21 + index}`}
               >
                 {possibleAnswers.map((answer) => (
@@ -247,9 +260,6 @@ export default function Section3({ answers, setAnswers }) {
         <Typography>
           Write <b>NO MORE THAN TWO WORDS</b> for each answer.
         </Typography>
-        <Typography>
-          <b>Practical details</b>
-        </Typography>
         <List
           sx={{
             display: "flex",
@@ -258,47 +268,53 @@ export default function Section3({ answers, setAnswers }) {
             gap: 2,
             pl: "3rem",
             width: "100%",
-            fontSize: "19px",
+            fontSize: "18px",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>28 </Typography>
-            A first draft of the dissertation should be completed by the end of
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="28"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(27, e.target.value)}
-              value={answers[27]}
-            />
-            .
+            <Typography>
+              <b>28 - </b>
+              Marco's tutor suggests that he should look at the
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="28"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(27, e.target.value)}
+                value={answers[27]}
+              />
+              for each course.
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>29 </Typography>
-            The dissertation should be registered with the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="29"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(28, e.target.value)}
-              value={answers[28]}
-            />
-            of the department.
+            <Typography>
+              <b>29 - </b>
+              Marco's tutor advises him to check the
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="29"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(28, e.target.value)}
+                value={answers[28]}
+              />
+              for each course.
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>30 </Typography>
-            Marco should get a copy of the statistics software from the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="30"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(29, e.target.value)}
-              value={answers[29]}
-            />
-            .
+            <Typography>
+              <b>30 - </b>
+              Marco's tutor suggests that he should look at the
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="30"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(29, e.target.value)}
+                value={answers[29]}
+              />
+              for each course.
+            </Typography>
           </ListItem>
         </List>
       </Box>

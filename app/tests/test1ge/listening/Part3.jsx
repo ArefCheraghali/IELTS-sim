@@ -62,7 +62,7 @@ export default function Section3({ answers, setAnswers }) {
         <Box
           component="img"
           sx={{
-            width: "40%",
+            width: "35%",
             height: "30vh",
             maxWidth: "60rem",
             mt: 5,

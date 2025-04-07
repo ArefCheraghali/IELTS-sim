@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import {
   Box,
   Divider,
@@ -8,7 +9,19 @@ import {
   Typography,
 } from "@mui/material";
 
-export default function Section1({ answers, setAnswers }) {
+export default function Part1({ answers, setAnswers, currentQuestion }) {
+  // Create refs for each text field
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    // Focus on the text field corresponding to the current question
+    if (currentQuestion >= 1 && currentQuestion <= 10) {
+      const index = currentQuestion - 1;
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].focus();
+      }
+    }
+  }, [currentQuestion]);
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
@@ -86,6 +99,7 @@ export default function Section1({ answers, setAnswers }) {
                   label="1"
                   variant="standard"
                   autoComplete="off"
+                  inputRef={(el) => (inputRefs.current[0] = el)}
                   onChange={(e) => handleInputChange(0, e.target.value)}
                   value={answers[0]}
                 />
@@ -97,6 +111,7 @@ export default function Section1({ answers, setAnswers }) {
                   label="2"
                   autoComplete="off"
                   variant="standard"
+                  inputRef={(el) => (inputRefs.current[1] = el)}
                   onChange={(e) => handleInputChange(1, e.target.value)}
                   value={answers[1]}
                 />
@@ -253,6 +268,7 @@ export default function Section1({ answers, setAnswers }) {
                   onChange={(e) => handleInputChange(9, e.target.value)}
                   value={answers[9]}
                 />
+                in advance
               </ListItem>
             </List>
           </Grid>

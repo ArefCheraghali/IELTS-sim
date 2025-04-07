@@ -1,9 +1,6 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Section1 from "./Section1";
-import Section2 from "./Section2";
-import Section3 from "./Section3";
 import {
   Box,
   Button,
@@ -14,63 +11,55 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import Part1 from "./Part1";
+import Part2 from "./Part2";
+import Part3 from "./Part3";
+import ExamLayout from "../../../components/ExamLayout";
+import { useExam } from "../../../contexts/ExamContext";
+import useTextHighlight from "app/hooks/useTextHighlight";
+import HighlightContextMenu from "app/components/HighlightContextMenu";
 
 export default function Test() {
-  const [currentSection, setCurrentSection] = useState(0);
+  const [currentPart, setCurrentPart] = useState(0);
   const [answers, setAnswers] = useState(Array(40).fill(""));
-  const [timeLeft, setTimeLeft] = useState(60 * 60);
   const [openDialog, setOpenDialog] = useState(false);
-
-  const router = useRouter();
   const answersRef = useRef(answers);
+  const router = useRouter();
+  const { startTimer, timeLeft } = useExam();
+
+  const {
+    anchorEl,
+    menuPosition,
+    textRef,
+    handleContextMenu,
+    handleHighlight,
+    handleClearHighlights,
+    handleClose,
+  } = useTextHighlight();
 
   useEffect(() => {
-    let timerInterval;
-
-    timerInterval = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timerInterval);
-          handleAutoSubmit();
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, []);
+    // Start 60-minute timer when component mounts
+    startTimer(60);
+  }, [startTimer]);
 
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
 
-  const handleAutoSubmit = () => {
-    console.log("Time is up! Test submitted automatically.");
-    onSubmit();
-  };
-
-  const onSubmit = () => {
-    console.log("User Answers:", answersRef.current);
-    localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
-    handleCloseDialog();
-    router.push("/tests/test1ac/writing");
-  };
+  // Auto-submit when time is up
+  useEffect(() => {
+    if (timeLeft === 0) {
+      onSubmit();
+    }
+  }, [timeLeft]);
 
   const handleNavigation = (direction) => {
-    if (direction === "next" && currentSection < 2) {
-      setCurrentSection(currentSection + 1);
-    } else if (direction === "prev" && currentSection > 0) {
-      setCurrentSection(currentSection - 1);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (direction === "next" && currentPart < 2) {
+      setCurrentPart(currentPart + 1);
+    } else if (direction === "prev" && currentPart > 0) {
+      setCurrentPart(currentPart - 1);
     }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
   const handleOpenDialog = () => {
@@ -81,79 +70,85 @@ export default function Test() {
     setOpenDialog(false);
   };
 
-  return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Box sx={{ mt: 4 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            Reading Test
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            Time Left: {formatTime(timeLeft)}
-          </Typography>
+  const onSubmit = () => {
+    localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
+    handleCloseDialog();
+    router.push("/tests/test1ac/writing");
+  };
+
+  const content = (
+    <Box sx={{ textAlign: "center", mt: 4, userSelect: "text" }}>
+      <Box
+        onContextMenu={handleContextMenu}
+        ref={textRef}
+        sx={{ userSelect: "text" }}
+      >
+        <HighlightContextMenu
+          anchorEl={anchorEl}
+          menuPosition={menuPosition}
+          handleClose={handleClose}
+          handleHighlight={handleHighlight}
+          handleClearHighlights={handleClearHighlights}
+        />
+        <Box sx={{ mt: 4 }}>
+          {currentPart === 0 && (
+            <Part1 answers={answers} setAnswers={setAnswers} />
+          )}
+          {currentPart === 1 && (
+            <Part2 answers={answers} setAnswers={setAnswers} />
+          )}
+          {currentPart === 2 && (
+            <Part3 answers={answers} setAnswers={setAnswers} />
+          )}
+          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleNavigation("prev")}
+              disabled={currentPart === 0}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleNavigation("next")}
+              disabled={currentPart === 2}
+            >
+              Next
+            </Button>
+          </Box>
+          {currentPart === 2 && (
+            <Button
+              onClick={handleOpenDialog}
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              Submit
+            </Button>
+          )}
         </Box>
-        {currentSection === 0 && (
-          <Section1 answers={answers} setAnswers={setAnswers} />
-        )}
-        {currentSection === 1 && (
-          <Section2 answers={answers} setAnswers={setAnswers} />
-        )}
-        {currentSection === 2 && (
-          <Section3 answers={answers} setAnswers={setAnswers} />
-        )}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleNavigation("prev")}
-            disabled={currentSection === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleNavigation("next")}
-            disabled={currentSection === 2}
-          >
-            Next
-          </Button>
-        </Box>
-        {currentSection === 2 && (
-          <Button
-            onClick={handleOpenDialog}
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Submit
-          </Button>
-        )}
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>{"Submit Answers?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to submit your answers? You will not be able
+              to change them after submission.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="secondary">
+              Cancel
+            </Button>
+            <Button onClick={onSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>{"Submit Answers?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to submit your answers? You will not be able
-            to change them after submission.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={onSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
+
+  return <ExamLayout sectionName="Reading Test">{content}</ExamLayout>;
 }

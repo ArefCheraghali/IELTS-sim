@@ -80,7 +80,7 @@ const Part1 = ({ answers, setAnswers }) => {
             <Grid
               container
               spacing={2}
-              sx={{ maxWidth: "75%", minWidth: "200rem" }}
+              sx={{ maxWidth: "75%" }}
             >
               <Grid item xs={6}>
                 <Typography variant="h6" sx={{ marginLeft: "15%" }}>

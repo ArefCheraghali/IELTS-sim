@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -11,7 +11,19 @@ import {
   TextField,
 } from "@mui/material";
 
-export default function Section4({ answers, setAnswers }) {
+export default function Part4({ answers, setAnswers, currentQuestion }) {
+  // Create refs for each text field
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    // Focus on the text field corresponding to the current question
+    if (currentQuestion >= 31 && currentQuestion <= 40) {
+      const index = currentQuestion - 31;
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].focus();
+      }
+    }
+  }, [currentQuestion]);
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G"];
 
   const handleInputChange = (index, value) => {
@@ -90,6 +102,7 @@ export default function Section4({ answers, setAnswers }) {
                 label="31"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[0] = el)}
                 onChange={(e) => handleInputChange(30, e.target.value)}
                 value={answers[30]}
               />
@@ -250,7 +263,7 @@ export default function Section4({ answers, setAnswers }) {
                 mb: "0.5em",
               }}
             >
-              The shark was
+              The shark was released after its
               <TextField
                 sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
                 label="38"
@@ -259,11 +272,12 @@ export default function Section4({ answers, setAnswers }) {
                 onChange={(e) => handleInputChange(37, e.target.value)}
                 value={answers[37]}
               />
-              and could be tracked.
+              was checked.
             </ListItem>
           </List>
         </Box>
       </Box>
+
       <Box
         sx={{
           display: "flex",
@@ -271,13 +285,12 @@ export default function Section4({ answers, setAnswers }) {
           alignItems: "flex-start",
           width: "100%",
           maxWidth: "60rem",
-          mt: 3,
-          mb: 3,
+          mt: "1em",
         }}
       >
-        <Typography>Questions 39 and 40</Typography>
+        <Typography>Questions 39-40</Typography>
         <Typography>
-          Choose the correct letter, <b>A</b>,<b>B</b> or <b>C</b>.
+          Choose the correct letter, <b>A</b>, <b>B</b> or <b>C</b>.
         </Typography>
         <Box
           sx={{
@@ -291,8 +304,8 @@ export default function Section4({ answers, setAnswers }) {
         >
           <FormControl sx={{ mt: 2 }}>
             <Typography>
-              <b style={{ marginRight: "2em" }}>39</b> The purpose of the
-              research was to understand the tiger sharks'
+              <b style={{ marginRight: "2em" }}>39</b> What was the most
+              surprising finding about tiger sharks in the Raine Island area?
             </Typography>
             <RadioGroup
               sx={{ ml: "5em" }}
@@ -302,24 +315,24 @@ export default function Section4({ answers, setAnswers }) {
               <FormControlLabel
                 value={"A"}
                 control={<Radio />}
-                label="A) reproductive patterns."
+                label="A) They were more numerous than expected."
               ></FormControlLabel>
               <FormControlLabel
                 value={"B"}
                 control={<Radio />}
-                label="B) migration patterns."
+                label="B) They were larger than expected."
               />
               <FormControlLabel
                 value={"C"}
                 control={<Radio />}
-                label="C) feeding patterns."
+                label="C) They were less aggressive than expected."
               />
             </RadioGroup>
           </FormControl>
           <FormControl sx={{ mt: 2 }}>
             <Typography>
-              <b style={{ marginRight: "2em", marginLeft: "-3em" }}>40</b>{" "}
-              Observations showed that, in general, tiger sharks
+              <b style={{ marginRight: "2em" }}>40</b> What does the speaker say
+              about the future of the research project?
             </Typography>
             <RadioGroup
               sx={{ ml: "5em" }}
@@ -329,17 +342,17 @@ export default function Section4({ answers, setAnswers }) {
               <FormControlLabel
                 value={"A"}
                 control={<Radio />}
-                label="A) change depths frequently."
+                label="A) The same methods will continue to be used."
               ></FormControlLabel>
               <FormControlLabel
                 value={"B"}
                 control={<Radio />}
-                label="B) usually avoid the surface of the water."
+                label="B) More attention will be paid to other species."
               />
               <FormControlLabel
                 value={"C"}
                 control={<Radio />}
-                label="C) often spend long periods on the ocean floor."
+                label="C) A new system of tagging will be tried out."
               />
             </RadioGroup>
           </FormControl>

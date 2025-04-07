@@ -14,7 +14,7 @@ import {
   Paper,
 } from "@mui/material";
 
-const Part3 = ({ answers, setAnswers }) => {
+const Part3 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = [
     "A) size",
     "B) escape",
@@ -92,6 +92,7 @@ const Part3 = ({ answers, setAnswers }) => {
               sx={{ ml: "5em" }}
               value={answers[20] || ""}
               onChange={(e) => handleInputChange(20, e.target.value)}
+              autoFocus={currentQuestion === 21}
             >
               <FormControlLabel
                 value={"A"}
@@ -119,6 +120,7 @@ const Part3 = ({ answers, setAnswers }) => {
               sx={{ ml: "5em" }}
               value={answers[21] || ""}
               onChange={(e) => handleInputChange(21, e.target.value)}
+              autoFocus={currentQuestion === 22}
             >
               <FormControlLabel
                 value={"A"}
@@ -146,6 +148,7 @@ const Part3 = ({ answers, setAnswers }) => {
               sx={{ ml: "5em" }}
               value={answers[22] || ""}
               onChange={(e) => handleInputChange(22, e.target.value)}
+              autoFocus={currentQuestion === 23}
             >
               <FormControlLabel
                 value={"A"}
@@ -173,6 +176,7 @@ const Part3 = ({ answers, setAnswers }) => {
               sx={{ ml: "5em" }}
               value={answers[23] || ""}
               onChange={(e) => handleInputChange(23, e.target.value)}
+              autoFocus={currentQuestion === 24}
             >
               <FormControlLabel
                 value={"A"}
@@ -200,6 +204,7 @@ const Part3 = ({ answers, setAnswers }) => {
               sx={{ ml: "5em" }}
               value={answers[24] || ""}
               onChange={(e) => handleInputChange(24, e.target.value)}
+              autoFocus={currentQuestion === 25}
             >
               <FormControlLabel
                 value={"A"}

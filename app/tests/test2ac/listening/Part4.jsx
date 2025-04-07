@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Box, Typography, List, ListItem, TextField } from "@mui/material";
 
-const Part4 = ({ answers, setAnswers }) => {
+const Part4 = ({ answers, setAnswers, currentQuestion }) => {
+  // Create refs for each text field
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    // Focus on the text field corresponding to the current question
+    if (currentQuestion >= 31 && currentQuestion <= 40) {
+      const index = currentQuestion - 31;
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].focus();
+      }
+    }
+  }, [currentQuestion]);
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
@@ -76,6 +88,7 @@ const Part4 = ({ answers, setAnswers }) => {
                 autoComplete="off"
                 onChange={(e) => handleInputChange(30, e.target.value)}
                 value={answers[30]}
+                inputRef={(el) => (inputRefs.current[0] = el)}
               />
               during washing
             </ListItem>
@@ -100,6 +113,7 @@ const Part4 = ({ answers, setAnswers }) => {
                 autoComplete="off"
                 onChange={(e) => handleInputChange(31, e.target.value)}
                 value={answers[31]}
+                inputRef={(el) => (inputRefs.current[1] = el)}
               />
               of wildlife and affect their digestive systems.
             </ListItem>
@@ -112,6 +126,7 @@ const Part4 = ({ answers, setAnswers }) => {
                 autoComplete="off"
                 onChange={(e) => handleInputChange(32, e.target.value)}
                 value={answers[32]}
+                inputRef={(el) => (inputRefs.current[2] = el)}
               />
               and seafood.
             </ListItem>
@@ -125,6 +140,7 @@ const Part4 = ({ answers, setAnswers }) => {
                 autoComplete="off"
                 onChange={(e) => handleInputChange(33, e.target.value)}
                 value={answers[33]}
+                inputRef={(el) => (inputRefs.current[3] = el)}
               />
               in some countries.
             </ListItem>
@@ -137,6 +153,7 @@ const Part4 = ({ answers, setAnswers }) => {
                 autoComplete="off"
                 onChange={(e) => handleInputChange(34, e.target.value)}
                 value={answers[34]}
+                inputRef={(el) => (inputRefs.current[4] = el)}
               />
             </ListItem>
             <Typography>
@@ -153,6 +170,7 @@ const Part4 = ({ answers, setAnswers }) => {
                 autoComplete="off"
                 onChange={(e) => handleInputChange(35, e.target.value)}
                 value={answers[35]}
+                inputRef={(el) => (inputRefs.current[5] = el)}
               />
               to the soil.
             </ListItem>
@@ -166,6 +184,7 @@ const Part4 = ({ answers, setAnswers }) => {
                 autoComplete="off"
                 onChange={(e) => handleInputChange(36, e.target.value)}
                 value={answers[36]}
+                inputRef={(el) => (inputRefs.current[6] = el)}
               />
               of plants.
             </ListItem>
@@ -180,6 +199,7 @@ const Part4 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(37, e.target.value)}
                     value={answers[37]}
+                    inputRef={(el) => (inputRefs.current[7] = el)}
                   />
                   loss in earthworms
                 </ListItem>
@@ -195,6 +215,7 @@ const Part4 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(38, e.target.value)}
                     value={answers[38]}
+                    inputRef={(el) => (inputRefs.current[8] = el)}
                   />
                   in the soil.
                 </ListItem>
@@ -215,6 +236,7 @@ const Part4 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(39, e.target.value)}
                     value={answers[39]}
+                    inputRef={(el) => (inputRefs.current[9] = el)}
                   />
                   .
                 </ListItem>

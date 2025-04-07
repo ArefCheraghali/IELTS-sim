@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -13,7 +14,19 @@ import {
   Typography,
 } from "@mui/material";
 
-const Part1 = ({ answers, setAnswers }) => {
+const Part1 = ({ answers, setAnswers, currentQuestion }) => {
+  // Create refs for each text field
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    // Focus on the text field corresponding to the current question
+    if (currentQuestion >= 1 && currentQuestion <= 10) {
+      const index = currentQuestion - 1;
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].focus();
+      }
+    }
+  }, [currentQuestion]);
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
@@ -90,6 +103,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(0, e.target.value)}
                   value={answers[0]}
+                  inputRef={(el) => (inputRefs.current[0] = el)}
                 />
               </ListItem>
               <b>Fish market</b>
@@ -102,6 +116,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(1, e.target.value)}
                   value={answers[1]}
+                  inputRef={(el) => (inputRefs.current[1] = el)}
                 />
                 and turn right
               </ListItem>
@@ -114,6 +129,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(2, e.target.value)}
                   value={answers[2]}
+                  inputRef={(el) => (inputRefs.current[2] = el)}
                 />
                 pm, earlier than closing time
               </ListItem>
@@ -127,6 +143,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(3, e.target.value)}
                   value={answers[3]}
+                  inputRef={(el) => (inputRefs.current[3] = el)}
                 />
               </ListItem>
               <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
@@ -141,6 +158,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(4, e.target.value)}
                   value={answers[4]}
+                  inputRef={(el) => (inputRefs.current[4] = el)}
                 />
                 outside
               </ListItem>
@@ -154,6 +172,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(5, e.target.value)}
                   value={answers[5]}
+                  inputRef={(el) => (inputRefs.current[5] = el)}
                 />
                 minibus, number 289
               </ListItem>
@@ -188,6 +207,7 @@ const Part1 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(6, e.target.value)}
                     value={answers[6]}
+                    inputRef={(el) => (inputRefs.current[6] = el)}
                   />
                   (type of seaweed)
                 </TableCell>

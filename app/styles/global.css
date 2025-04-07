@@ -1,7 +1,16 @@
-body {
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
   font-family: "Arial", sans-serif;
-  background: linear-gradient(135deg, #1e90ff, #ff7f50);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

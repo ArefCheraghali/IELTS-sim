@@ -1,127 +1,28 @@
 import React from "react";
-import { Box, TextField, Typography } from "@mui/material";
+import WritingTask from "../../../components/WritingTask";
 
 const Task1 = ({ answers, setAnswers }) => {
-  const wordLimit = 150;
+  const prompt = `You should spend about 20 minutes on this task.
 
-  const getWordCount = (text) => {
-    return text.trim().split(/\s+/).length;
-  };
+The graph below shows the number of books read by men and women at different ages.
 
-  const handleInputChange = (index, value) => {
-    const newAnswers = [...answers];
-    newAnswers[index] = value;
-    setAnswers(newAnswers);
-    console.log(newAnswers);
-  };
+Summarise the information by selecting and reporting the main features, and make comparisons where relevant.`;
+
+  const instructions = "Write at least 150 words about the following graph:";
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "75vh",
-      }}
-    >
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          padding: 2,
-          borderRight: "1px solid #ccc",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-        }}
-      >
-        <Typography variant="h5" sx={{ ml: 4, mb: 2 }}>
-          <b>Writing Task 1</b>
-        </Typography>
-        <Typography sx={{ ml: 4, mb: 1 }}>
-          You should spend about 20 minutes on this task.
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            bgcolor: "lightgray",
-            borderStyle: "solid",
-            borderWidth: 1,
-            padding: "0.5em",
-            ml: 4,
-            mb: 1,
-            pl: 2,
-            textAlign: "left",
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: "1.1em",
-            }}
-          >
-            <b>
-              You recently took part in a training course. The organiser of the
-              course has asked you for some feedback.
-            </b>
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: "1.1em",
-            }}
-          >
-            <b>
-              Write a letter to the organiser of the course. In your letter:
-              <ul>
-                <li> give details of the course you took part in</li>
-                <li> say what you found useful on the course</li>
-                <li> suggest ways the course could be improved</li>
-                {/* • */}
-              </ul>
-            </b>
-          </Typography>
-        </Box>
-        <Typography sx={{ ml: 4, mb: 1 }}>Write at least 150 words.</Typography>
-        <Typography sx={{ ml: 4, mb: 1 }}>
-          You do <b>NOT</b> need to write any addresses. Begin your letter as
-          follows:
-        </Typography>
-        <Typography sx={{ ml: 12, mb: 1, mt: 3 }}>
-          <b>Dear ...... ,</b>
-        </Typography>
-      </Box>
-
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          padding: 2,
-        }}
-      >
-        <Typography variant="body2">
-          Word Count: {getWordCount(answers[0])} / {wordLimit}
-        </Typography>
-        <Box sx={{ mt: 4, width: "100%", height: "100%" }}>
-          <TextField
-            fullWidth
-            multiline
-            rows={15}
-            variant="outlined"
-            placeholder="Start writing your letter here..."
-            autoComplete="off"
-            spellCheck={false}
-            onChange={(e) => handleInputChange(0, e.target.value)}
-            value={answers[0]}
-            sx={{ backgroundColor: "#fff", height: "50vh" }}
-          />
-        </Box>
-      </Box>
-    </Box>
+    <WritingTask
+      answers={answers}
+      setAnswers={setAnswers}
+      wordLimit={150}
+      taskNumber={1}
+      prompt={prompt}
+      instructions={instructions}
+      index={0}
+      imagePath="/images/test2/test2ge writing task1.jpg"
+      imageAlt="Graph showing books read by gender and age"
+      placeholder="Start writing your essay here..."
+    />
   );
 };
 

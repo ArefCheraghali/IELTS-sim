@@ -8,6 +8,8 @@ const DragDrop = ({
   setAnswers,
   title,
   infoTitle,
+  questionRefs,
+  startIndex,
 }) => {
   const [questions, setQuestions] = useState(initialQuestions);
   const [availableAnswers, setAvailableAnswers] = useState(initialAnswers);
@@ -78,90 +80,112 @@ const DragDrop = ({
     ]);
 
     setAnswers((prevAnswers) => {
-      const newAnswers = [...prevAnswers];
-      newAnswers[parseInt(questionId)] = null;
+      const newAnswers = Array(prevAnswers.length).fill(null);
+      prevAnswers.forEach((answer, index) => {
+        if (index !== parseInt(questionId)) {
+          newAnswers[index] = answer;
+        }
+      });
       return newAnswers;
     });
   };
 
+  const handleClearAll = () => {
+    setQuestions(questions.map((q) => ({ ...q, answerId: null })));
+    setAvailableAnswers(initialAnswers);
+    setAnswers(Array(answers.length).fill(null));
+  };
+
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div
-        style={{
-          padding: 8,
-          width: "50%",
-        }}
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      {/* <Button
+        onClick={handleClearAll}
+        variant="outlined"
+        sx={{ mb: 2, alignSelf: "flex-end" }}
       >
-        <Typography>{title}</Typography>
-        {questions.map((question) => (
-          <div
-            key={question.id}
-            onDrop={(e) => handleDrop(e, question.id)}
-            onDragOver={handleDragOver}
-            style={{
-              marginBottom: "8px",
-              padding: "8px",
-              border: "1px solid lightgrey",
-              minHeight: "50px",
-              backgroundColor: "white",
-              position: "relative",
-            }}
-          >
-            <Typography sx={{ mr: 2, fontSize: "0.9rem" }}>
-              {question.text}
-            </Typography>
+        Clear All
+      </Button> */}
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <div
+          style={{
+            padding: 8,
+            width: "50%",
+          }}
+        >
+          <Typography>{title}</Typography>
+          {questions.map((question, index) => (
+            <div
+              key={question.id}
+              onDrop={(e) => handleDrop(e, question.id)}
+              onDragOver={handleDragOver}
+              style={{
+                marginBottom: "8px",
+                padding: "8px",
+                border: "1px solid lightgrey",
+                minHeight: "50px",
+                backgroundColor: "white",
+                position: "relative",
+              }}
+              ref={questionRefs && startIndex !== undefined ? (el) => (questionRefs.current[startIndex + index] = el) : null}
+            >
+              <Typography sx={{ mr: 2, fontSize: "0.9rem" }}>
+                {question.text}
+              </Typography>
 
-            <span style={{ color: "#1976d2" }}>
-              {question.answerId
-                ? initialAnswers.find((a) => a.id === question.answerId)
-                    ?.text || ""
-                : ""}
-            </span>
-            {question.answerId && (
-              <Button
-                style={{
-                  position: "absolute",
-                  right: -18,
-                  top: -3,
-                  border: "none",
-                  background: "none",
-                  cursor: "pointer",
-                }}
-                onClick={() => handleReset(question.id)}
-              >
-                ✖
-              </Button>
-            )}
-          </div>
-        ))}
-      </div>
+              <span style={{ color: "#1976d2" }}>
+                {question.answerId
+                  ? initialAnswers.find((a) => a.id === question.answerId)
+                      ?.text || ""
+                  : ""}
+              </span>
+              {question.answerId && (
+                <Button
+                  style={{
+                    position: "absolute",
+                    right: -18,
+                    top: -3,
+                    border: "none",
+                    background: "none",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleReset(question.id)}
+                >
+                  ✖
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
 
-      <div
-        style={{
-          margin: 8,
-          borderRadius: 4,
-          padding: 8,
-          width: "50%",
-        }}
-      >
-        <Typography>{infoTitle}</Typography>
-        {availableAnswers.map((answer) => (
-          <div
-            key={answer.id}
-            draggable
-            onDragStart={(e) => handleDragStart(e, answer.id)}
-            style={{
-              marginBottom: "8px",
-              padding: "8px",
-              border: "1px solid lightgrey",
-              borderRadius: 4,
-              cursor: "pointer",
-              backgroundColor: "white",
-            }}
-          >
-            <Typography>{answer.text}</Typography>
-          </div>
-        ))}
+        <div
+          style={{
+            margin: 8,
+            borderRadius: 4,
+            padding: 8,
+            width: "50%",
+          }}
+        >
+          <Typography>{infoTitle}</Typography>
+          {availableAnswers.map((answer) => (
+            <div
+              key={answer.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, answer.id)}
+              style={{
+                marginBottom: "8px",
+                padding: "8px",
+                border: "1px solid lightgrey",
+                borderRadius: 4,
+                cursor: "pointer",
+                backgroundColor: "white",
+              }}
+            >
+              <Typography>{answer.text}</Typography>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

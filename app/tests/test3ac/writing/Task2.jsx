@@ -33,7 +33,7 @@ const Task2 = ({ answers, setAnswers }) => {
           alignItems: "flex-start",
         }}
       >
-        <Typography variant="h5" sx={{ ml: 4, mb: 3 }}>
+        <Typography variant="h5" sx={{ ml: 4, mb: 1 }}>
           <b>Writing Task 2</b>
         </Typography>
         <Typography sx={{ ml: 4, mb: 2 }}>
@@ -60,7 +60,6 @@ const Task2 = ({ answers, setAnswers }) => {
           <Typography
             sx={{
               fontSize: "1.1em",
-              mb: 1,
             }}
           >
             <b>
@@ -83,12 +82,12 @@ const Task2 = ({ answers, setAnswers }) => {
           Give reasons for your answer and include any relevant examples from
           your own knowledge or experience.
         </Typography>
-        <Typography sx={{ ml: 4, mb: 2 }}>Write at least 250 words.</Typography>
+        <Typography sx={{ ml: 4 }}>Write at least 250 words.</Typography>
       </Box>
 
       <Box
         sx={{
-          width: "50%",
+          width: "55%",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -105,7 +104,7 @@ const Task2 = ({ answers, setAnswers }) => {
           <TextField
             fullWidth
             multiline
-            rows={25}
+            rows={15}
             variant="outlined"
             placeholder="Start writing your essay here..."
             autoComplete="off"

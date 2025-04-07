@@ -2,14 +2,22 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, Button } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Tests() {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
     setUser(userData);
   }, []);
+
+  const handleTestSelect = (testId, testType) => {
+    // Store selected test info in localStorage
+    localStorage.setItem("selectedTest", JSON.stringify({ testId, testType }));
+    router.push("/tests/confirm-details");
+  };
 
   return (
     <Box sx={{ textAlign: "center", mt: 4 }}>
@@ -21,41 +29,51 @@ export default function Tests() {
       <Typography variant="h4" gutterBottom>
         Select a Test
       </Typography>
-      <Link href="/tests/test1ac/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
-          test 1 Academic
-        </Button>
-      </Link>
-      <Link href="/tests/test1ge/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
-          test 1 General
-        </Button>
-      </Link>
-      <Link href="/tests/test2ac/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
-          test 2 Academic
-        </Button>
-      </Link>
-      <Link href="/tests/test2ge/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
-          test 2 General
-        </Button>
-      </Link>
-      <Link href="/tests/test3ac/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
-          test 3 Academic
-        </Button>
-      </Link>
-      {/* <Link href="/tests/test3ge/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
-          test 3 General
-        </Button>
-      </Link> */}
-      {/* <Link href="/tests/test4ac/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
-          test 4 Academic
-        </Button>
-      </Link> */}
+
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mr: 2 }}
+        onClick={() => handleTestSelect(1, "academic")}
+      >
+        Test 1 Academic
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mr: 2 }}
+        onClick={() => handleTestSelect(1, "general")}
+      >
+        Test 1 General
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mr: 2 }}
+        onClick={() => handleTestSelect(2, "academic")}
+      >
+        Test 2 Academic
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mr: 2 }}
+        onClick={() => handleTestSelect(2, "general")}
+      >
+        Test 2 General
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mr: 2 }}
+        onClick={() => handleTestSelect(3, "academic")}
+      >
+        Test 3 Academic
+      </Button>
     </Box>
   );
 }

@@ -14,8 +14,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Slider,
 } from "@mui/material";
+import useTextHighlight from "app/hooks/useTextHighlight";
+import HighlightContextMenu from "app/components/HighlightContextMenu";
+import ExamLayout from "../../../components/ExamLayout";
+import { useExam } from "../../../contexts/ExamContext";
 
 const listeningAudio = "/audio/Listening3.mp3";
 
@@ -24,13 +27,22 @@ export default function Test() {
   const [showQuestions, setShowQuestions] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
   const [answers, setAnswers] = useState(Array(40).fill(""));
-  const [timeLeft, setTimeLeft] = useState(33 * 60);
   const [openDialog, setOpenDialog] = useState(false);
-  const [volume, setVolume] = useState(1);
 
   const router = useRouter();
   const audioRef = useRef(null);
   const answersRef = useRef(answers);
+  const { volume, startTimer, timeLeft } = useExam();
+
+  const {
+    anchorEl,
+    menuPosition,
+    textRef,
+    handleContextMenu,
+    handleHighlight,
+    handleClearHighlights,
+    handleClose,
+  } = useTextHighlight();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -40,36 +52,23 @@ export default function Test() {
 
   useEffect(() => {
     let audioTimeout;
-    let timerInterval;
 
     if (isReady && audioRef.current) {
       const audio = audioRef.current;
-      audio.volume = volume;
       audio.play();
+      startTimer(28); // 28 minutes for listening test
 
       audioTimeout = setTimeout(() => {
         setShowQuestions(true);
-      }, 27000); //27
-
-      timerInterval = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(timerInterval);
-            handleAutoSubmit();
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
+      }, 28000);
     }
     return () => {
       clearTimeout(audioTimeout);
-      clearInterval(timerInterval);
       if (audioRef.current) {
         audioRef.current.pause();
       }
     };
-  }, [isReady, volume]);
+  }, [isReady, startTimer]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -81,9 +80,13 @@ export default function Test() {
     answersRef.current = answers;
   }, [answers]);
 
-  const handleVolumeChange = (event, newValue) => {
-    setVolume(newValue);
-  };
+  // Auto-submit when time is up
+  useEffect(() => {
+    if (timeLeft === 0 && isReady) {
+      // Only auto-submit if the test has started
+      onSubmit();
+    }
+  }, [timeLeft, isReady]);
 
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
@@ -91,13 +94,14 @@ export default function Test() {
   };
 
   const onSubmit = () => {
+    if (!isReady) return; // Don't submit if test hasn't started
     console.log("User Answers:", answersRef.current);
     localStorage.setItem(
       "listeningAnswers",
       JSON.stringify(answersRef.current)
     );
     handleCloseDialog();
-    router.push("/tests/test2ge/reading");
+    router.push("/tests/test3ge/reading");
   };
 
   const handleNavigation = (direction) => {
@@ -124,127 +128,122 @@ export default function Test() {
   };
 
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      {!showQuestions ? (
-        <Typography variant="h4" gutterBottom>
-          Listening Test
-        </Typography>
-      ) : null}
-      {!isReady && (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setIsReady(true)}
+    <ExamLayout sectionName="Listening Test">
+      <Box sx={{ textAlign: "center", mt: 4, userSelect: "text" }}>
+        <Box
+          onContextMenu={handleContextMenu}
+          ref={textRef}
+          sx={{ userSelect: "text" }}
         >
-          I'm Ready
-        </Button>
-      )}
-      {isReady && !showQuestions && (
-        <Typography variant="h6" sx={{ mt: 4 }}>
-          Audio Started...
-        </Typography>
-      )}
-      {isReady && showQuestions && (
-        <Box sx={{ mt: 4 }}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography
-              variant="h6"
-              gutterBottom
-              sx={{
-                color: timeLeft <= 120 ? "red" : "inherit",
-                fontWeight: timeLeft <= 120 ? "bold" : "normal",
-              }}
-            >
-              Time Left: {formatTime(timeLeft)}
+          <HighlightContextMenu
+            anchorEl={anchorEl}
+            menuPosition={menuPosition}
+            handleClose={handleClose}
+            handleHighlight={handleHighlight}
+            handleClearHighlights={handleClearHighlights}
+          />
+          {!showQuestions ? (
+            <Typography variant="h4" gutterBottom>
+              Listening Test
             </Typography>
-            <Box
-              sx={{
-                width: "200px",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                mr: 20,
-              }}
+          ) : null}
+          {!isReady && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setIsReady(true)}
             >
-              <Typography variant="h6" gutterBottom>
-                Volume:
-              </Typography>
-              <Slider
-                value={volume}
-                onChange={handleVolumeChange}
-                aria-labelledby="volume-slider"
-                min={0}
-                max={1}
-                step={0.01}
-                sx={{ ml: 2, mb: 4, mt: 0.5 }}
-              />
+              I'm Ready
+            </Button>
+          )}
+          {isReady && !showQuestions && (
+            <Typography variant="h6" sx={{ mt: 4 }}>
+              Audio Started...
+            </Typography>
+          )}
+          {isReady && showQuestions && (
+            <Box sx={{ mt: 4 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{
+                    color: timeLeft <= 120 ? "red" : "inherit",
+                    fontWeight: timeLeft <= 120 ? "bold" : "normal",
+                  }}
+                >
+                  Time Left: {formatTime(timeLeft)}
+                </Typography>
+              </Box>
+              {currentSection === 0 && (
+                <Part1 answers={answers} setAnswers={setAnswers} />
+              )}
+              {currentSection === 1 && (
+                <Part2 answers={answers} setAnswers={setAnswers} />
+              )}
+              {currentSection === 2 && (
+                <Part3 answers={answers} setAnswers={setAnswers} />
+              )}
+              {currentSection === 3 && (
+                <Part4 answers={answers} setAnswers={setAnswers} />
+              )}
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}
+              >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleNavigation("prev")}
+                  disabled={currentSection === 0}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleNavigation("next")}
+                  disabled={currentSection === 3}
+                >
+                  Next
+                </Button>
+              </Box>
+              {currentSection === 3 && (
+                <Button
+                  onClick={handleOpenDialog}
+                  variant="contained"
+                  color="primary"
+                  sx={{ mt: 2 }}
+                >
+                  Submit
+                </Button>
+              )}
             </Box>
-          </Box>
-          {currentSection === 0 && (
-            <Part1 answers={answers} setAnswers={setAnswers} />
           )}
-          {currentSection === 1 && (
-            <Part2 answers={answers} setAnswers={setAnswers} />
-          )}
-          {currentSection === 2 && (
-            <Part3 answers={answers} setAnswers={setAnswers} />
-          )}
-          {currentSection === 3 && (
-            <Part4 answers={answers} setAnswers={setAnswers} />
-          )}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => handleNavigation("prev")}
-              disabled={currentSection === 0}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleNavigation("next")}
-              disabled={currentSection === 3}
-            >
-              Next
-            </Button>
-          </Box>
-          {currentSection === 3 && (
-            <Button
-              onClick={handleOpenDialog}
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-            >
-              Submit
-            </Button>
-          )}
+          <Dialog open={openDialog} onClose={handleCloseDialog}>
+            <DialogTitle>{"Submit Answers?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to submit your answers? You will not be
+                able to change them after submission.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={onSubmit} color="primary">
+                Submit
+              </Button>
+            </DialogActions>
+          </Dialog>
         </Box>
-      )}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>{"Submit Answers?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to submit your answers? You will not be able
-            to change them after submission.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={onSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+      </Box>
+    </ExamLayout>
   );
 }
