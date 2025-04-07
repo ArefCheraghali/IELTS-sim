@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Divider,
   FormControl,
   InputLabel,
   List,
@@ -28,8 +29,6 @@ const Section1 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -81,133 +80,155 @@ const Section1 = ({ answers, setAnswers }) => {
             flexDirection: "column",
             alignItems: "flex-start",
             gap: 2,
-            pl: "3rem",
+            // pl: "3rem",
             width: "100%",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>1 </Typography>
-            In an emergency, a teacher will either phone the office or
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="1"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(0, e.target.value)}
-              value={answers[0]}
-            />
-            .
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>1</b>
+              In an emergency, a teacher will either phone the office or
+              <TextField
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                label="1"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(0, e.target.value)}
+                value={answers[0]}
+              />
+              .
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>2 </Typography>
-            The signal for evacuation will normally be several
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="2"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(1, e.target.value)}
-              value={answers[1]}
-            />
-            .
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>2</b>
+              The signal for evacuation will normally be several
+              <TextField
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                label="2"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(1, e.target.value)}
+                value={answers[1]}
+              />
+              .
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>3 </Typography>
-            If possible, students should leave the building by the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="3"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(2, e.target.value)}
-              value={answers[2]}
-            />
-            .
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>3</b>
+              If possible, students should leave the building by the
+              <TextField
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                label="3"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(2, e.target.value)}
+                value={answers[2]}
+              />
+              .
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>4 </Typography>
-            They then walk quickly to the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="4"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(3, e.target.value)}
-              value={answers[3]}
-            />
-            .
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>4</b>
+              They then walk quickly to the
+              <TextField
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                label="4"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(3, e.target.value)}
+                value={answers[3]}
+              />
+              .
+            </Typography>
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>5 </Typography>
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="5"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(4, e.target.value)}
-              value={answers[4]}
-            />
-            will join the teachers and students in the quad.
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>6 </Typography>
-            Each class teacher will count up his or her students and mark
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="6"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(5, e.target.value)}
-              value={answers[5]}
-            />
-            .
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem" }}>7 </Typography>
-            After the
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="7"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(6, e.target.value)}
-              value={answers[6]}
-            />
-            , everyone may return to class.
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>5</b>
+              <TextField
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                label="5"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(4, e.target.value)}
+                value={answers[4]}
+              />
+              will join the teachers and students in the quad.
+            </Typography>
           </ListItem>
           <ListItem
             sx={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>6</b>
+              Each class teacher will count up his or her students and mark
+            </Typography>
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <TextField
+                sx={{ mt: -2, ml: 3, mr: 1, width: "10em" }}
+                label="6"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(5, e.target.value)}
+                value={answers[5]}
+              />
+              .
+            </Typography>
+          </ListItem>
+          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>7</b>
+              After the
+              <TextField
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                label="7"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(6, e.target.value)}
+                value={answers[6]}
+              />
+              , everyone may return to class.
+            </Typography>
+          </ListItem>
+          <ListItem
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
               maxWidth: "40em",
             }}
           >
-            <Typography sx={{ marginRight: "3rem" }}>8 </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Box>
-                If there is an emergency at lunchtime, students gather in the
-                quad in
-              </Box>
-              <Box sx={{ mt: 3 }}>
-                <TextField
-                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-                  label="8"
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(7, e.target.value)}
-                  value={answers[7]}
-                />
-                and wait for their teacher.
-              </Box>
-            </Box>
+            <Typography sx={{ fontSize: "0.85rem" }}>
+              <b style={{ marginRight: "1em" }}>8</b>
+              If there is an emergency at lunchtime, students gather in the quad
+              in
+            </Typography>
+            <Typography sx={{ fontSize: "0.85rem", ml: 2, mt: 3 }}>
+              <TextField
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                label="8"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(7, e.target.value)}
+                value={answers[7]}
+              />
+              and wait for their teacher.
+            </Typography>
           </ListItem>
         </List>
         <br />
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <br />
+        <Typography sx={{ ml: 1, mb: 1 }}>
           Read the{" "}
           <b>
             <i>second text (Community Education)</i>
-          </b>{" "}
+          </b>
           and answer Questions 9 - 14
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>Questions 9 - 14</Typography>

@@ -27,10 +27,35 @@ export default function Tests() {
         </Button>
       </Link>
       <Link href="/tests/test1ge/listening" passHref>
-        <Button variant="contained" color="primary" sx={{ mt: 2 }}>
-          test 1 general
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
+          test 1 General
         </Button>
       </Link>
+      <Link href="/tests/test2ac/listening" passHref>
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
+          test 2 Academic
+        </Button>
+      </Link>
+      <Link href="/tests/test2ge/listening" passHref>
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
+          test 2 General
+        </Button>
+      </Link>
+      <Link href="/tests/test3ac/listening" passHref>
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
+          test 3 Academic
+        </Button>
+      </Link>
+      {/* <Link href="/tests/test3ge/listening" passHref>
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
+          test 3 General
+        </Button>
+      </Link> */}
+      {/* <Link href="/tests/test4ac/listening" passHref>
+        <Button variant="contained" color="primary" sx={{ mt: 2, mr: 2 }}>
+          test 4 Academic
+        </Button>
+      </Link> */}
     </Box>
   );
 }

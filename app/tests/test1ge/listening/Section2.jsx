@@ -69,11 +69,11 @@ export default function Section2({ answers, setAnswers }) {
           <Box
             component="img"
             sx={{
-              width: "80%",
+              width: "100%",
               maxWidth: "60rem",
               mt: 20,
             }}
-            alt="Map"
+            alt="Answers"
             src={answerImage}
           />
         </Box>

@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Section1 from "./Section1";
 import Section2 from "./Section2";
 import Section3 from "./Section3";
-// import Drag from "./Drag";
 import {
   Box,
   Button,
@@ -23,6 +22,7 @@ export default function Test() {
   const [openDialog, setOpenDialog] = useState(false);
 
   const router = useRouter();
+  const answersRef = useRef(answers);
 
   useEffect(() => {
     let timerInterval;
@@ -43,20 +43,24 @@ export default function Test() {
     };
   }, []);
 
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
     onSubmit();
   };
 
   const onSubmit = () => {
-    console.log("User Answers:", answers);
-    localStorage.setItem("readingAnswers", JSON.stringify(answers));
+    console.log("User Answers:", answersRef.current);
+    localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
     handleCloseDialog();
     router.push("/tests/test1ge/writing");
   };
 
   const handleNavigation = (direction) => {
-    if (direction === "next" && currentSection < 3) {
+    if (direction === "next" && currentSection < 2) {
       setCurrentSection(currentSection + 1);
     } else if (direction === "prev" && currentSection > 0) {
       setCurrentSection(currentSection - 1);
@@ -97,7 +101,6 @@ export default function Test() {
         </Box>
         {currentSection === 0 && (
           <Section1 answers={answers} setAnswers={setAnswers} />
-          // <Drag />
         )}
         {currentSection === 1 && (
           <Section2 answers={answers} setAnswers={setAnswers} />

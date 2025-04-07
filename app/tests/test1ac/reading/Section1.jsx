@@ -40,8 +40,6 @@ const Section1 = ({ answers, setAnswers }) => {
       sx={{
         display: "flex",
         height: "75vh",
-        marginLeft: "-200px",
-        marginRight: "-200px",
       }}
     >
       <Box
@@ -101,7 +99,7 @@ const Section1 = ({ answers, setAnswers }) => {
             <img
               src={image3}
               alt="Reading Passage Part 1"
-              style={{ width: "100%" }}
+              style={{ width: "550px" }}
             />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
@@ -249,7 +247,7 @@ const Section1 = ({ answers, setAnswers }) => {
           </ListItem>
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>13 </Typography>
-            can survive the heat and dryness at the high-water mark
+            share their site with karengo seaweed
             <Box sx={{ minWidth: 120, ml: "1em" }}>
               <FormControl>
                 <InputLabel>13</InputLabel>

@@ -70,6 +70,7 @@ export default function Section4({ answers, setAnswers }) {
             alignItems: "flex-start",
             borderStyle: "solid",
             padding: "1em",
+            fontSize: "18px",
           }}
         >
           <Typography variant="h6" sx={{ marginLeft: "40%" }}>
