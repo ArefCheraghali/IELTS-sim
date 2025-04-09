@@ -20,16 +20,18 @@ import HighlightContextMenu from "app/components/HighlightContextMenu";
 import ExamLayout from "../../../components/ExamLayout";
 import { useVolume } from "../../../contexts/VolumeContext";
 import { useTimer } from "../../../contexts/TimerContext";
+import TestBottomNavigation from "../../../components/TestBottomNavigation";
 import { TEST_DURATIONS } from "../../../config/testDurations";
 
 const listeningAudio = "/audio/Listening1.mp3";
 const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ac.listening;
-const QUESTIONS_DELAY_MS = 27000; // Time before showing questions (27 seconds)
+const QUESTIONS_DELAY_MS = 1000; // Time before showing questions (27 seconds)
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -140,29 +142,22 @@ export default function Test() {
     router.push("/tests/test1ac/reading");
   };
 
-  const handleNavigation = (direction) => {
-    if (direction === "next" && currentSection < 3) {
-      setCurrentSection(currentSection + 1, () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    } else if (direction === "prev" && currentSection > 0) {
-      setCurrentSection(currentSection - 1, () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      });
-    }
-  };
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
-  };
-
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
 
   return (
     <ExamLayout sectionName="Listening" onSubmit={() => setOpenDialog(true)}>
-      <Box sx={{ height: "100%", overflow: "hidden" }}>
+      <Box
+        sx={{
+          height: "100%",
+          overflow: "hidden",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "0 20px",
+          pb: 5,
+        }}
+      >
         <Box
           onContextMenu={handleContextMenu}
           ref={textRef}
@@ -177,46 +172,54 @@ export default function Test() {
           />
           {!showQuestions ? (
             <Typography variant="h4" gutterBottom>
-              Listening Test
+              Click start when you are ready to take the Test.
             </Typography>
           ) : null}
           {!isReady && (
-            <Button variant="contained" color="primary" onClick={handleStart}>
-              I'm Ready
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ ml: "20rem" }}
+              onClick={handleStart}
+            >
+              Start
             </Button>
           )}
           {isReady && !showQuestions && (
             <Typography variant="h6" sx={{ mt: 4 }}>
-              Audio Started...
+              Audio Started, please wait...
             </Typography>
           )}
           {isReady && showQuestions && (
             <Box sx={{ mt: 4, pb: 8 }}>
               {currentSection === 0 && (
-                <Part1 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+                <Part1
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
               {currentSection === 1 && (
-                <Part2 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+                <Part2
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
               {currentSection === 2 && (
-                <Part3 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+                <Part3
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
               {currentSection === 3 && (
-                <Part4 answers={answers} setAnswers={setAnswers} currentQuestion={currentQuestion} />
+                <Part4
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
-              <TestBottomNavigation
-                currentSection={currentSection}
-                setCurrentSection={setCurrentSection}
-                currentQuestion={currentQuestion}
-                setCurrentQuestion={setCurrentQuestion}
-                sections={["Part 1", "Part 2", "Part 3", "Part 4"]}
-                questionRanges={[
-                  { start: 1, end: 10 },
-                  { start: 11, end: 20 },
-                  { start: 21, end: 30 },
-                  { start: 31, end: 40 },
-                ]}
-              />
             </Box>
           )}
           <Dialog open={openDialog} onClose={handleCloseDialog}>
@@ -238,6 +241,15 @@ export default function Test() {
           </Dialog>
         </Box>
       </Box>
+      {isReady && showQuestions && (
+        <TestBottomNavigation
+          currentSection={currentSection}
+          setCurrentSection={setCurrentSection}
+          currentQuestion={currentQuestion}
+          setCurrentQuestion={setCurrentQuestion}
+          answers={answers}
+        />
+      )}
     </ExamLayout>
   );
 }

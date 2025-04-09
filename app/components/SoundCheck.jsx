@@ -16,7 +16,7 @@ const SoundCheck = () => {
     setSelectedTest(testData);
 
     // Create audio element
-    const audio = new Audio("/audio/sample-sound.mp3"); // Replace with your sound file path
+    const audio = new Audio("/audio/check-sound.mp3"); // Replace with your sound file path
     setAudioElement(audio);
 
     return () => {

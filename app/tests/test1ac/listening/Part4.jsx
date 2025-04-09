@@ -14,17 +14,31 @@ import {
 export default function Part4({ answers, setAnswers, currentQuestion }) {
   // Create refs for each text field
   const inputRefs = useRef([]);
+  const questionRefs = useRef([]);
 
   useEffect(() => {
-    // Focus on the text field corresponding to the current question
     if (currentQuestion >= 31 && currentQuestion <= 40) {
       const index = currentQuestion - 31;
-      if (inputRefs.current[index]) {
-        inputRefs.current[index].focus();
+      if (questionRefs.current[index]) {
+        questionRefs.current[index].scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+        if (inputRefs.current[index]) {
+          if (currentQuestion <= 38) {
+            inputRefs.current[index].focus();
+          } else {
+            inputRefs.current[index].focus();
+            const radioButtons = questionRefs.current[index].querySelectorAll('input[type="radio"]');
+            if (radioButtons.length > 0) {
+              const selectedRadio = radioButtons[answers[currentQuestion - 1]] || radioButtons[0];
+              selectedRadio.focus();
+            }
+          }
+        }
       }
     }
-  }, [currentQuestion]);
-  const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G"];
+  }, [currentQuestion, answers]);
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -38,8 +52,11 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         width: "100%",
+        margin: "0 auto",
+        maxWidth: "1200px",
+        padding: "0 2rem",
       }}
     >
       <Box
@@ -49,6 +66,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
           justifyContent: "space-between",
           width: "100%",
           maxWidth: "60rem",
+          margin: "0 auto",
         }}
       >
         <Typography variant="h5" gutterBottom>
@@ -95,7 +113,10 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
             <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
               <b>Size:</b> 6.5 metres (maximum)
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              sx={{ display: "list-item", mb: "0.5em" }}
+              ref={(el) => (questionRefs.current[0] = el)}
+            >
               <b>Preferred habitat:</b> near to the{" "}
               <TextField
                 sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
@@ -107,19 +128,26 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 value={answers[30]}
               />
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              sx={{ display: "list-item", mb: "0.5em" }}
+              ref={(el) => (questionRefs.current[1] = el)}
+            >
               <b>Typical food:</b> other sea creatures but also{" "}
               <TextField
                 sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
                 label="32"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[1] = el)}
                 onChange={(e) => handleInputChange(31, e.target.value)}
                 value={answers[31]}
               />{" "}
               produced by humans
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              sx={{ display: "list-item", mb: "0.5em" }}
+              ref={(el) => (questionRefs.current[2] = el)}
+            >
               <b>Raine Island area:</b> studies show tiger sharks are mainly
               found here during the{" "}
               <TextField
@@ -127,6 +155,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="33"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[2] = el)}
                 onChange={(e) => handleInputChange(32, e.target.value)}
                 value={answers[32]}
               />
@@ -175,6 +204,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 display: "list-item",
                 mb: 2,
               }}
+              ref={(el) => (questionRefs.current[3] = el)}
             >
               Pieces of
               <TextField
@@ -182,6 +212,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="34"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[3] = el)}
                 onChange={(e) => handleInputChange(33, e.target.value)}
                 value={answers[33]}
               />
@@ -194,6 +225,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 display: "list-item",
                 mb: 2,
               }}
+              ref={(el) => (questionRefs.current[4] = el)}
             >
               The lines were
               <TextField
@@ -201,6 +233,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="35"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[4] = el)}
                 onChange={(e) => handleInputChange(34, e.target.value)}
                 value={answers[34]}
               />
@@ -213,6 +246,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 display: "list-item",
                 mb: "0.5em",
               }}
+              ref={(el) => (questionRefs.current[5] = el)}
             >
               The hooked shark was brought to the
               <TextField
@@ -220,6 +254,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="36"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[5] = el)}
                 onChange={(e) => handleInputChange(35, e.target.value)}
                 value={answers[35]}
               />
@@ -243,6 +278,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 display: "list-item",
                 mb: "0.5em",
               }}
+              ref={(el) => (questionRefs.current[6] = el)}
             >
               Larger sharks: an acoustic tag was fitted or a
               <TextField
@@ -250,6 +286,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="37"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[6] = el)}
                 onChange={(e) => handleInputChange(36, e.target.value)}
                 value={answers[36]}
               />
@@ -262,6 +299,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 display: "list-item",
                 mb: "0.5em",
               }}
+              ref={(el) => (questionRefs.current[7] = el)}
             >
               The shark was released after its
               <TextField
@@ -269,6 +307,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="38"
                 variant="standard"
                 autoComplete="off"
+                inputRef={(el) => (inputRefs.current[7] = el)}
                 onChange={(e) => handleInputChange(37, e.target.value)}
                 value={answers[37]}
               />
@@ -302,8 +341,14 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
             mt: 2,
           }}
         >
-          <FormControl sx={{ mt: 2 }}>
-            <Typography>
+          <FormControl
+            sx={{ mt: 2, width: "100%" }}
+            ref={(el) => (questionRefs.current[8] = el)}
+          >
+            <Typography
+              ref={(el) => (inputRefs.current[8] = el)}
+              tabIndex={0}
+            >
               <b style={{ marginRight: "2em" }}>39</b> What was the most
               surprising finding about tiger sharks in the Raine Island area?
             </Typography>
@@ -329,8 +374,14 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
               />
             </RadioGroup>
           </FormControl>
-          <FormControl sx={{ mt: 2 }}>
-            <Typography>
+          <FormControl
+            sx={{ mt: 2, width: "100%" }}
+            ref={(el) => (questionRefs.current[9] = el)}
+          >
+            <Typography
+              ref={(el) => (inputRefs.current[9] = el)}
+              tabIndex={0}
+            >
               <b style={{ marginRight: "2em" }}>40</b> What does the speaker say
               about the future of the research project?
             </Typography>

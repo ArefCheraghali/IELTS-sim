@@ -13,19 +13,22 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-const answerImage = "/images/test1/listening1-section3-1.jpg";
-
 export default function Part3({ answers, setAnswers, currentQuestion }) {
   // Create refs for each text field
   const inputRefs = useRef([]);
+  const questionRefs = useRef([]);
 
   useEffect(() => {
     // Focus on the text field corresponding to the current question
     if (currentQuestion >= 21 && currentQuestion <= 30) {
       const index = currentQuestion - 21;
-      if (inputRefs.current[index]) {
-        inputRefs.current[index].focus();
+      if (currentQuestion <= 23) {
+        inputRefs.current[index]?.focus();
       }
+      questionRefs.current[index]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [currentQuestion]);
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G"];
@@ -42,8 +45,11 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         width: "100%",
+        margin: "0 auto",
+        maxWidth: "1200px",
+        padding: "0 2rem",
       }}
     >
       <Box
@@ -51,8 +57,9 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
-          width: "100%",
-          maxWidth: "60rem",
+          minWidth: "35rem",
+          maxWidth: "1200px",
+          margin: "0 auto",
         }}
       >
         <Typography variant="h5" gutterBottom>
@@ -72,33 +79,74 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
       </Typography>
       <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
         <Box
-          component="img"
           sx={{
-            width: "40%",
-            height: "30vh",
+            width: "70%",
             maxWidth: "60rem",
-            mt: 5,
+            mt: 1,
+            border: "1px solid #ccc",
+            borderRadius: 1,
+            bgcolor: "#f5f5f5",
           }}
-          alt="Map"
-          src={answerImage}
-        />
+        >
+          <List>
+            <ListItem>
+              <Typography>
+                <b>A</b>&nbsp;&nbsp;&nbsp;possibility of specialisation
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <b>B</b>&nbsp;&nbsp;&nbsp;relevance to future career
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <b>C</b>&nbsp;&nbsp;&nbsp;personal interest
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <b>D</b>&nbsp;&nbsp;&nbsp;organisation of course
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <b>E</b>&nbsp;&nbsp;&nbsp;assessment methods
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <b>F</b>&nbsp;&nbsp;&nbsp;range of topics
+              </Typography>
+            </ListItem>
+            <ListItem>
+              <Typography>
+                <b>G</b>&nbsp;&nbsp;&nbsp;reputation of lecturer
+              </Typography>
+            </ListItem>
+          </List>
+        </Box>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             width: "100%",
             maxWidth: "60rem",
-            mt: 2,
+            mt: 5,
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ margin: "0.5em", ml: "15em" }} key={index}>
+            <FormControl
+              sx={{ margin: "0.5em", ml: "15em" }}
+              key={index}
+              ref={(el) => (questionRefs.current[index] = el)}
+            >
               <InputLabel>{`${21 + index}`}</InputLabel>
               <Select
                 sx={{ width: "5em" }}
                 value={answers[20 + index] || ""}
                 inputRef={(el) => (inputRefs.current[index] = el)}
-              onChange={(e) => handleInputChange(20 + index, e.target.value)}
+                onChange={(e) => handleInputChange(20 + index, e.target.value)}
                 label={`${21 + index}`}
               >
                 {possibleAnswers.map((answer) => (
@@ -116,7 +164,6 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          width: "100%",
           maxWidth: "60rem",
           mt: 3,
           mb: 3,
@@ -136,7 +183,10 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
             mt: 2,
           }}
         >
-          <FormControl sx={{ mt: 2 }}>
+          <FormControl
+            sx={{ mt: 2 }}
+            ref={(el) => (questionRefs.current[3] = el)}
+          >
             <Typography>
               <b style={{ marginRight: "2em" }}>24</b> Why does Marco's tutor
               advise him to avoid the <i>Team Management</i> course?
@@ -150,23 +200,26 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
                 value={"A"}
                 control={<Radio />}
                 label="A) It will repeat work that Marco has already done."
-              ></FormControlLabel>
+              />
               <FormControlLabel
                 value={"B"}
                 control={<Radio />}
-                label="B) It is intended for students at a lower level than Marco."
+                label="B) It will not be relevant to his future career."
               />
               <FormControlLabel
                 value={"C"}
                 control={<Radio />}
-                label="C) It may take too much time to do well."
+                label="C) It will be too difficult for him to manage."
               />
             </RadioGroup>
           </FormControl>
-          <FormControl sx={{ mt: 2 }}>
+          <FormControl
+            sx={{ mt: 2 }}
+            ref={(el) => (questionRefs.current[4] = el)}
+          >
             <Typography>
-              <b style={{ marginRight: "2em", marginLeft: "-3em" }}>25</b> Why
-              does Marco want to do a dissertation?
+              <b style={{ marginRight: "2em" }}>25</b> What does Marco's tutor
+              say about the <i>Marketing</i> course?
             </Typography>
             <RadioGroup
               sx={{ ml: "5em" }}
@@ -176,24 +229,27 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
               <FormControlLabel
                 value={"A"}
                 control={<Radio />}
-                label="A) He thinks it will help his future career."
-              ></FormControlLabel>
+                label="A) It would be a good choice for Marco."
+              />
               <FormControlLabel
                 value={"B"}
                 control={<Radio />}
-                label="B) He would like to do a detailed study."
+                label="B) It is not suitable for Marco's level."
               />
               <FormControlLabel
                 value={"C"}
                 control={<Radio />}
-                label="C) He has already done some work for it."
+                label="C) It would be better to take it later."
               />
             </RadioGroup>
           </FormControl>
-          <FormControl sx={{ mt: 2 }}>
+          <FormControl
+            sx={{ mt: 2 }}
+            ref={(el) => (questionRefs.current[5] = el)}
+          >
             <Typography>
               <b style={{ marginRight: "2em" }}>26</b> What does Marco's tutor
-              think about the dissertation outline?
+              say about the <i>Finance</i> course?
             </Typography>
             <RadioGroup
               sx={{ ml: "5em" }}
@@ -203,24 +259,27 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
               <FormControlLabel
                 value={"A"}
                 control={<Radio />}
-                label="A) The topic is too narrow to be useful."
-              ></FormControlLabel>
+                label="A) It would be useful for Marco's future career."
+              />
               <FormControlLabel
                 value={"B"}
                 control={<Radio />}
-                label="B) The available data may be unsuitable."
+                label="B) It would be too challenging for Marco."
               />
               <FormControlLabel
                 value={"C"}
                 control={<Radio />}
-                label="C) The research plan is too complicated."
+                label="C) It would not be interesting for Marco."
               />
             </RadioGroup>
           </FormControl>
-          <FormControl sx={{ mt: 2 }}>
+          <FormControl
+            sx={{ mt: 2 }}
+            ref={(el) => (questionRefs.current[6] = el)}
+          >
             <Typography>
-              <b style={{ marginRight: "2em" }}>27</b> What does Marco decide to
-              do about his dissertation?
+              <b style={{ marginRight: "2em" }}>27</b> What does Marco's tutor
+              say about the <i>Human Resources</i> course?
             </Typography>
             <RadioGroup
               sx={{ ml: "5em" }}
@@ -230,17 +289,17 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
               <FormControlLabel
                 value={"A"}
                 control={<Radio />}
-                label="A) contact potencial interviewees."
-              ></FormControlLabel>
+                label="A) It would be too theoretical for Marco."
+              />
               <FormControlLabel
                 value={"B"}
                 control={<Radio />}
-                label="B) change to another topic."
+                label="B) It would help Marco develop practical skills."
               />
               <FormControlLabel
                 value={"C"}
                 control={<Radio />}
-                label="C) discuss it with Professor Briggs."
+                label="C) It would not be relevant to Marco's interests."
               />
             </RadioGroup>
           </FormControl>
@@ -251,7 +310,6 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          width: "100%",
           maxWidth: "60rem",
         }}
       >
@@ -260,63 +318,59 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
         <Typography>
           Write <b>NO MORE THAN TWO WORDS</b> for each answer.
         </Typography>
-        <List
+        <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            gap: 2,
-            pl: "3rem",
+            pl: "2rem",
             width: "100%",
             fontSize: "18px",
           }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography>
-              <b>28 - </b>
-              Marco's tutor suggests that he should look at the
-              <TextField
-                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-                label="28"
-                variant="standard"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(27, e.target.value)}
-                value={answers[27]}
-              />
-              for each course.
-            </Typography>
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography>
-              <b>29 - </b>
-              Marco's tutor advises him to check the
-              <TextField
-                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-                label="29"
-                variant="standard"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(28, e.target.value)}
-                value={answers[28]}
-              />
-              for each course.
-            </Typography>
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography>
-              <b>30 - </b>
-              Marco's tutor suggests that he should look at the
-              <TextField
-                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-                label="30"
-                variant="standard"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(29, e.target.value)}
-                value={answers[29]}
-              />
-              for each course.
-            </Typography>
-          </ListItem>
-        </List>
+          <Typography sx={{ mt: 2 }} ref={(el) => (questionRefs.current[7] = el)}>
+            <b>28 - </b>
+            Marco's tutor suggests that he should look at the
+            <TextField
+              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+              label="28"
+              variant="standard"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(27, e.target.value)}
+              value={answers[27]}
+              inputRef={(el) => (inputRefs.current[7] = el)}
+            />
+            for each course.
+          </Typography>
+          <Typography sx={{ mt: 3 }} ref={(el) => (questionRefs.current[8] = el)}>
+            <b>29 - </b>
+            Marco's tutor advises him to check the
+            <TextField
+              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+              label="29"
+              variant="standard"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(28, e.target.value)}
+              value={answers[28]}
+              inputRef={(el) => (inputRefs.current[8] = el)}
+            />
+            for each course.
+          </Typography>
+          <Typography sx={{ mt: 3 }} ref={(el) => (questionRefs.current[9] = el)}>
+            <b>30 - </b>
+            Marco's tutor suggests that he should look at the
+            <TextField
+              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+              label="30"
+              variant="standard"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(29, e.target.value)}
+              value={answers[29]}
+              inputRef={(el) => (inputRefs.current[9] = el)}
+            />
+            for each course.
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
