@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   FormControl,
@@ -10,12 +10,43 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useHighlight } from "app/contexts/HighlightContext";
+import ReadingHighlightMenu from "app/components/ReadingHighlightMenu";
 
 import SeaweedText from "./text/seaweedText";
-const image3 = "/images/test1/readingAc1-passage1-3.jpg";
 const image4 = "/images/test1/readingAc1-passage1-4.jpg";
 
-const Section1 = ({ answers, setAnswers }) => {
+const Part1 = ({ answers, setAnswers, currentQuestion }) => {
+  const refs = useRef(Array(13).fill(null));
+  const { handleContextMenu, textRef } = useHighlight();
+
+  useEffect(() => {
+    // Focus on the element corresponding to the current question
+    if (currentQuestion >= 1 && currentQuestion <= 13) {
+      const index = currentQuestion - 1;
+      const element = refs.current[index];
+      if (element) {
+        // Scroll the element into view first
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        // Handle focus based on question type
+        if (index < 6 || index >= 10) {
+          // For Select components (questions 1-6 and 11-13)
+          const input = element.querySelector("input");
+          if (input) {
+            setTimeout(() => input.focus(), 100);
+          }
+        } else if (index >= 6 && index <= 9) {
+          // For text fields (questions 7-10)
+          setTimeout(() => element.focus(), 100);
+        }
+      }
+    }
+  }, [currentQuestion]);
+
   const possibleAnswers = [
     "i",
     "ii",
@@ -43,6 +74,8 @@ const Section1 = ({ answers, setAnswers }) => {
       }}
     >
       <Box
+        ref={textRef}
+        onContextMenu={handleContextMenu}
         sx={{
           width: "50%",
           overflowY: "auto",
@@ -51,6 +84,7 @@ const Section1 = ({ answers, setAnswers }) => {
         }}
       >
         <SeaweedText />
+        <ReadingHighlightMenu />
       </Box>
 
       <Box
@@ -94,19 +128,62 @@ const Section1 = ({ answers, setAnswers }) => {
           <Box
             sx={{
               width: "70%",
+              border: "1px solid #000",
+              padding: "1rem",
+              mb: 2,
+              ml: 2,
             }}
           >
-            <img
-              src={image3}
-              alt="Reading Passage Part 1"
-              style={{ width: "550px" }}
-            />
+            <Typography variant="h6" sx={{ textAlign: "center", mb: 1 }}>
+              List of Headings
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>i</Typography>
+                <Typography>
+                  The appearance and location of different seaweeds
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>ii</Typography>
+                <Typography>The nutritional value of seaweeds</Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>iii</Typography>
+                <Typography>How seaweeds reproduce and grow</Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>iv</Typography>
+                <Typography>How to make agar from seaweeds</Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>v</Typography>
+                <Typography>The under-use of native seaweeds</Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>vi</Typography>
+                <Typography>Seaweed species at risk of extinction</Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>vii</Typography>
+                <Typography>Recipes for how to cook seaweeds</Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>viii</Typography>
+                <Typography>The range of seaweed products</Typography>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <Typography sx={{ minWidth: "2rem" }}>ix</Typography>
+                <Typography>Why seaweeds don't sink or dry out</Typography>
+              </Box>
+            </Box>
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
             {Array.from({ length: 6 }).map((_, index) => (
               <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
                 <InputLabel>{`${1 + index}`}</InputLabel>
                 <Select
+                  ref={(el) => (refs.current[index] = el)}
                   sx={{ width: "5em" }}
                   value={answers[index] || ""}
                   onChange={(e) => handleInputChange(index, e.target.value)}
@@ -156,6 +233,7 @@ const Section1 = ({ answers, setAnswers }) => {
           }}
         >
           <TextField
+            ref={(el) => (refs.current[6] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="7"
             autoComplete="off"
@@ -163,6 +241,7 @@ const Section1 = ({ answers, setAnswers }) => {
             value={answers[6]}
           />
           <TextField
+            ref={(el) => (refs.current[7] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="8"
             autoComplete="off"
@@ -170,6 +249,7 @@ const Section1 = ({ answers, setAnswers }) => {
             value={answers[7]}
           />
           <TextField
+            ref={(el) => (refs.current[8] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="9"
             autoComplete="off"
@@ -177,6 +257,7 @@ const Section1 = ({ answers, setAnswers }) => {
             value={answers[8]}
           />
           <TextField
+            ref={(el) => (refs.current[9] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="10"
             autoComplete="off"
@@ -214,6 +295,7 @@ const Section1 = ({ answers, setAnswers }) => {
               <FormControl>
                 <InputLabel>11</InputLabel>
                 <Select
+                  ref={(el) => (refs.current[10] = el)}
                   sx={{ width: "5em" }}
                   value={answers[10] || ""}
                   label="11"
@@ -233,6 +315,7 @@ const Section1 = ({ answers, setAnswers }) => {
               <FormControl>
                 <InputLabel>12</InputLabel>
                 <Select
+                  ref={(el) => (refs.current[11] = el)}
                   sx={{ width: "5em" }}
                   value={answers[11] || ""}
                   label="12"
@@ -252,6 +335,7 @@ const Section1 = ({ answers, setAnswers }) => {
               <FormControl>
                 <InputLabel>13</InputLabel>
                 <Select
+                  ref={(el) => (refs.current[12] = el)}
                   sx={{ width: "5em" }}
                   value={answers[12] || ""}
                   label="13"
@@ -270,4 +354,4 @@ const Section1 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Section1;
+export default Part1;

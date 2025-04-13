@@ -39,7 +39,7 @@ export default function Test() {
   const audioRef = useRef(null);
   const answersRef = useRef(answers);
   const { volume } = useVolume();
-  const { timeLeft, startTimer } = useTimer();
+  const { timeLeft, startTimer, resetTimer } = useTimer();
 
   const {
     anchorEl,
@@ -139,6 +139,7 @@ export default function Test() {
       JSON.stringify(answersRef.current)
     );
     handleCloseDialog();
+    resetTimer();
     router.push("/tests/reading-intro");
   };
 
@@ -154,7 +155,6 @@ export default function Test() {
     <ExamLayout sectionName="Listening Test" onSubmit={handleOpenDialog}>
       <Box sx={{ textAlign: "center", userSelect: "text", pb: 14 }}>
         {" "}
-        {/* Added padding at bottom for the navigation bar */}
         <Box
           onContextMenu={handleContextMenu}
           ref={textRef}
@@ -168,7 +168,7 @@ export default function Test() {
             handleClearHighlights={handleClearHighlights}
           />
           {!showQuestions ? (
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={{ mt: 6 }}>
               Click whenever you are ready to take the test.
             </Typography>
           ) : null}

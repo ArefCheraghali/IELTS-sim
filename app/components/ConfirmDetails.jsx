@@ -1,25 +1,92 @@
 "use client";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import InfoIcon from "@mui/icons-material/Info";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ConfirmDetails = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [selectedTest, setSelectedTest] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    const testData = JSON.parse(localStorage.getItem("selectedTest"));
-    setUser(userData);
-    setSelectedTest(testData);
+    const fetchUserData = async () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        if (!userData) {
+          setError("Phone number not found. Please log in again.");
+          setLoading(false);
+          return;
+        }
+
+        const phoneNumber = userData;
+        const token = localStorage.getItem("access_token");
+        const testData = JSON.parse(localStorage.getItem("selectedTest"));
+
+        const response = await axios.get(
+          `http://127.0.0.1:8000/users/${phoneNumber}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setUser(response.data);
+          setSelectedTest(testData);
+        } else {
+          setError("Failed to fetch user data.");
+        }
+      } catch (error) {
+        setError("There was an error fetching the user data.");
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const handleConfirm = () => {
-    // Navigate to instructions first
     router.push("/tests/instructions");
   };
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <Typography variant="h5" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -57,10 +124,10 @@ const ConfirmDetails = () => {
           {user && (
             <>
               <Typography variant="body1" gutterBottom>
-                Name: {user.name}
+                Name: {user.name} {user.family_name}
               </Typography>
               <Typography variant="body1" gutterBottom>
-                Phone Number: {user.phone}
+                Phone Number: {user.phone_number}
               </Typography>
             </>
           )}

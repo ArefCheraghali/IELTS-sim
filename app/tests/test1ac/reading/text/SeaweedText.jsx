@@ -1,18 +1,13 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import useTextHighlight from "app/hooks/useTextHighlight";
-import HighlightContextMenu from "app/components/HighlightContextMenu";
+import { useHighlight } from "app/contexts/HighlightContext";
+import ReadingHighlightMenu from "app/components/ReadingHighlightMenu";
 
 const SeaweedText = () => {
   const {
-    anchorEl,
-    menuPosition,
     textRef,
     handleContextMenu,
-    handleHighlight,
-    handleClearHighlights,
-    handleClose,
-  } = useTextHighlight();
+  } = useHighlight();
 
   return (
     <Box sx={{ userSelect: "text" }}>
@@ -21,13 +16,7 @@ const SeaweedText = () => {
         ref={textRef}
         sx={{ userSelect: "text" }}
       >
-        <HighlightContextMenu
-          anchorEl={anchorEl}
-          menuPosition={menuPosition}
-          handleClose={handleClose}
-          handleHighlight={handleHighlight}
-          handleClearHighlights={handleClearHighlights}
-        />
+        <ReadingHighlightMenu />
         <Typography variant="h6" gutterBottom>
           <b>Seaweeds of New Zealand</b>
         </Typography>

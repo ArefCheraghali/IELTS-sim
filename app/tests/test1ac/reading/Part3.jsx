@@ -13,6 +13,8 @@ import {
   Accordion,
   AccordionSummary,
 } from "@mui/material";
+import { useHighlight } from "app/contexts/HighlightContext";
+import ReadingHighlightMenu from "app/components/ReadingHighlightMenu";
 import WritingText from "./text/WritingText";
 
 const image3 = "/images/test1/readingAc1-passage3-3.jpg";
@@ -20,6 +22,7 @@ const image4 = "/images/test1/readingAc1-passage3-5.jpg";
 
 const Section3 = ({ answers, setAnswers }) => {
   const possibleAnswers = ["A", "B", "C", "D", "E"];
+  const { handleContextMenu, textRef } = useHighlight();
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -44,6 +47,7 @@ const Section3 = ({ answers, setAnswers }) => {
         }}
       >
         <WritingText />
+        <ReadingHighlightMenu />
       </Box>
       <Box
         sx={{
@@ -69,6 +73,8 @@ const Section3 = ({ answers, setAnswers }) => {
           Choose the correct letter, <b>A, B, C</b> or <b>D</b>.
         </Typography>
         <Box
+          ref={textRef}
+          onContextMenu={handleContextMenu}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -287,6 +293,8 @@ const Section3 = ({ answers, setAnswers }) => {
           were narrow at first, and later widened.
         </Typography>
         <Box
+          ref={textRef}
+          onContextMenu={handleContextMenu}
           sx={{
             width: "100%",
           }}
@@ -380,6 +388,8 @@ const Section3 = ({ answers, setAnswers }) => {
           </Typography>
         </Box>
         <Box
+          ref={textRef}
+          onContextMenu={handleContextMenu}
           sx={{
             width: "100%",
             mt: 2,

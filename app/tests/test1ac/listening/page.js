@@ -25,7 +25,7 @@ import { TEST_DURATIONS } from "../../../config/testDurations";
 
 const listeningAudio = "/audio/Listening1.mp3";
 const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ac.listening;
-const QUESTIONS_DELAY_MS = 1000; // Time before showing questions (27 seconds)
+const QUESTIONS_DELAY_MS = 27000; // Time before showing questions (27 seconds)
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
@@ -39,7 +39,7 @@ export default function Test() {
   const audioRef = useRef(null);
   const answersRef = useRef(answers);
   const { volume } = useVolume();
-  const { timeLeft, startTimer } = useTimer();
+  const { timeLeft, startTimer, resetTimer } = useTimer();
 
   const {
     anchorEl,
@@ -139,7 +139,8 @@ export default function Test() {
       JSON.stringify(answersRef.current)
     );
     handleCloseDialog();
-    router.push("/tests/test1ac/reading");
+    resetTimer();
+    router.push("/tests/reading-intro");
   };
 
   const handleCloseDialog = () => {
@@ -171,7 +172,7 @@ export default function Test() {
             handleClearHighlights={handleClearHighlights}
           />
           {!showQuestions ? (
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" gutterBottom sx={{ mt: 6 }}>
               Click start when you are ready to take the Test.
             </Typography>
           ) : null}

@@ -12,6 +12,11 @@ export function TimerProvider({ children, onTimeExpired }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
+  const resetTimer = useCallback(() => {
+    setTimeLeft(0);
+    setIsRunning(false);
+  }, []);
+
   const startTimer = useCallback((durationInMinutes) => {
     const seconds = durationInMinutes * 60;
     setTimeLeft(seconds);
@@ -52,6 +57,7 @@ export function TimerProvider({ children, onTimeExpired }) {
   const value = {
     timeLeft,
     startTimer,
+    resetTimer,
     formatTime,
     isRunning,
   };

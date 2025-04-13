@@ -36,10 +36,12 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const onSubmit = async (data) => {
     setLoading(true);
     setError(null);
+    setSuccessMessage(null);
 
     localStorage.setItem("user", JSON.stringify(data.phone));
 
@@ -63,20 +65,27 @@ export default function Home() {
         localStorage.setItem("access_token", response.data.access_token);
         localStorage.setItem("role", response.data.role);
 
-        // Redirect based on role
-        if (response.data.role === "admin") {
-          router.push("/admin"); // Redirect to admin page
-        } else if (response.data.role === "user") {
-          router.push("/user"); // Redirect to user page
-        } else {
-          console.error("Unknown role:", response.data.role);
-        }
+        setSuccessMessage("Login successful! Redirecting...");
+
+        // Add a small delay before redirecting
+        setTimeout(() => {
+          // Redirect based on role
+          if (response.data.role === "admin") {
+            router.push("/admin");
+          } else if (response.data.role === "user") {
+            router.push("/user");
+          } else {
+            console.error("Unknown role:", response.data.role);
+          }
+        }, 1500); // 1.5 second delay
       } else {
         setError("Login failed: Invalid credentials");
       }
     } catch (error) {
-      setError("There was an error logging in. Please try again.");
-      console.error("There was an error logging in:", error);
+      const errorMessage =
+        error.response?.data?.detail || "An unexpected error occurred";
+      setError(errorMessage);
+      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }
@@ -84,6 +93,10 @@ export default function Home() {
 
   const handleCloseError = () => {
     setError(null);
+  };
+
+  const handleCloseSuccess = () => {
+    setSuccessMessage(null);
   };
 
   return (
@@ -151,6 +164,21 @@ export default function Home() {
           sx={{ width: "100%" }}
         >
           {error}
+        </Alert>
+      </Snackbar>
+
+      {/* Success Snackbar */}
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={1500}
+        onClose={handleCloseSuccess}
+      >
+        <Alert
+          onClose={handleCloseSuccess}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {successMessage}
         </Alert>
       </Snackbar>
     </Box>

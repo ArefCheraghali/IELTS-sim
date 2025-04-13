@@ -10,16 +10,16 @@ export default function AdminPanel() {
   const [showForm, setShowForm] = useState(false);
   const router = useRouter();
 
-  // Handle logout
-  const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("role");
-    router.push("/");
+  // Handle exam navigation
+  const handleExamNavigation = () => {
+    router.push("/tests");
   };
 
   return (
     <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mb: 4 }}>
+      <Box
+        sx={{ display: "flex", justifyContent: "space-between", gap: 2, mb: 4 }}
+      >
         <Button
           onClick={() => setShowForm(!showForm)}
           variant="contained"
@@ -43,15 +43,15 @@ export default function AdminPanel() {
         </Button>
 
         <Button
-          onClick={handleLogout}
+          onClick={handleExamNavigation}
           variant="contained"
           sx={{
-            backgroundColor: "#dc3545", // Red color for logout
+            backgroundColor: "#2196f3", // Blue color for exam button
             "&:hover": {
-              backgroundColor: "#c82333", // Darker red on hover
+              backgroundColor: "#1976d2", // Darker blue on hover
             },
             "&:active": {
-              backgroundColor: "#bd2130", // Even darker red when clicked
+              backgroundColor: "#1565c0", // Even darker blue when clicked
             },
             color: "#fff",
             fontWeight: "bold",
@@ -61,7 +61,7 @@ export default function AdminPanel() {
             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           }}
         >
-          Logout
+          Exam
         </Button>
       </Box>
 

@@ -48,8 +48,9 @@ const ExamNavbar = ({ sectionName, userName, onSubmit }) => {
     <AppBar
       position="static"
       sx={{
-        bgcolor: "primary.dark",
+        bgcolor: "black",
         boxShadow: 3,
+        color: "white",
       }}
     >
       <Toolbar>
@@ -59,6 +60,7 @@ const ExamNavbar = ({ sectionName, userName, onSubmit }) => {
             sx={{
               mr: 2,
               fontWeight: "medium",
+              color: "rgba(255, 255, 255, 0.9)",
             }}
           >
             {userName}
@@ -68,6 +70,7 @@ const ExamNavbar = ({ sectionName, userName, onSubmit }) => {
             component="div"
             sx={{
               fontWeight: "bold",
+              color: "white",
             }}
           >
             {sectionName}
@@ -77,7 +80,7 @@ const ExamNavbar = ({ sectionName, userName, onSubmit }) => {
           <Typography
             variant="h6"
             sx={{
-              color: timeLeft <= 120 ? "#ff4444" : "inherit",
+              color: timeLeft <= 120 ? "#ff4444" : "white",
               fontWeight: timeLeft <= 120 ? "bold" : "normal",
               mr: "150px",
             }}
@@ -135,13 +138,13 @@ const ExamNavbar = ({ sectionName, userName, onSubmit }) => {
 
           <Button
             variant="contained"
-            color="secondary"
             onClick={onSubmit}
             sx={{
               ml: 2,
-              bgcolor: "secondary.main",
+              bgcolor: "rgba(255, 255, 255, 0.9)",
+              color: "black",
               "&:hover": {
-                bgcolor: "secondary.dark",
+                bgcolor: "white",
               },
             }}
           >

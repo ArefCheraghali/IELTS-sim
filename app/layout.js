@@ -6,6 +6,7 @@ import MainNavbar from "./components/MainNavbar";
 import styles from "./layout.module.css";
 import { VolumeProvider } from "./contexts/VolumeContext";
 import { TimerProvider } from "./contexts/TimerContext";
+import { ExamProvider } from "./contexts/ExamContext";
 import { isExamRoute } from "./utils/routeHelpers";
 
 export default function Layout({ children }) {
@@ -21,13 +22,17 @@ export default function Layout({ children }) {
       <body>
         <VolumeProvider>
           <TimerProvider>
-            {!isExam && <MainNavbar />}
-            <Container className={styles.container} data-exam={isExam}>{children}</Container>
-            <Box component="footer" className={styles.footer}>
-              <Typography variant="body2" color="textSecondary">
-                Shayegan The Test Helper © 2025 LTD
-              </Typography>
-            </Box>
+            <ExamProvider>
+              {!isExam && <MainNavbar />}
+              <Container className={styles.container} data-exam={isExam}>
+                {children}
+              </Container>
+              <Box component="footer" className={styles.footer}>
+                <Typography variant="body2" color="textSecondary">
+                  Shayegan The Test Helper © 2025 LTD
+                </Typography>
+              </Box>
+            </ExamProvider>
           </TimerProvider>
         </VolumeProvider>
       </body>

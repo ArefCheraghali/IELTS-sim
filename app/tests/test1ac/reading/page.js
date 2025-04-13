@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import {
   Box,
   Button,
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
@@ -15,32 +14,33 @@ import Part1 from "./Part1";
 import Part2 from "./Part2";
 import Part3 from "./Part3";
 import ExamLayout from "../../../components/ExamLayout";
-import { useExam } from "../../../contexts/ExamContext";
+import { useTimer } from "../../../contexts/TimerContext";
+import TestBottomNavigation from "../../../components/TestBottomNavigation";
+import { TEST_DURATIONS } from "../../../config/testDurations";
+import { HighlightProvider } from "app/contexts/HighlightContext";
 import useTextHighlight from "app/hooks/useTextHighlight";
 import HighlightContextMenu from "app/components/HighlightContextMenu";
 
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ac.reading;
+
 export default function Test() {
-  const [currentPart, setCurrentPart] = useState(0);
+  const [isReady, setIsReady] = useState(false);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
   const answersRef = useRef(answers);
   const router = useRouter();
-  const { startTimer, timeLeft } = useExam();
+  const { startTimer, timeLeft, resetTimer } = useTimer();
 
-  const {
-    anchorEl,
-    menuPosition,
-    textRef,
-    handleContextMenu,
-    handleHighlight,
-    handleClearHighlights,
-    handleClose,
-  } = useTextHighlight();
+  const handleStart = () => {
+    setIsReady(true);
+    startTimer(TEST_DURATION_MINUTES);
+  };
 
   useEffect(() => {
-    // Start 60-minute timer when component mounts
-    startTimer(60);
-  }, [startTimer]);
+    handleStart(); // Auto-start the reading test
+  }, []);
 
   useEffect(() => {
     answersRef.current = answers;
@@ -48,17 +48,25 @@ export default function Test() {
 
   // Auto-submit when time is up
   useEffect(() => {
-    if (timeLeft === 0) {
-      onSubmit();
+    let autoSubmitTimeout;
+    if (timeLeft === 0 && isReady) {
+      // Add a small delay to ensure state updates are complete
+      autoSubmitTimeout = setTimeout(() => {
+        onSubmit();
+      }, 100);
     }
-  }, [timeLeft]);
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft, isReady]);
 
-  const handleNavigation = (direction) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (direction === "next" && currentPart < 2) {
-      setCurrentPart(currentPart + 1);
-    } else if (direction === "prev" && currentPart > 0) {
-      setCurrentPart(currentPart - 1);
+  const handleQuestionChange = (questionNumber) => {
+    setCurrentQuestion(questionNumber);
+    // Update the section based on the question number
+    if (questionNumber <= 13) {
+      setCurrentSection(0);
+    } else if (questionNumber <= 26) {
+      setCurrentSection(1);
+    } else {
+      setCurrentSection(2);
     }
   };
 
@@ -71,63 +79,79 @@ export default function Test() {
   };
 
   const onSubmit = () => {
+    if (!isReady) return; // Don't submit if test hasn't started
+
     localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
     handleCloseDialog();
-    router.push("/tests/test1ac/writing");
+    resetTimer();
+    router.push("/tests/writing-intro");
   };
 
-  const content = (
-    <Box sx={{ textAlign: "center", mt: 4, userSelect: "text" }}>
-      <Box
-        onContextMenu={handleContextMenu}
-        ref={textRef}
-        sx={{ userSelect: "text" }}
-      >
-        <HighlightContextMenu
-          anchorEl={anchorEl}
-          menuPosition={menuPosition}
-          handleClose={handleClose}
-          handleHighlight={handleHighlight}
-          handleClearHighlights={handleClearHighlights}
-        />
-        <Box sx={{ mt: 4 }}>
-          {currentPart === 0 && (
-            <Part1 answers={answers} setAnswers={setAnswers} />
+  const {
+    anchorEl,
+    menuPosition,
+    textRef,
+    handleContextMenu,
+    handleHighlight,
+    handleClearHighlights,
+    handleClose,
+  } = useTextHighlight();
+
+  return (
+    <HighlightProvider>
+      <ExamLayout sectionName="Reading" onSubmit={handleOpenDialog}>
+        <Box
+          ref={textRef}
+          onContextMenu={handleContextMenu}
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+          }}
+        >
+          {currentSection === 0 && (
+            <Part1
+              answers={answers}
+              setAnswers={setAnswers}
+              currentQuestion={currentQuestion}
+            />
           )}
-          {currentPart === 1 && (
-            <Part2 answers={answers} setAnswers={setAnswers} />
+          {currentSection === 1 && (
+            <Part2
+              answers={answers}
+              setAnswers={setAnswers}
+              currentQuestion={currentQuestion}
+            />
           )}
-          {currentPart === 2 && (
-            <Part3 answers={answers} setAnswers={setAnswers} />
+          {currentSection === 2 && (
+            <Part3
+              answers={answers}
+              setAnswers={setAnswers}
+              currentQuestion={currentQuestion}
+            />
           )}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => handleNavigation("prev")}
-              disabled={currentPart === 0}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleNavigation("next")}
-              disabled={currentPart === 2}
-            >
-              Next
-            </Button>
-          </Box>
-          {currentPart === 2 && (
-            <Button
-              onClick={handleOpenDialog}
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-            >
-              Submit
-            </Button>
-          )}
+
+          <HighlightContextMenu
+            anchorEl={anchorEl}
+            menuPosition={menuPosition}
+            handleHighlight={handleHighlight}
+            handleClearHighlights={handleClearHighlights}
+            handleClose={handleClose}
+          />
+          <TestBottomNavigation
+            currentSection={currentSection}
+            setCurrentSection={setCurrentSection}
+            currentQuestion={currentQuestion}
+            setCurrentQuestion={handleQuestionChange}
+            answers={answers}
+            totalSections={3}
+            partQuestions={{
+              0: { start: 1, end: 13 },
+              1: { start: 14, end: 26 },
+              2: { start: 27, end: 40 },
+            }}
+          />
         </Box>
         <Dialog open={openDialog} onClose={handleCloseDialog}>
           <DialogTitle>{"Submit Answers?"}</DialogTitle>
@@ -146,9 +170,7 @@ export default function Test() {
             </Button>
           </DialogActions>
         </Dialog>
-      </Box>
-    </Box>
+      </ExamLayout>
+    </HighlightProvider>
   );
-
-  return <ExamLayout sectionName="Reading Test">{content}</ExamLayout>;
 }

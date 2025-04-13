@@ -1,18 +1,9 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import useTextHighlight from "app/hooks/useTextHighlight";
-import HighlightContextMenu from "app/components/HighlightContextMenu";
+import { useHighlight } from "app/contexts/HighlightContext";
 
 const CrowText = () => {
-  const {
-    anchorEl,
-    menuPosition,
-    textRef,
-    handleContextMenu,
-    handleHighlight,
-    handleClearHighlights,
-    handleClose,
-  } = useTextHighlight();
+  const { textRef, handleContextMenu } = useHighlight();
 
   return (
     <Box sx={{ userSelect: "text" }}>
@@ -21,13 +12,6 @@ const CrowText = () => {
         ref={textRef}
         sx={{ userSelect: "text" }}
       >
-        <HighlightContextMenu
-          anchorEl={anchorEl}
-          menuPosition={menuPosition}
-          handleClose={handleClose}
-          handleHighlight={handleHighlight}
-          handleClearHighlights={handleClearHighlights}
-        />
         <Typography variant="h5" gutterBottom>
           <b>TWO WINGS AND A TOOLKIT</b>
         </Typography>

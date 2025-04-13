@@ -1,33 +1,79 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Typography, Box, Button } from "@mui/material";
-import Link from "next/link";
+import { Typography, Box, Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function Tests() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    setUser(userData);
+    const fetchUserData = async () => {
+      try {
+        const userData = JSON.parse(localStorage.getItem("user"));
+        if (!userData) {
+          setError("Phone number not found. Please log in again.");
+          setLoading(false);
+          return;
+        }
+
+        const phoneNumber = userData;
+        const token = localStorage.getItem("access_token");
+
+        const response = await axios.get(
+          `http://127.0.0.1:8000/users/${phoneNumber}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setUser(response.data);
+        } else {
+          setError("Failed to fetch user data.");
+        }
+      } catch (error) {
+        setError("There was an error fetching the user data.");
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   const handleTestSelect = (testId, testType) => {
-    // Store selected test info in localStorage
     localStorage.setItem("selectedTest", JSON.stringify({ testId, testType }));
     router.push("/tests/confirm-details");
   };
 
   return (
     <Box sx={{ textAlign: "center", mt: 4 }}>
-      {user && (
-        <Typography variant="h6" gutterBottom>
-          Candidate: {user.name} ({user.phone})
+      {loading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Typography variant="h5" sx={{ mb: 3, color: "error.main" }}>
+          {error}
+        </Typography>
+      ) : user ? (
+        <Typography variant="h5" sx={{ mb: 3, color: "primary.main" }}>
+          Candidate: {user.name} {user.family_name} ({user.phone_number})
+        </Typography>
+      ) : (
+        <Typography variant="h5" sx={{ mb: 3, color: "error.main" }}>
+          Candidate: Not logged in
         </Typography>
       )}
       <Typography variant="h4" gutterBottom>
-        Select a Test
+        Please Select a Test
       </Typography>
 
       <Button
@@ -73,6 +119,14 @@ export default function Tests() {
         onClick={() => handleTestSelect(3, "academic")}
       >
         Test 3 Academic
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ mt: 2, mr: 2 }}
+        onClick={() => handleTestSelect(4, "academic")}
+      >
+        Test 4 Academic
       </Button>
     </Box>
   );

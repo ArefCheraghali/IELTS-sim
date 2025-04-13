@@ -10,13 +10,27 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useHighlight } from "app/contexts/HighlightContext";
+import ReadingHighlightMenu from "app/components/ReadingHighlightMenu";
 
 import CrowText from "./text/CrowText";
 const image3 = "/images/test1/readingAc1-passage2-3.jpg";
 
-const Section2 = ({ answers, setAnswers }) => {
+const Section2 = ({ answers, setAnswers, currentQuestion }) => {
+  const questionRefs = React.useRef(Array(13).fill(null));
+
+  React.useEffect(() => {
+    if (currentQuestion >= 14 && currentQuestion <= 26) {
+      const index = currentQuestion - 14;
+      questionRefs.current[index]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [currentQuestion]);
   const possibleAnswers = ["TRUE", "FALSE", "NOT GIVEN"];
   const possibleAnswers2 = ["A", "B", "C", "D", "E", "F", "G"];
+  const { handleContextMenu, textRef } = useHighlight();
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -33,6 +47,8 @@ const Section2 = ({ answers, setAnswers }) => {
       }}
     >
       <Box
+        ref={textRef}
+        onContextMenu={handleContextMenu}
         sx={{
           width: "50%",
           overflowY: "auto",
@@ -41,6 +57,7 @@ const Section2 = ({ answers, setAnswers }) => {
         }}
       >
         <CrowText />
+        <ReadingHighlightMenu />
       </Box>
 
       <Box
@@ -101,34 +118,42 @@ const Section2 = ({ answers, setAnswers }) => {
               justifyItems: "center",
             }}
           >
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="14"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(13, e.target.value)}
-              value={answers[13]}
-            />
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="15"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(14, e.target.value)}
-              value={answers[14]}
-            />
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="16"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(15, e.target.value)}
-              value={answers[15]}
-            />
-            <TextField
-              sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
-              label="17"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(16, e.target.value)}
-              value={answers[16]}
-            />
+            <Box ref={(el) => (questionRefs.current[0] = el)}>
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="14"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(13, e.target.value)}
+                value={answers[13]}
+              />
+            </Box>
+            <Box ref={(el) => (questionRefs.current[1] = el)}>
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="15"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(14, e.target.value)}
+                value={answers[14]}
+              />
+            </Box>
+            <Box ref={(el) => (questionRefs.current[2] = el)}>
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="16"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(15, e.target.value)}
+                value={answers[15]}
+              />
+            </Box>
+            <Box ref={(el) => (questionRefs.current[3] = el)}>
+              <TextField
+                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                label="17"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(16, e.target.value)}
+                value={answers[16]}
+              />
+            </Box>
           </Box>
         </Box>
         <Typography sx={{ ml: 2, mb: 1 }}>Questions 18 - 23</Typography>
@@ -151,15 +176,24 @@ const Section2 = ({ answers, setAnswers }) => {
             width: "90%",
           }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[4] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <b style={{ marginRight: "4.8em" }}>TRUE</b> if the statement agrees
             with the information
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[4] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <b style={{ marginRight: "4.5em" }}>FALSE</b> if the statement
             contradicts the information
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[4] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <b style={{ marginRight: "2em" }}>NOT GIVEN</b> if there is no
             information on this
           </ListItem>
@@ -174,32 +208,50 @@ const Section2 = ({ answers, setAnswers }) => {
             width: "90%",
           }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[4] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>18 </Typography>
             There appears to be a fixed pattern for the padanus probe's
             construction.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[5] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>19 </Typography>
             There is plenty of evidence to indicate how the crows manufacture
             the padanus probe.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[6] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>20 </Typography>
             Crows seem to practise a number of times before making a usable
             padanus probe.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[7] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>21 </Typography>
             The researchers suspect the crows have a mental image of the padanus
             probe before they create it.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[8] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>22 </Typography>
             Research into how the padanus probe is made has helped to explain
             the toolmaking skills of many other bird species.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[9] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>23 </Typography>
             The researchers believe the ability to make the padanus probe is
             passed down to the crows in their genes.
@@ -277,7 +329,10 @@ const Section2 = ({ answers, setAnswers }) => {
             width: "90%",
           }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[4] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>A </Typography>
             keeping the same mate for life
           </ListItem>

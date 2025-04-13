@@ -37,7 +37,7 @@ export default function Test() {
   const audioRef = useRef(null);
   const answersRef = useRef(answers);
   const { volume } = useVolume();
-  const { timeLeft, startTimer } = useTimer();
+  const { timeLeft, startTimer, resetTimer } = useTimer();
 
   const {
     anchorEl,
@@ -104,6 +104,7 @@ export default function Test() {
       "listeningAnswers",
       JSON.stringify(answersRef.current)
     );
+    resetTimer(); // Reset timer before navigating
     handleCloseDialog();
     router.push("/tests/test2ge/reading");
   };
