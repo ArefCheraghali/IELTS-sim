@@ -110,9 +110,10 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
             sx={{
               mt: 2,
               mb: 2,
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
+              width: "80%",
+              display: "grid",
+              gridTemplateColumns: "repeat(2, 1fr)",
+              gap: 2,
               alignItems: "center",
               justifyContent: "center",
               justifyItems: "center",
@@ -120,7 +121,7 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
           >
             <Box ref={(el) => (questionRefs.current[0] = el)}>
               <TextField
-                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                sx={{ ml: 1, mr: 1, width: "14em" }}
                 label="14"
                 autoComplete="off"
                 onChange={(e) => handleInputChange(13, e.target.value)}
@@ -129,7 +130,7 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
             </Box>
             <Box ref={(el) => (questionRefs.current[1] = el)}>
               <TextField
-                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                sx={{ ml: 1, mr: 1, width: "14em" }}
                 label="15"
                 autoComplete="off"
                 onChange={(e) => handleInputChange(14, e.target.value)}
@@ -138,7 +139,7 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
             </Box>
             <Box ref={(el) => (questionRefs.current[2] = el)}>
               <TextField
-                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                sx={{ ml: 1, mr: 1, width: "14em" }}
                 label="16"
                 autoComplete="off"
                 onChange={(e) => handleInputChange(15, e.target.value)}
@@ -147,7 +148,7 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
             </Box>
             <Box ref={(el) => (questionRefs.current[3] = el)}>
               <TextField
-                sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
+                sx={{ ml: 1, mr: 1, width: "14em" }}
                 label="17"
                 autoComplete="off"
                 onChange={(e) => handleInputChange(16, e.target.value)}

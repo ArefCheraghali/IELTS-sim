@@ -2,6 +2,8 @@ import { useRef, useEffect } from "react";
 import {
   Box,
   FormControl,
+  Select,
+  MenuItem,
   FormControlLabel,
   List,
   ListItem,
@@ -85,8 +87,13 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
               mb: 3,
             }}
           >
-            <Typography>Questions 11-15</Typography>
-            <Typography>Choose the correct letter, A, B or C.</Typography>
+            <Typography>Complete the sentences below.</Typography>
+            <Typography>
+              Write <b>NO MORE THAN TWO WORDS</b> for each answer.
+            </Typography>
+            <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
+              Marathon – tips for spectators
+            </Typography>
             <Box
               sx={{
                 display: "flex",
@@ -97,146 +104,115 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
                 mt: 2,
               }}
             >
-              <FormControl sx={{ mt: 1 }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Typography>
-                  <b style={{ marginRight: "2em" }}>11</b> The September
-                  Celebration day is held ...
+                  <b style={{ marginRight: "1em" }}>11</b> To enjoy the day,
+                  make sure you
                 </Typography>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[10] || ""}
+                <TextField
+                  sx={{ ml: 1, width: "10em" }}
+                  variant="standard"
+                  autoComplete="off"
                   onChange={(e) => handleInputChange(10, e.target.value)}
-                  ref={(el) => (inputRefs.current[0] = el)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) five times a year to honour the city"
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) on the park's important birthday"
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C) to remember the history of the park"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl sx={{ mt: 2 }}>
+                  value={answers[10]}
+                  inputRef={(el) => (inputRefs.current[0] = el)}
+                />
+                <Typography sx={{ ml: 1 }}>it first.</Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Typography>
-                  <b style={{ marginRight: "2em" }}>12</b> The park was first
-                  built in ...
+                  <b style={{ marginRight: "1em" }}>12</b> Travel
                 </Typography>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[11] || ""}
+                <TextField
+                  sx={{ ml: 1, width: "10em" }}
+                  variant="standard"
+                  autoComplete="off"
                   onChange={(e) => handleInputChange(11, e.target.value)}
-                  ref={(el) => (inputRefs.current[1] = el)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) 1955"
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) 1979"
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C) the 1990s"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl sx={{ mt: 2 }}>
+                  value={answers[11]}
+                  inputRef={(el) => (inputRefs.current[1] = el)}
+                />
+                <Typography sx={{ ml: 1 }}>within the city centre.</Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Typography>
-                  <b style={{ marginRight: "2em" }}>13</b> The park still uses
-                  ...
+                  <b style={{ marginRight: "1em" }}>13</b> Wear
                 </Typography>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[12] || ""}
+                <TextField
+                  sx={{ ml: 1, width: "10em" }}
+                  variant="standard"
+                  autoComplete="off"
                   onChange={(e) => handleInputChange(12, e.target.value)}
-                  ref={(el) => (inputRefs.current[2] = el)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) a children's play area"
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) a petting zoo"
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C) two of the early rides"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl sx={{ mt: 2 }}>
+                  value={answers[12]}
+                  inputRef={(el) => (inputRefs.current[2] = el)}
+                />
+                <Typography sx={{ ml: 1 }}>on the day.</Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                 <Typography>
-                  <b style={{ marginRight: "2em" }}>14</b> The Hurricane
-                  roller-coaster is ...
+                  <b style={{ marginRight: "1em" }}>14</b> Check the
                 </Typography>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[13] || ""}
+                <TextField
+                  sx={{ ml: 1, width: "10em" }}
+                  variant="standard"
+                  autoComplete="off"
                   onChange={(e) => handleInputChange(13, e.target.value)}
-                  ref={(el) => (inputRefs.current[3] = el)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) tall and made of wood"
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) designed for smaller children"
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C) very fast and exciting"
-                  />
-                </RadioGroup>
-              </FormControl>
-              <FormControl sx={{ mt: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>15</b> The rides with a
-                  height limit are coded ...
+                  value={answers[13]}
+                  inputRef={(el) => (inputRefs.current[3] = el)}
+                />
+                <Typography sx={{ ml: 1 }}>
+                  the night before the marathon.
                 </Typography>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[14] || ""}
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography>
+                  <b style={{ marginRight: "1em" }}>15</b> Let the
+                </Typography>
+                <TextField
+                  sx={{ ml: 1, width: "10em" }}
+                  variant="standard"
+                  autoComplete="off"
                   onChange={(e) => handleInputChange(14, e.target.value)}
-                  ref={(el) => (inputRefs.current[4] = el)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) yellow"
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) blue"
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C) black"
-                  />
-                </RadioGroup>
-              </FormControl>
+                  value={answers[14]}
+                  inputRef={(el) => (inputRefs.current[4] = el)}
+                />
+                <Typography sx={{ ml: 1 }}>give drinks to runners.</Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography>
+                  <b style={{ marginRight: "1em" }}>16</b> Stay on one side of
+                  the road to avoid
+                </Typography>
+                <TextField
+                  sx={{ ml: 1, width: "10em" }}
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleInputChange(15, e.target.value)}
+                  value={answers[15]}
+                  inputRef={(el) => (inputRefs.current[5] = el)}
+                />
+                <Typography>.</Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography>
+                  <b style={{ marginRight: "1em" }}>17</b> Don't arrange to meet
+                  runners near the
+                </Typography>
+                <TextField
+                  sx={{ ml: 1, width: "10em" }}
+                  variant="standard"
+                  autoComplete="off"
+                  onChange={(e) => handleInputChange(16, e.target.value)}
+                  value={answers[16]}
+                  inputRef={(el) => (inputRefs.current[6] = el)}
+                />
+                <Typography>.</Typography>
+              </Box>
             </Box>
           </Box>
         </>
@@ -255,145 +231,127 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
               mb: 4,
             }}
           >
-            <Typography>Questions 16-20</Typography>
-            <Typography>Complete the notes below.</Typography>
+            <Typography>Questions 18-20</Typography>
             <Typography>
-              Write <b>NO MORE THAN TWO WORDS</b> for each answer.
+              What does the speaker say about the following forms of transport?
+            </Typography>
+            <Typography>
+              Write the correct letter, A, B, C, D or E, next to questions
+              18-20.
             </Typography>
             <Box
               sx={{
                 width: "100%",
                 display: "flex",
                 flexDirection: "row",
+                mt: 2,
               }}
             >
               <Box
                 sx={{
                   width: "100%",
-                  height: "auto",
                   maxWidth: "40rem",
-                  mt: 2,
-                  ml: 20,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "left",
-                  alignItems: "flex-start",
-                  borderStyle: "solid",
-                  padding: "1em",
-                  textAlign: "left",
+                  border: "1px solid #ccc",
+                  borderRadius: 1,
+                  p: 2,
+                  mb: 2,
                 }}
               >
-                <List sx={{ listStyleType: "disc", ml: "3em" }}>
-                  <Typography>
-                    <b>Food options:</b>
-                  </Typography>
-                  <ListItem sx={{ display: "list-item" }}>
+                <List>
+                  <ListItem>
                     <Typography>
-                      Italian, Chinese, etc. at the Food Court
+                      <b>A</b>&nbsp;&nbsp;&nbsp;will take more passengers than
+                      usual
                     </Typography>
                   </ListItem>
-                  <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 1 }}>
+                  <ListItem>
                     <Typography>
-                      hamburgers, sandwiches, etc. at
-                      <TextField
-                        sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                        label="16"
-                        variant="standard"
-                        autoComplete="off"
-                        onChange={(e) => handleInputChange(15, e.target.value)}
-                        value={answers[15]}
-                        inputRef={(el) => (inputRefs.current[5] = el)}
-                      />
+                      <b>B</b>&nbsp;&nbsp;&nbsp;will suit people who want to see
+                      the start of the race
                     </Typography>
                   </ListItem>
-                  <Typography>
-                    <b>Special Evenents:</b>
-                    <br />
-                    <b>Parade</b>
-                  </Typography>
-                  <ListItem sx={{ display: "list-item" }}>
-                    <Typography>Starts at noon</Typography>
-                  </ListItem>
-                  <ListItem sx={{ display: "list-item" }}>
+                  <ListItem>
                     <Typography>
-                      On the
-                      <TextField
-                        sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                        label="17"
-                        variant="standard"
-                        autoComplete="off"
-                        onChange={(e) => handleInputChange(16, e.target.value)}
-                        value={answers[16]}
-                        inputRef={(el) => (inputRefs.current[6] = el)}
-                      />
+                      <b>C</b>&nbsp;&nbsp;&nbsp;waiting times will be longer
+                      than usual
                     </Typography>
                   </ListItem>
-                  <ListItem sx={{ display: "list-item" }}>
+                  <ListItem>
                     <Typography>
-                      Run by final year high school students
+                      <b>D</b>&nbsp;&nbsp;&nbsp;will have fewer staff than usual
                     </Typography>
                   </ListItem>
-                  <Typography>
-                    <b>Concert</b>
-                  </Typography>
-                  <ListItem sx={{ display: "list-item" }}>
-                    <Typography>At the amphitheatre</Typography>
-                  </ListItem>
-                  <ListItem sx={{ display: "list-item" }}>
+                  <ListItem>
                     <Typography>
-                      Theme:
-                      <TextField
-                        sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                        label="18"
-                        variant="standard"
-                        autoComplete="off"
-                        onChange={(e) => handleInputChange(17, e.target.value)}
-                        value={answers[17]}
-                        inputRef={(el) => (inputRefs.current[7] = el)}
-                      />
-                    </Typography>
-                  </ListItem>
-                  <ListItem sx={{ display: "list-item" }}>
-                    <Typography>Starts at 7:00</Typography>
-                  </ListItem>
-                  <Typography>
-                    <b>Safety and Security:</b>
-                  </Typography>
-                  <ListItem sx={{ display: "list-item", mt: 2 }}>
-                    <Typography>
-                      Ten
-                      <TextField
-                        sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                        label="19"
-                        variant="standard"
-                        autoComplete="off"
-                        onChange={(e) => handleInputChange(18, e.target.value)}
-                        value={answers[18]}
-                        inputRef={(el) => (inputRefs.current[8] = el)}
-                      />
-                      centers in the park
-                    </Typography>
-                  </ListItem>
-                  <ListItem sx={{ display: "list-item", mt: 1 }}>
-                    <Typography>
-                      Children ask any staff member for help
-                    </Typography>
-                  </ListItem>
-                  <ListItem sx={{ display: "list-item", mt: 1 }}>
-                    <Typography>
-                      Ask security team at the
-                      <TextField
-                        sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                        label="20"
-                        variant="standard"
-                        autoComplete="off"
-                        onChange={(e) => handleInputChange(19, e.target.value)}
-                        value={answers[19]}
-                        inputRef={(el) => (inputRefs.current[9] = el)}
-                      />
+                      <b>E</b>&nbsp;&nbsp;&nbsp;some work schedules will change
                     </Typography>
                   </ListItem>
                 </List>
+              </Box>
+            </Box>
+            <Box sx={{ mt: 2 }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                ref={(el) => (inputRefs.current[7] = el)}
+              >
+                <Typography>
+                  <b style={{ marginRight: "1em" }}>18</b> taxis
+                </Typography>
+                <FormControl sx={{ ml: 2, minWidth: 120 }}>
+                  <Select
+                    variant="standard"
+                    value={answers[17] || ""}
+                    onChange={(e) => handleInputChange(17, e.target.value)}
+                  >
+                    {["A", "B", "C", "D", "E"].map((letter) => (
+                      <MenuItem key={letter} value={letter}>
+                        {letter}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                ref={(el) => (inputRefs.current[8] = el)}
+              >
+                <Typography>
+                  <b style={{ marginRight: "1em" }}>19</b> trams
+                </Typography>
+                <FormControl sx={{ ml: 2, minWidth: 120 }}>
+                  <Select
+                    variant="standard"
+                    value={answers[18] || ""}
+                    onChange={(e) => handleInputChange(18, e.target.value)}
+                  >
+                    {["A", "B", "C", "D", "E"].map((letter) => (
+                      <MenuItem key={letter} value={letter}>
+                        {letter}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box
+                sx={{ display: "flex", alignItems: "center", mb: 2 }}
+                ref={(el) => (inputRefs.current[9] = el)}
+              >
+                <Typography>
+                  <b style={{ marginRight: "1em" }}>20</b> buses
+                </Typography>
+                <FormControl sx={{ ml: 2, minWidth: 120 }}>
+                  <Select
+                    variant="standard"
+                    value={answers[19] || ""}
+                    onChange={(e) => handleInputChange(19, e.target.value)}
+                  >
+                    {["A", "B", "C", "D", "E"].map((letter) => (
+                      <MenuItem key={letter} value={letter}>
+                        {letter}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Box>
             </Box>
           </Box>

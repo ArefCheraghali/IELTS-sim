@@ -64,8 +64,8 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
           </Typography>
         </Box>
         <>
-          <Typography>Questions 1-4</Typography>
-          <Typography>Complete the table below.</Typography>
+          <Typography>Questions 1-5</Typography>
+          <Typography>Complete the form below.</Typography>
           <Typography>
             Write <b>NO MORE THAN TWO WORDS AND/OR A NUMBER</b> for each answer.
           </Typography>
@@ -99,7 +99,13 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                   variant="h6"
                   sx={{ textAlign: "center", width: "100%", mb: 3 }}
                 >
-                  <b>City Bank Customer Service Log</b>
+                  <b>KT Furniture</b>
+                </Typography>
+                <Typography
+                  variant="h6"
+                  sx={{ textAlign: "center", width: "100%", mb: 3 }}
+                >
+                  <b>Customer Order Form</b>
                 </Typography>
                 <List
                   sx={{
@@ -112,11 +118,13 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                     pr: "2rem",
                   }}
                 >
+                  <Typography>
+                    <b>Customer details</b>
+                  </Typography>
                   <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "14rem", mt: 3 }}>
-                      Customer name:
+                    <Typography sx={{ marginRight: "8rem", mt: 3 }}>
+                      Company name:
                     </Typography>
-                    David
                     <TextField
                       sx={{ mt: -2, ml: 1 }}
                       label="1"
@@ -128,30 +136,9 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                     />
                   </ListItem>
                   <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "19em" }}>
-                      Phone:{" "}
+                    <Typography sx={{ marginRight: "11.5em" }}>
+                      Address:
                     </Typography>
-                    023 - 561 - 055
-                  </ListItem>
-                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "19em" }}>
-                      D.O.B.:
-                    </Typography>
-                    18 / 02 / 1968
-                  </ListItem>
-                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography>
-                      <b>Customer's Term Deposit details:</b>
-                    </Typography>
-                  </ListItem>
-                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "18em" }}>
-                      Amount:
-                    </Typography>
-                    $18,000
-                  </ListItem>
-                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "18em" }}>Term:</Typography>
                     <TextField
                       sx={{ mt: -2, ml: 1 }}
                       autoComplete="off"
@@ -161,26 +148,24 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                       onChange={(e) => handleInputChange(1, e.target.value)}
                       value={answers[1]}
                       inputRef={(el) => (inputRefs.current[1] = el)}
-                    />
+                    />{" "}
+                    Trading Estate
+                  </ListItem>
+                  <ListItem
+                    sx={{ display: "flex", flexDirection: "row", mt: -2 }}
+                  >
+                    <Typography sx={{ marginRight: "16.5em" }}></Typography>
+                    210 New Hampton Road
+                  </ListItem>
+                  <ListItem
+                    sx={{ display: "flex", flexDirection: "row", mt: -3 }}
+                  >
+                    <Typography sx={{ marginRight: "16.5em" }}></Typography>
+                    South Down
                   </ListItem>
                   <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "16em" }}>
-                      Interest rate:
-                    </Typography>
-                    3.45% per annum
-                  </ListItem>
-                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography>
-                      <b>Current Term deposit interest rates:</b>
-                    </Typography>
-                  </ListItem>
-                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "19em" }}>1 year</Typography>
-                    3.65% per annum
-                  </ListItem>
-                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "18em" }}>
-                      2 years
+                    <Typography sx={{ marginRight: "8rem" }}>
+                      Contact number:
                     </Typography>
                     <TextField
                       sx={{ mt: -2, ml: 1 }}
@@ -191,11 +176,15 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                       value={answers[2]}
                       inputRef={(el) => (inputRefs.current[2] = el)}
                     />{" "}
-                    % per annum
+                    (mobile)
                   </ListItem>
-                  <Typography>
+                  <ListItem sx={{ display: "flex", flexDirection: "row" }}>
+                    <Typography sx={{ marginRight: "9rem" }}>
+                      Delivery option:
+                    </Typography>
+                    <Typography>1□ 2✓ (no</Typography>
                     <TextField
-                      sx={{ mt: -2, ml: 1 }}
+                      sx={{ mt: -2, ml: 1, width: "10em" }}
                       autoComplete="off"
                       variant="standard"
                       label="4"
@@ -203,12 +192,22 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                       value={answers[3]}
                       inputRef={(el) => (inputRefs.current[3] = el)}
                     />
-                    <b> Term deposits</b>
-                  </Typography>
+                    <Typography>)</Typography>
+                  </ListItem>
                   <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-                    <Typography sx={{ marginRight: "23em" }}>
-                      Minimum deposit: $20,000
+                    <Typography sx={{ marginRight: "7rem" }}>
+                      Method of payment:
                     </Typography>
+                    <Typography>credit card Type:</Typography>
+                    <TextField
+                      sx={{ mt: -2, ml: 1 }}
+                      autoComplete="off"
+                      variant="standard"
+                      label="5"
+                      onChange={(e) => handleInputChange(4, e.target.value)}
+                      value={answers[4]}
+                      inputRef={(el) => (inputRefs.current[4] = el)}
+                    />
                   </ListItem>
                 </List>
               </Box>
@@ -217,7 +216,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
         </>
         <br />
         <>
-          <Typography>Questions 5-10</Typography>
+          <Typography>Questions 6-10</Typography>
           <Typography>Complete the table below.</Typography>
           <Typography>
             Write <b>NO MORE THAN TWO WORDS AND/OR A NUMBER</b> for each answer.
@@ -229,42 +228,22 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>
-                    <TextField
-                      sx={{
-                        mt: -2,
-                        ml: 1,
-                        mr: 1,
-                        width: "10em",
-                        height: "3em",
-                      }}
-                      label="5"
-                      variant="outlined"
-                      autoComplete="off"
-                      onChange={(e) => handleInputChange(4, e.target.value)}
-                      value={answers[4]}
-                      inputRef={(el) => (inputRefs.current[4] = el)}
-                    />{" "}
-                    tax rate:
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>28%</TableCell>
-                  <TableCell></TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>item</TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>code</TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>colour</TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>quantity</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 <TableRow>
                   <TableCell sx={{ fontSize: "1.1rem" }}>
-                    Investment returns
+                    Office chairs
                   </TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>ASP 23</TableCell>
                   <TableCell sx={{ fontSize: "1.1rem" }}>
-                    Depend on
                     <TextField
                       sx={{
-                        mt: -2,
-                        ml: 1,
-                        mr: 1,
                         width: "10em",
-                        height: "3em",
                       }}
                       label="6"
                       variant="outlined"
@@ -274,35 +253,13 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                       inputRef={(el) => (inputRefs.current[5] = el)}
                     />
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>5</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>Term</TableCell>
                   <TableCell sx={{ fontSize: "1.1rem" }}>
-                    Effective rate of return
-                  </TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>2 years</TableCell>{" "}
-                  <TableCell sx={{ fontSize: "1.1rem" }}>
-                    <b>Salary</b>
-                    <br />
-                    $48,001 - $70,000
-                    <br />
-                    3.75% per annum
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>
-                    <b>Salary</b>
-                    <br />
-                    $70,001 - $
                     <TextField
                       sx={{
-                        mt: -2,
-                        ml: 1,
-                        mr: 1,
                         width: "10em",
-                        height: "3em",
                       }}
                       label="7"
                       variant="outlined"
@@ -311,29 +268,11 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                       value={answers[6]}
                       inputRef={(el) => (inputRefs.current[6] = el)}
                     />
-                    <br />
-                    3.92% per annum
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>
-                    Minimum investment amount:
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>$10,000</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>
-                    Hidden charges/fees:
                   </TableCell>
                   <TableCell sx={{ fontSize: "1.1rem" }}>
                     <TextField
                       sx={{
-                        mt: -2,
-                        ml: 1,
-                        mr: 1,
                         width: "10em",
-                        height: "3em",
                       }}
                       label="8"
                       variant="outlined"
@@ -344,20 +283,17 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                     />
                   </TableCell>
                   <TableCell></TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>2</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={{ fontSize: "1.1rem" }}>
-                    Interest payment options:
+                    Leather sofa
                   </TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>DFD 44</TableCell>
                   <TableCell sx={{ fontSize: "1.1rem" }}>
-                    monthly,{" "}
                     <TextField
                       sx={{
-                        mt: -2,
-                        ml: 1,
-                        mr: 1,
                         width: "10em",
-                        height: "3em",
                       }}
                       label="9"
                       variant="outlined"
@@ -366,23 +302,14 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                       value={answers[8]}
                       inputRef={(el) => (inputRefs.current[8] = el)}
                     />
-                    , 6-monthly, annually
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>1</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell sx={{ fontSize: "1.1rem" }}>
-                    Application options:
-                  </TableCell>
-                  <TableCell sx={{ fontSize: "1.1rem" }}>
-                    - online <br /> <br />-{" "}
                     <TextField
                       sx={{
-                        mt: -2,
-                        mr: 1,
-                        mb: 1,
                         width: "10em",
-                        height: "3em",
                       }}
                       label="10"
                       variant="outlined"
@@ -391,9 +318,10 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                       value={answers[9]}
                       inputRef={(el) => (inputRefs.current[9] = el)}
                     />
-                    <br />- in person
                   </TableCell>
-                  <TableCell></TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>TX 22</TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>silver</TableCell>
+                  <TableCell sx={{ fontSize: "1.1rem" }}>1</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
