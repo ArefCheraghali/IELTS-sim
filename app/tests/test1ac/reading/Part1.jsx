@@ -17,32 +17,46 @@ import SeaweedText from "./text/seaweedText";
 const image4 = "/images/test1/readingAc1-passage1-4.jpg";
 
 const Part1 = ({ answers, setAnswers, currentQuestion }) => {
-  const refs = useRef(Array(13).fill(null));
+  const questionRefs = useRef(Array(13).fill(null)); // Renamed refs to questionRefs
   const { handleContextMenu, textRef } = useHighlight();
 
   useEffect(() => {
-    // Focus on the element corresponding to the current question
     if (currentQuestion >= 1 && currentQuestion <= 13) {
       const index = currentQuestion - 1;
-      const element = refs.current[index];
+      const element = questionRefs.current[index];
       if (element) {
-        // Scroll the element into view first
         element.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
 
-        // Handle focus based on question type
-        if (index < 6 || index >= 10) {
-          // For Select components (questions 1-6 and 11-13)
-          const input = element.querySelector("input");
-          if (input) {
-            setTimeout(() => input.focus(), 100);
+        // Delay focus/click slightly after scroll
+        setTimeout(() => {
+          // Questions 1-6 (Select)
+          if (index < 6) {
+            const selectButton = element.querySelector("[role='button']"); // Target the button part of the Select
+            if (selectButton) {
+              selectButton.focus(); // Focus the button
+              // selectButton.click(); // Optionally click to open dropdown
+            }
           }
-        } else if (index >= 6 && index <= 9) {
-          // For text fields (questions 7-10)
-          setTimeout(() => element.focus(), 100);
-        }
+          // Questions 7-10 (TextField)
+          else if (index >= 6 && index < 10) {
+            const input = element.querySelector("input");
+            if (input) {
+              input.focus();
+              input.select();
+            }
+          }
+          // Questions 11-13 (Select)
+          else if (index >= 10) {
+            const selectButton = element.querySelector("[role='button']"); // Target the button part of the Select
+            if (selectButton) {
+              selectButton.focus(); // Focus the button
+              // selectButton.click(); // Optionally click to open dropdown
+            }
+          }
+        }, 150); // Slightly increased timeout for stability
       }
     }
   }, [currentQuestion]);
@@ -183,7 +197,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
                 <InputLabel>{`${1 + index}`}</InputLabel>
                 <Select
-                  ref={(el) => (refs.current[index] = el)}
+                  ref={(el) => (questionRefs.current[index] = el)} // Use questionRefs
                   sx={{ width: "5em" }}
                   value={answers[index] || ""}
                   onChange={(e) => handleInputChange(index, e.target.value)}
@@ -233,7 +247,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
           }}
         >
           <TextField
-            ref={(el) => (refs.current[6] = el)}
+            ref={(el) => (questionRefs.current[6] = el)} // Use questionRefs
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="7"
             autoComplete="off"
@@ -241,7 +255,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             value={answers[6]}
           />
           <TextField
-            ref={(el) => (refs.current[7] = el)}
+            ref={(el) => (questionRefs.current[7] = el)} // Use questionRefs
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="8"
             autoComplete="off"
@@ -249,7 +263,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             value={answers[7]}
           />
           <TextField
-            ref={(el) => (refs.current[8] = el)}
+            ref={(el) => (questionRefs.current[8] = el)} // Use questionRefs
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="9"
             autoComplete="off"
@@ -257,7 +271,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             value={answers[8]}
           />
           <TextField
-            ref={(el) => (refs.current[9] = el)}
+            ref={(el) => (questionRefs.current[9] = el)} // Use questionRefs
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="10"
             autoComplete="off"
@@ -295,7 +309,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl>
                 <InputLabel>11</InputLabel>
                 <Select
-                  ref={(el) => (refs.current[10] = el)}
+                  ref={(el) => (questionRefs.current[10] = el)} // Use questionRefs
                   sx={{ width: "5em" }}
                   value={answers[10] || ""}
                   label="11"
@@ -315,7 +329,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl>
                 <InputLabel>12</InputLabel>
                 <Select
-                  ref={(el) => (refs.current[11] = el)}
+                  ref={(el) => (questionRefs.current[11] = el)} // Use questionRefs
                   sx={{ width: "5em" }}
                   value={answers[11] || ""}
                   label="12"
@@ -335,7 +349,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl>
                 <InputLabel>13</InputLabel>
                 <Select
-                  ref={(el) => (refs.current[12] = el)}
+                  ref={(el) => (questionRefs.current[12] = el)} // Use questionRefs
                   sx={{ width: "5em" }}
                   value={answers[12] || ""}
                   label="13"

@@ -22,10 +22,37 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
   React.useEffect(() => {
     if (currentQuestion >= 14 && currentQuestion <= 26) {
       const index = currentQuestion - 14;
-      questionRefs.current[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      const element = questionRefs.current[index];
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Delay focus/click slightly after scroll
+        setTimeout(() => {
+          // Questions 14-17 (TextField)
+          if (index >= 0 && index < 4) {
+            const input = element.querySelector("input");
+            if (input) {
+              input.focus();
+              input.select();
+            }
+          }
+          // Questions 18-23 (Select - TRUE/FALSE/NOT GIVEN)
+          else if (index >= 4 && index < 10) {
+            const selectButton = element.querySelector("[role='button']"); // Target the button part of the Select
+            if (selectButton) {
+              selectButton.focus(); // Focus the button
+              // selectButton.click(); // Optionally click to open dropdown
+            }
+          }
+          // Questions 24-26 (Select - A/B/C...)
+          else if (index >= 10) {
+            const selectButton = element.querySelector("[role='button']"); // Target the button part of the Select
+            if (selectButton) {
+              selectButton.focus(); // Focus the button
+              // selectButton.click(); // Optionally click to open dropdown
+            }
+          }
+        }, 150); // Slightly increased timeout for stability
+      }
     }
   }, [currentQuestion]);
   const possibleAnswers = ["TRUE", "FALSE", "NOT GIVEN"];
@@ -177,22 +204,25 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
             width: "90%",
           }}
         >
+          {/* Ref for Q18-23 group moved to FormControl below */}
           <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
+            // ref={(el) => (questionRefs.current[4] = el)} // Ref moved
             sx={{ display: "flex", flexDirection: "row" }}
           >
             <b style={{ marginRight: "4.8em" }}>TRUE</b> if the statement agrees
             with the information
           </ListItem>
+          {/* Ref for Q18-23 group moved to FormControl below */}
           <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
+            // ref={(el) => (questionRefs.current[4] = el)} // Ref moved
             sx={{ display: "flex", flexDirection: "row" }}
           >
             <b style={{ marginRight: "4.5em" }}>FALSE</b> if the statement
             contradicts the information
           </ListItem>
+          {/* Ref for Q18-23 group moved to FormControl below */}
           <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
+            // ref={(el) => (questionRefs.current[4] = el)} // Ref moved
             sx={{ display: "flex", flexDirection: "row" }}
           >
             <b style={{ marginRight: "2em" }}>NOT GIVEN</b> if there is no
@@ -209,8 +239,9 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
             width: "90%",
           }}
         >
+          {/* Ref for Q18-23 group moved to FormControl below */}
           <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
+            // ref={(el) => (questionRefs.current[4] = el)} // Ref moved
             sx={{ display: "flex", flexDirection: "row" }}
           >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>18 </Typography>
@@ -266,7 +297,12 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ ml: 5, margin: "1em" }} key={index}>
+            // Assign ref to FormControl for Q18-20
+            <FormControl
+              ref={(el) => (questionRefs.current[4 + index] = el)}
+              sx={{ ml: 5, margin: "1em" }}
+              key={index}
+            >
               <InputLabel>{`${18 + index}`}</InputLabel>
               <Select
                 sx={{ width: "10em" }}
@@ -291,7 +327,12 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ margin: "1em" }} key={index}>
+            // Assign ref to FormControl for Q21-23
+            <FormControl
+              ref={(el) => (questionRefs.current[7 + index] = el)}
+              sx={{ margin: "1em" }}
+              key={index}
+            >
               <InputLabel>{`${21 + index}`}</InputLabel>
               <Select
                 sx={{ width: "10em" }}
@@ -330,8 +371,9 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
             width: "90%",
           }}
         >
+          {/* Ref for Q18-23 group moved to FormControl below */}
           <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
+            // ref={(el) => (questionRefs.current[4] = el)} // Ref moved
             sx={{ display: "flex", flexDirection: "row" }}
           >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>A </Typography>
@@ -370,7 +412,12 @@ const Section2 = ({ answers, setAnswers, currentQuestion }) => {
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ margin: "1em" }} key={index}>
+            // Assign ref to FormControl for Q24-26
+            <FormControl
+              ref={(el) => (questionRefs.current[10 + index] = el)}
+              sx={{ margin: "1em" }}
+              key={index}
+            >
               <InputLabel>{`${24 + index}`}</InputLabel>
               <Select
                 sx={{ width: "5em" }}

@@ -17,12 +17,51 @@ import { useHighlight } from "app/contexts/HighlightContext";
 import ReadingHighlightMenu from "app/components/ReadingHighlightMenu";
 import WritingText from "./text/WritingText";
 
-const image3 = "/images/test1/readingAc1-passage3-3.jpg";
-const image4 = "/images/test1/readingAc1-passage3-5.jpg";
-
-const Section3 = ({ answers, setAnswers }) => {
+const Section3 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = ["A", "B", "C", "D", "E"];
   const { handleContextMenu, textRef } = useHighlight();
+  const questionRefs = React.useRef(Array(14).fill(null)); // Refs for Q27-40
+
+  React.useEffect(() => {
+    if (currentQuestion >= 27 && currentQuestion <= 40) {
+      const index = currentQuestion - 27; // index 0-13
+      const element = questionRefs.current[index];
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        // Delay focus/click slightly after scroll
+        setTimeout(() => {
+          // Q27-30 (RadioGroup in Accordion) - index 0-3
+          if (index >= 0 && index < 4) {
+            // Focus the Accordion button first to ensure it's expanded/visible
+            const accordionButton = element.querySelector('[role="button"]');
+            if (accordionButton) accordionButton.focus();
+            // Then focus the first radio button within the group
+            const firstRadio = element.querySelector('input[type="radio"]');
+            if (firstRadio) {
+              // Needs another short delay for the accordion to potentially expand
+              setTimeout(() => firstRadio.focus(), 50);
+            }
+          }
+          // Q31-36 (Select - A/B/C/D/E) - index 4-9
+          else if (index >= 4 && index < 10) {
+            const selectButton = element.querySelector("[role='button']");
+            if (selectButton) {
+              selectButton.focus();
+            }
+          }
+          // Q37-40 (TextField) - index 10-13
+          else if (index >= 10) {
+            const input = element.querySelector("input,textarea");
+            if (input) {
+              input.focus();
+              input.select && input.select();
+            }
+          }
+        }, 150); // Slightly increased timeout for stability
+      }
+    }
+  }, [currentQuestion]);
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -84,7 +123,8 @@ const Section3 = ({ answers, setAnswers }) => {
             alignContent: "flex-start",
           }}
         >
-          <FormControl>
+          {/* Assign ref for Q27 */}
+          <FormControl ref={(el) => (questionRefs.current[0] = el)}>
             <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
@@ -127,7 +167,8 @@ const Section3 = ({ answers, setAnswers }) => {
             </Accordion>
           </FormControl>
           <br />
-          <FormControl>
+          {/* Assign ref for Q28 */}
+          <FormControl ref={(el) => (questionRefs.current[1] = el)}>
             <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
@@ -167,7 +208,8 @@ const Section3 = ({ answers, setAnswers }) => {
             </Accordion>
           </FormControl>
           <br />
-          <FormControl>
+          {/* Assign ref for Q29 */}
+          <FormControl ref={(el) => (questionRefs.current[2] = el)}>
             <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
@@ -210,7 +252,8 @@ const Section3 = ({ answers, setAnswers }) => {
             </Accordion>
           </FormControl>
           <br />
-          <FormControl>
+          {/* Assign ref for Q30 */}
+          <FormControl ref={(el) => (questionRefs.current[3] = el)}>
             <Accordion sx={{ bgcolor: "lightgray", textAlign: "left" }}>
               <AccordionSummary
                 aria-controls="panel1a-content"
@@ -299,15 +342,46 @@ const Section3 = ({ answers, setAnswers }) => {
             width: "100%",
           }}
         >
-          <img
-            src={image3}
-            alt="Reading Passage Part 1"
-            style={{ width: "50%" }}
-          />
+          <Box
+            sx={{
+              border: "1px solid black",
+              p: 1,
+              mt: 1,
+              mb: 1,
+              ml: 5,
+              width: "fit-content",
+            }}
+          >
+            <Typography variant="h6" sx={{ textAlign: "center", mb: 1 }}>
+              List of People
+            </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(2, auto)",
+                gap: "0 2rem",
+              }}
+            >
+              <Box>
+                <Typography>A) Robert Barton</Typography>
+                <Typography>B) Denise Schmandt-Besserat</Typography>
+                <Typography>C) Piotr Michalowski</Typography>
+              </Box>
+              <Box>
+                <Typography>D) Andrew Robinson</Typography>
+                <Typography>E) Holly Pittman</Typography>
+              </Box>
+            </Box>
+          </Box>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
           {Array.from({ length: 6 }).map((_, index) => (
-            <FormControl sx={{ mt: 2, margin: "3px" }} key={index}>
+            // Assign ref for Q31-36 (Selects) - index 4-9
+            <FormControl
+              ref={(el) => (questionRefs.current[4 + index] = el)}
+              sx={{ mt: 2, margin: "3px" }}
+              key={index}
+            >
               <InputLabel>{`${31 + index}`}</InputLabel>
               <Select
                 sx={{ width: "6em" }}
@@ -338,36 +412,54 @@ const Section3 = ({ answers, setAnswers }) => {
         <Box sx={{ textAlign: "left" }}>
           <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
             Most archeological evidence shows that the people of
-            <TextField
-              sx={{ mt: -2.5, ml: 1, mr: 1, width: "9em" }}
-              label="37"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(36, e.target.value)}
-              value={answers[36]}
-            />
+            {/* Assign ref for Q37 */}
+            <Box
+              ref={(el) => (questionRefs.current[10] = el)}
+              sx={{ display: "inline-block", verticalAlign: "bottom" }}
+            >
+              <TextField
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "9em" }}
+                label="37"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(36, e.target.value)}
+                value={answers[36]}
+              />
+            </Box>
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
             invented writing in around 3,300 BC. Their script was written on
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-            <TextField
-              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-              label="38"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(37, e.target.value)}
-              value={answers[37]}
-            />
+            {/* Assign ref for Q38 */}
+            <Box
+              ref={(el) => (questionRefs.current[11] = el)}
+              sx={{ display: "inline-block", verticalAlign: "bottom" }}
+            >
+              <TextField
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+                label="38"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(37, e.target.value)}
+                value={answers[37]}
+              />
+            </Box>
             and was called
-            <TextField
-              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-              label="39"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(38, e.target.value)}
-              value={answers[38]}
-            />{" "}
+            {/* Assign ref for Q39 */}
+            <Box
+              ref={(el) => (questionRefs.current[12] = el)}
+              sx={{ display: "inline-block", verticalAlign: "bottom" }}
+            >
+              <TextField
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+                label="39"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(38, e.target.value)}
+                value={answers[38]}
+              />
+            </Box>
             .
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
@@ -376,14 +468,20 @@ const Section3 = ({ answers, setAnswers }) => {
           </Typography>
           <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
             and later developed to become more
-            <TextField
-              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-              label="40"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(39, e.target.value)}
-              value={answers[39]}
-            />
+            {/* Assign ref for Q40 */}
+            <Box
+              ref={(el) => (questionRefs.current[13] = el)}
+              sx={{ display: "inline-block", verticalAlign: "bottom" }}
+            >
+              <TextField
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+                label="40"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(39, e.target.value)}
+                value={answers[39]}
+              />
+            </Box>
             .
           </Typography>
         </Box>
@@ -395,11 +493,27 @@ const Section3 = ({ answers, setAnswers }) => {
             mt: 2,
           }}
         >
-          <img
-            src={image4}
-            alt="Reading Passage Part 3"
-            style={{ width: "100%" }}
-          />
+          <Box sx={{ border: "1px solid black", p: 1, mt: 1, mb: 1 }}>
+            <Typography variant="h6" sx={{ textAlign: "center", mb: 1 }}>
+              List of Words
+            </Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: "0.5rem 2rem" }}>
+              <Typography>A) abstract</Typography>
+              <Typography>B) clay tablets</Typography>
+              <Typography>C) cuneiform</Typography>
+              <Typography>D) decorative</Typography>
+              <Typography>E) Egypt</Typography>
+              <Typography>F) grammatical</Typography>
+              <Typography>G) Mesopotamia</Typography>
+              <Typography>H) narrative</Typography>
+              <Typography>I) numerical</Typography>
+              <Typography>J) parchment</Typography>
+              <Typography>K) personal</Typography>
+              <Typography>L) pictograms</Typography>
+              <Typography>M) simple</Typography>
+              <Typography>N) Sumerians</Typography>
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>

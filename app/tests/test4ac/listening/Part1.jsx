@@ -22,8 +22,10 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
     // Focus on the text field corresponding to the current question
     if (currentQuestion >= 1 && currentQuestion <= 10) {
       const index = currentQuestion - 1;
-      if (inputRefs.current[index]) {
-        inputRefs.current[index].focus();
+      const element = inputRefs.current[index];
+      if (element) {
+        element.focus();
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [currentQuestion]);

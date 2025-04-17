@@ -1,32 +1,39 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Task1 from "./Task1";
+import Task2 from "./Task2";
+import ExamLayout from "app/components/ExamLayout";
+import { useTimer } from "app/contexts/TimerContext";
 import {
   Box,
   Button,
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  BottomNavigation,
+  BottomNavigationAction,
+  Paper,
 } from "@mui/material";
-import Task1 from "./Task1";
-import Task2 from "./Task2";
-import ExamLayout from "../../../components/ExamLayout";
-import { useExam } from "../../../contexts/ExamContext";
+import { TEST_DURATIONS } from "../../../config/testDurations";
 
 export default function Test() {
-  const [currentTask, setCurrentTask] = useState(0);
+  const [currentSection, setCurrentSection] = useState(0);
   const [answers, setAnswers] = useState(Array(2).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
-  const answersRef = useRef(answers);
+
   const router = useRouter();
-  const { startTimer, timeLeft } = useExam();
+  const answersRef = useRef(answers);
+
+  const { timeLeft, startTimer, resetTimer } = useTimer();
 
   useEffect(() => {
-    // Start 60-minute timer when component mounts
-    startTimer(60);
+    // Determine test ID from localStorage or context if available
+    // For now, assuming test1ac
+    const testDuration = TEST_DURATIONS.test1ac.writing; // Use specific duration
+    startTimer(testDuration);
   }, [startTimer]);
 
   useEffect(() => {
@@ -35,91 +42,128 @@ export default function Test() {
 
   // Auto-submit when time is up
   useEffect(() => {
+    let autoSubmitTimeout;
     if (timeLeft === 0) {
-      onSubmit();
+      autoSubmitTimeout = setTimeout(() => {
+        console.log("Time is up! Submitting writing test automatically.");
+        handleSubmit();
+      }, 100);
     }
+    return () => clearTimeout(autoSubmitTimeout);
   }, [timeLeft]);
 
-  const handleNavigation = (direction) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (direction === "next" && currentTask < 1) {
-      setCurrentTask(currentTask + 1);
-    } else if (direction === "prev" && currentTask > 0) {
-      setCurrentTask(currentTask - 1);
+  const handleSubmit = () => {
+    // Retrieve the selected test details from localStorage
+    const testDataString = localStorage.getItem("selectedTest");
+    let testId = "test1ac"; // Default or fallback
+    if (testDataString) {
+      try {
+        const testData = JSON.parse(testDataString);
+        testId = testData.testId; // Use the actual testId
+      } catch (error) {
+        console.error("Error parsing selectedTest from localStorage:", error);
+      }
     }
+
+    const writingAnswers = answersRef.current;
+
+    // Retrieve existing answers for this test, or initialize if not present
+    const existingAnswersString = localStorage.getItem(`test${testId}Answers`);
+    let existingAnswers = {};
+    if (existingAnswersString) {
+      try {
+        existingAnswers = JSON.parse(existingAnswersString);
+      } catch (error) {
+        console.error(
+          `Error parsing test${testId}Answers from localStorage:`,
+          error
+        );
+        existingAnswers = {}; // Reset if parsing fails
+      }
+    }
+
+    // Merge writing answers into the structure
+    const updatedAnswers = {
+      ...existingAnswers,
+      writing: writingAnswers,
+    };
+
+    // Save the updated answers back to localStorage
+    localStorage.setItem(
+      `test${testId}Answers`,
+      JSON.stringify(updatedAnswers)
+    );
+
+    console.log(`Writing answers for ${testId} saved:`, writingAnswers);
+
+    resetTimer(); // Reset timer before navigating
+    router.push("/tests/completion"); // Navigate to completion page
   };
 
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
+  const handleConfirmSubmit = () => {
+    setOpenDialog(false);
+    handleSubmit();
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
 
-  const onSubmit = () => {
-    localStorage.setItem("writingAnswers", JSON.stringify(answersRef.current));
-    handleCloseDialog();
-    router.push("/tests"); // Return to test selection
+  const handleSectionChange = (event, newValue) => {
+    setCurrentSection(newValue);
   };
 
-  const content = (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Box sx={{ mt: 4 }}>
-        {currentTask === 0 && (
+  return (
+    <ExamLayout sectionName="Writing" onSubmit={() => setOpenDialog(true)}>
+      <Box
+        sx={{
+          height: "100%",
+          overflow: "hidden",
+          pb: 7 /* Add padding for BottomNavigation */,
+        }}
+      >
+        {currentSection === 0 ? (
           <Task1 answers={answers} setAnswers={setAnswers} />
-        )}
-        {currentTask === 1 && (
+        ) : (
           <Task2 answers={answers} setAnswers={setAnswers} />
         )}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleNavigation("prev")}
-            disabled={currentTask === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleNavigation("next")}
-            disabled={currentTask === 1}
-          >
-            Next
-          </Button>
-        </Box>
-        {currentTask === 1 && (
-          <Button
-            onClick={handleOpenDialog}
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Submit
-          </Button>
-        )}
-      </Box>
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>{"Submit Answers?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to submit your answers? You will not be able
-            to change them after submission.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={onSubmit} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
 
-  return <ExamLayout sectionName="Writing Test">{content}</ExamLayout>;
+        <Paper
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+          }}
+          elevation={3}
+        >
+          <BottomNavigation
+            value={currentSection}
+            onChange={handleSectionChange}
+            showLabels
+          >
+            <BottomNavigationAction label="Task 1" />
+            <BottomNavigationAction label="Task 2" />
+          </BottomNavigation>
+        </Paper>
+
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>Submit Writing Test</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to submit your writing test? This action
+              cannot be undone.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog}>Cancel</Button>
+            <Button onClick={handleConfirmSubmit} autoFocus>
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Box>
+    </ExamLayout>
+  );
 }
