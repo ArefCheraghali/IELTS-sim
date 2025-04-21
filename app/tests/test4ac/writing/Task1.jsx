@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const image1 = "/images/test3/test3ac writing task1.jpg";
+const image1 = "/images/test4/Task1 writing.jpg";
 
 const Task1 = ({ answers, setAnswers }) => {
   const wordLimit = 150;
@@ -62,8 +62,8 @@ const Task1 = ({ answers, setAnswers }) => {
             }}
           >
             <b>
-              The graph and table below give information about water use
-              worldwide and water consumption in two different countries.
+              The diagram below shows the stages and equipment used in the
+              process of making matches.
             </b>
           </Typography>
           <Typography
@@ -78,11 +78,7 @@ const Task1 = ({ answers, setAnswers }) => {
           </Typography>
         </Box>
         <Typography sx={{ ml: 4, mb: 1 }}>Write at least 150 words.</Typography>
-        <img
-          src={image1}
-          alt="Reading Passage Part 1"
-          style={{ width: "100%" }}
-        />
+        <img src={image1} alt="Writing Task 1" style={{ width: "100%" }} />
       </Box>
 
       <Box

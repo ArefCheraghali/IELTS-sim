@@ -11,10 +11,10 @@ import {
   Typography,
 } from "@mui/material";
 
-import AmericanDanceText from "./text/AmericanDanceText";
+import FoliesBarText from "./text/FoliesBarText";
 
 const Part1 = ({ answers, setAnswers, currentQuestion }) => {
-  const possibleAnswers = ["TRUE", "FALSE", "NOT GIVEN"];
+  const possibleAnswers = ["A", "B", "C", "D", "E", "F"];
   const questionRefs = React.useRef(Array(13).fill(null));
 
   React.useEffect(() => {
@@ -49,7 +49,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
           borderRight: "1px solid #ccc",
         }}
       >
-        <AmericanDanceText />
+        <FoliesBarText />
       </Box>
       <Box
         sx={{
@@ -70,106 +70,86 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
           You should spend about 20 minutes on <b>Questions 1-13</b>, which are
           based on Reading Passage 1.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 1 - 6</Typography>
+        <Typography sx={{ ml: 2, mb: 1 }}>Questions 1-5</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          Do the following statements agree with the information given in the
-          Reading Passage 1?
+          Reading Passage 1 has six paragraphs, A-F.
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          In boxes 1-6 below, select
+          Which paragraph contains the following information?
         </Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
-          Classify the following characteristics as belonging to
+          Choose the correct letter, A-F, in boxes 1-5.
         </Typography>
         <List
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            pl: "3rem",
-            width: "90%",
-          }}
-        >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "4.8em" }}>TRUE</b> if the statement agrees
-            with the information
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "4.5em" }}>FALSE</b> if the statement
-            contradicts the information
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "2em" }}>NOT GIVEN</b> if there is no
-            information on this
-          </ListItem>
-        </List>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 0,
-            pl: "3rem",
+            gap: 1,
             width: "90%",
           }}
         >
           <ListItem
             ref={(el) => (questionRefs.current[0] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
           >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>1 </Typography>
-            Dance historians agree about the development of modern American
-            dance.
+            <Typography sx={{ width: "2rem" }}>1 </Typography>
+            <Typography>
+              a description of how Manet created the painting
+            </Typography>
           </ListItem>
           <ListItem
             ref={(el) => (questionRefs.current[1] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
           >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>2 </Typography>
-            Dancers in the early 1900s tended to copy the styles of earlier
-            dancers.
+            <Typography sx={{ width: "2rem" }}>2 </Typography>
+            <Typography>
+              aspects of the painting that scholars are most interested in
+            </Typography>
           </ListItem>
           <ListItem
             ref={(el) => (questionRefs.current[2] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
           >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>3 </Typography>
-            Loie Fuller preferred to dance alone on stage.
+            <Typography sx={{ width: "2rem" }}>3 </Typography>
+            <Typography>
+              the writer's view of the idea that Manet wants to communicate
+            </Typography>
           </ListItem>
           <ListItem
             ref={(el) => (questionRefs.current[3] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
           >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>4 </Typography>
-            Isadora Duncan wore complicated clothing when dancing.
+            <Typography sx={{ width: "2rem" }}>4 </Typography>
+            <Typography>
+              examples to show why the bar scene is unrealistic
+            </Typography>
           </ListItem>
           <ListItem
             ref={(el) => (questionRefs.current[4] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
           >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>5 </Typography>
-            Some dancers criticized Isadora Duncan for her choice of music.
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[5] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>6 </Typography>
-            Ruth St Denis wished to educate others in her style of dancing.
+            <Typography sx={{ width: "2rem" }}>5 </Typography>
+            <Typography>
+              a statement about the popularity of the painting
+            </Typography>
           </ListItem>
         </List>
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 2,
             width: "100%",
+            padding: 2,
           }}
         >
-          {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ ml: 5, margin: "1em" }} key={index}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <FormControl key={index}>
               <InputLabel>{`${1 + index}`}</InputLabel>
               <Select
-                sx={{ width: "10em" }}
+                sx={{ width: "5em" }}
                 value={answers[index] || ""}
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 label={`${1 + index}`}
@@ -183,181 +163,221 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             </FormControl>
           ))}
         </Box>
+        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>Questions 6-10</Typography>
+        <Typography>Answer the questions below.</Typography>
+        <Typography>
+          Choose <b>NO MORE THAN THREE WORDS</b> from the passage for each
+          answer.
+        </Typography>
+        <Typography>Write your answers in boxes 6-10.</Typography>
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 1,
+            pl: "3rem",
+            width: "90%",
+            mt: 2,
+          }}
+        >
+          <ListItem
+            ref={(el) => (questionRefs.current[5] = el)}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
+          >
+            <Typography sx={{ width: "2rem" }}>6 </Typography>
+            <Typography>
+              Who was the first owner of A Bar at the Folies?
+            </Typography>
+          </ListItem>
+          <ListItem
+            ref={(el) => (questionRefs.current[6] = el)}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
+          >
+            <Typography sx={{ width: "2rem" }}>7 </Typography>
+            <Typography>What is the barmaid wearing?</Typography>
+          </ListItem>
+          <ListItem
+            ref={(el) => (questionRefs.current[7] = el)}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
+          >
+            <Typography sx={{ width: "2rem" }}>8 </Typography>
+            <Typography>
+              Which room is seen at the back of the painting?
+            </Typography>
+          </ListItem>
+          <ListItem
+            ref={(el) => (questionRefs.current[8] = el)}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
+          >
+            <Typography sx={{ width: "2rem" }}>9 </Typography>
+            <Typography>Who is performing for the audience?</Typography>
+          </ListItem>
+          <ListItem
+            ref={(el) => (questionRefs.current[9] = el)}
+            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
+          >
+            <Typography sx={{ width: "2rem" }}>10 </Typography>
+            <Typography>
+              Where did most of the work on the painting take place?
+            </Typography>
+          </ListItem>
+        </List>
         <Box
           sx={{
             display: "flex",
             flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 2,
             width: "100%",
+            padding: 2,
           }}
         >
-          {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ margin: "1em" }} key={index}>
-              <InputLabel>{`${4 + index}`}</InputLabel>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <FormControl key={index + 5}>
+              <TextField
+                sx={{ width: "15em" }}
+                label={`${6 + index}`}
+                variant="outlined"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(5 + index, e.target.value)}
+                value={answers[5 + index] || ""}
+              />
+            </FormControl>
+          ))}
+        </Box>
+        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>Questions 11-13</Typography>
+        <Typography>
+          Complete each sentence with the correct ending, A-F, below.
+        </Typography>
+        <Typography>Write the correct letter, A-F, in boxes 11-13.</Typography>
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            gap: 1,
+            pl: "3rem",
+            width: "90%",
+            mt: 2,
+          }}
+        >
+          <ListItem
+            ref={(el) => (questionRefs.current[10] = el)}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "1.1em",
+              gap: 2,
+              width: "100%",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ width: "2rem" }}>11 </Typography>
+              <Typography>
+                Manet misrepresents the images in the mirror because he
+              </Typography>
+            </Box>
+            <FormControl sx={{ ml: 3 }}>
               <Select
-                sx={{ width: "10em" }}
-                value={answers[3 + index] || ""}
-                onChange={(e) => handleInputChange(3 + index, e.target.value)}
-                label={`${4 + index}`}
+                value={answers[10] || ""}
+                onChange={(e) => handleInputChange(10, e.target.value)}
+                size="small"
+                sx={{ minWidth: 400 }}
               >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
+                {[
+                  "A. wanted to find out if the painting's perspective was realistic",
+                  "B. had to work in a private studio",
+                  "C. needed to show the barmaid's different emotions",
+                  "D. felt disconnected from their real identity",
+                  "E. were fascinated by the mirror's reflection",
+                  "F. preferred to focus on the human aspect",
+                ].map((answer) => (
+                  <MenuItem key={answer} value={answer.charAt(0)}>
                     {answer}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          ))}
-        </Box>
-        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>Questions 7 - 10</Typography>
-        <Typography>Complete the notes below.</Typography>
-        <Typography>
-          Write <b>ONE WORD ONLY</b> from the passage for each answer.
-        </Typography>
-        <Box
-          sx={{
-            width: "94%",
-            height: "auto",
-            maxWidth: "60rem",
-            mt: 2,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "left",
-            alignItems: "flex-start",
-            borderStyle: "solid",
-            padding: "1em",
-            textAlign: "left",
-          }}
-        >
-          <Typography variant="h6" sx={{ marginLeft: "10%" }}>
-            Developments in Modern American Dance
-          </Typography>
-          <List sx={{ listStyleType: "disc", ml: "3em" }}>
-            <Typography>
-              <b>1920s-1940s</b>
-            </Typography>
-            <ListItem
-              sx={{ display: "list-item", mb: "1em", mt: 3 }}
-              ref={(el) => (questionRefs.current[6] = el)}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                breathing and
-                <TextField
-                  sx={{ ml: 1, mr: 1, mt: -2, width: "10em" }}
-                  label="7"
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(6, e.target.value)}
-                  value={answers[6]}
-                />
-                .
-              </Box>
-            </ListItem>
-            <ListItem
-              sx={{ display: "list-item", mb: "0.5em" }}
-              ref={(el) => (questionRefs.current[7] = el)}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "row",
-                }}
+          </ListItem>
+          <ListItem
+            ref={(el) => (questionRefs.current[11] = el)}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "1.1em",
+              gap: 2,
+              width: "100%",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ width: "2rem" }}>12 </Typography>
+              <Typography>
+                Manet felt modern workers were alienated because they
+              </Typography>
+            </Box>
+            <FormControl sx={{ ml: 3 }}>
+              <Select
+                value={answers[11] || ""}
+                onChange={(e) => handleInputChange(11, e.target.value)}
+                size="small"
+                sx={{ minWidth: 400 }}
               >
-                Doris Humphrey wrote an important
-                <TextField
-                  sx={{ ml: 1, mr: 1, mt: -2, width: "10em" }}
-                  label="8"
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(7, e.target.value)}
-                  value={answers[7]}
-                />
-              </Box>
-              <Box>about her ideas.</Box>
-            </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
-              <Box>
-                Dance became a respectable subject to study at university.
-              </Box>
-            </ListItem>
-            <ListItem
-              sx={{ display: "list-item", mb: "0.5em" }}
-              ref={(el) => (questionRefs.current[8] = el)}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                Hanya Holm introduced
-                <TextField
-                  sx={{ ml: 1, mr: 1, mt: -2, width: "10em" }}
-                  label="9"
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(8, e.target.value)}
-                  value={answers[8]}
-                />
-                into dance and musicals.
-              </Box>
-            </ListItem>
-            <Typography>
-              <b>1950s-1970s</b>
-            </Typography>
-            <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
-              <Box>
-                Eric Hawkins and Merce Cunningham reintroduced some ballet
-                techniques.
-              </Box>
-            </ListItem>
-            <ListItem
-              sx={{ display: "list-item", mb: "0.5em" }}
-              ref={(el) => (questionRefs.current[9] = el)}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                An influential
-                <TextField
-                  sx={{ ml: 1, mr: 1, mt: -2, width: "10em" }}
-                  label="10"
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(9, e.target.value)}
-                  value={answers[9]}
-                />
-                outlined the workinglife of
-              </Box>
-              <Box> Paul Taylor.</Box>
-            </ListItem>
-          </List>
-        </Box>
-        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>Questions 11-13</Typography>
-        <Typography>Answer the questions below.</Typography>
-        <Typography>
-          Write <b>ONE WORD ONLY</b> from the passage for each answer.
-        </Typography>
-        <br />
-        <Typography ref={(el) => (questionRefs.current[10] = el)}>
-          <b>11 - </b>When Pearl Primus gave up dancing, what did she focus on
-          doing?
-        </Typography>
-        <Typography ref={(el) => (questionRefs.current[11] = el)}>
-          <b>12 - </b>What was an important influence for Mark Morris's The Hard
-          Nut?
-        </Typography>
-        <Typography ref={(el) => (questionRefs.current[12] = el)}>
-          <b>13 - </b>Dancers working with Ohad Naharin practise without using
-          what?
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
-          {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ margin: "1em" }} key={index}>
-              <TextField
-                sx={{ width: "10em" }}
-                label={`${11 + index}`}
-                variant="outlined"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(10 + index, e.target.value)}
-                value={answers[10 + index]}
-              />
+                {[
+                  "A. wanted to find out if the painting's perspective was realistic",
+                  "B. had to work in a private studio",
+                  "C. needed to show the barmaid's different emotions",
+                  "D. felt disconnected from their real identity",
+                  "E. were fascinated by the mirror's reflection",
+                  "F. preferred to focus on the human aspect",
+                ].map((answer) => (
+                  <MenuItem key={answer} value={answer.charAt(0)}>
+                    {answer}
+                  </MenuItem>
+                ))}
+              </Select>
             </FormControl>
-          ))}
-        </Box>
+          </ListItem>
+          <ListItem
+            ref={(el) => (questionRefs.current[12] = el)}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: "1.1em",
+              gap: 2,
+              width: "100%",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography sx={{ width: "2rem" }}>13 </Typography>
+              <Typography>
+                Academics have re-constructed the painting in real life because
+                they
+              </Typography>
+            </Box>
+            <FormControl sx={{ ml: 3 }}>
+              <Select
+                value={answers[12] || ""}
+                onChange={(e) => handleInputChange(12, e.target.value)}
+                size="small"
+                sx={{ minWidth: 400 }}
+              >
+                {[
+                  "A. wanted to find out if the painting's perspective was realistic",
+                  "B. had to work in a private studio",
+                  "C. needed to show the barmaid's different emotions",
+                  "D. felt disconnected from their real identity",
+                  "E. were fascinated by the mirror's reflection",
+                  "F. preferred to focus on the human aspect",
+                ].map((answer) => (
+                  <MenuItem key={answer} value={answer.charAt(0)}>
+                    {answer}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </ListItem>
+        </List>
       </Box>
     </Box>
   );

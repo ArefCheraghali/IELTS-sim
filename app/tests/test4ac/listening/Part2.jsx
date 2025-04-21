@@ -23,19 +23,21 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
       const index = currentQuestion - 11;
       const element = inputRefs.current[index];
       if (element) {
-        // For radio groups (questions 11-15), focus on the container and scroll it into view
-        if (index <= 4) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-          // Find the first radio input within the group and focus it
-          const firstRadio = element.querySelector('input[type="radio"]');
-          if (firstRadio) {
-            firstRadio.focus();
+        // For text fields (questions 11-17)
+        if (index <= 6) {
+          const textField = element.querySelector('input[type="text"]');
+          if (textField) {
+            textField.focus();
+            textField.select();
           }
         } else {
-          // For text fields (questions 16-20)
-          element.focus();
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
+          // For select fields (questions 18-20)
+          const selectField = element.querySelector("select");
+          if (selectField) {
+            selectField.focus();
+          }
         }
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [currentQuestion]);

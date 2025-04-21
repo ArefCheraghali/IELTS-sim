@@ -63,10 +63,8 @@ const Task2 = ({ answers, setAnswers }) => {
             }}
           >
             <b>
-              The main purpose of public libraries is to provide books, and they
-              should not waste their limited resources and space on providing
-              expensive hi-tech media such as computer software, videos and
-              DVDs.
+              Lack of fresh water is becoming a global issue of increasing
+              importance.
             </b>
           </Typography>
           <Typography
@@ -75,7 +73,10 @@ const Task2 = ({ answers, setAnswers }) => {
               mb: 1,
             }}
           >
-            <b>To what extent do you agree or disagree with this statement?</b>
+            <b>
+              What problems does this shortage cause? <br />
+              What measures could be taken to overcome these problems?
+            </b>
           </Typography>
         </Box>
         <Typography sx={{ ml: 4, mb: 2, textAlign: "left" }}>

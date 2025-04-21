@@ -15,7 +15,7 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import SRBText from "./text/SRBText";
+import RockClimbingText from "./text/RockClimbingText";
 const image1 = "/images/test3/test3ac reading part2-1.jpg";
 
 const Part3 = ({ answers, setAnswers, currentQuestion }) => {
@@ -54,7 +54,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
           borderRight: "1px solid #ccc",
         }}
       >
-        <SRBText />
+        <RockClimbingText />
       </Box>
       <Box
         sx={{
@@ -75,413 +75,253 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
           You should spend about 20 minutes on <b>Questions 27-40</b>, which are
           based on Reading Passage 3.
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Questions 27 - 31</Typography>
-        <Typography sx={{ ml: -1, mb: 1 }}>
-          Do the following statements agree with the claims of the writer in the
-          passage 3?
+        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Questions 27-32</Typography>
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          Reading Passage 3 has eight paragraphs, A-H.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>In boxes 27-31, pick</Typography>
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          Which paragraph contains the following information?
+        </Typography>
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          Write the correct letter, A-H, in boxes 27-32 on your answer sheet.
+        </Typography>
         <List
           sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "flex-start",
-            pl: "3rem",
-            width: "90%",
+            gap: 2,
+            fontSize: "1.1rem",
           }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "4.8em" }}>YES</b> if the statement agrees
-            with the claims of the writer
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "4.5em" }}>NO</b> if the statement
-            contradicts the claims of the writer
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "2em" }}>NOT GIVEN</b> If it is impossible
-            to say what the writer thinks about this
-          </ListItem>
-        </List>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 0,
-            pl: "3rem",
-            width: "90%",
-          }}
-        >
-          <ListItem
-            ref={(el) => (questionRefs.current[0] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>27 </Typography>
-            Many business commentators forget the examples of Muhammad Yunus.
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[1] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>28 </Typography>
-            Dan Rathbourne provides an accurate assessment of Socially
-            Responsible Businesses (SRBs).
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[2] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>29 </Typography>
-            The Quorate Group is a good example of an influential SRB.
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[3] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>30 </Typography>
-            Few other businesses will wish to follow the example of the Concern
-            Consultancy.
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>31 </Typography>
-            Professor Drew has correctly identified one reason for the emergence
-            of SRBs.
-          </ListItem>
-        </List>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-          }}
-        >
-          {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ ml: 5, margin: "1em" }} key={index}>
-              <InputLabel>{`${27 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "10em" }}
-                value={answers[26 + index] || ""}
-                onChange={(e) => handleInputChange(26 + index, e.target.value)}
-                label={`${27 + index}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          {[
+            "examples of the impact of climbers on ecosystems",
+            "an account of how politics affected rock climbing",
+            "a less dangerous alternative to climbing rock faces",
+            "a recommendation for better regulation",
+            "a reference to a climber who did not use any tools or ropes for assistance",
+            "examples of different types of people who use the outdoors for recreation",
+          ].map((text, index) => (
+            <ListItem
+              key={index}
+              ref={(el) => (questionRefs.current[index] = el)}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 1,
+                width: "100%",
+              }}
+            >
+              <Typography sx={{ fontSize: "1.2rem", minWidth: "2rem" }}>
+                {27 + index}
+              </Typography>
+              <Typography sx={{ fontSize: "1.1rem", flex: 1 }}>
+                {text}
+              </Typography>
+              <FormControl sx={{ minWidth: 120 }}>
+                <Select
+                  value={answers[26 + index] || ""}
+                  onChange={(e) =>
+                    handleInputChange(26 + index, e.target.value)
+                  }
+                  sx={{ width: "5em" }}
+                >
+                  {["A", "B", "C", "D", "E", "F", "G", "H"].map((answer) => (
+                    <MenuItem key={answer} value={answer}>
+                      {answer}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </ListItem>
           ))}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-          }}
-        >
-          {Array.from({ length: 2 }).map((_, index) => (
-            <FormControl sx={{ margin: "1em" }} key={index}>
-              <InputLabel>{`${30 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "10em" }}
-                value={answers[29 + index] || ""}
-                onChange={(e) => handleInputChange(29 + index, e.target.value)}
-                label={`${30 + index}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ))}
-        </Box>
+        </List>
 
-        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Questions 32 - 36</Typography>
+        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Questions 33-39</Typography>
         <Typography sx={{ ml: 1, mb: 1 }}>
-          Complete the summary using the list of words, <b>A - H</b>, below.
+          Complete the flow chart below.
         </Typography>
         <Typography sx={{ ml: 1, mb: 1 }}>
-          Write the correct letter, <b>A - H</b>, in boxes 32-36.
+          Choose <b>NO MORE THAN THREE WORDS</b> from the passage for each
+          answer.
         </Typography>
-        <Box sx={{ textAlign: "left" }}>
-          <Box sx={{ textAlign: "left" }}>
-            <Typography variant="h6" sx={{ ml: 6, mb: 0 }}>
-              Examples of SRBs
+        <Box sx={{ textAlign: "left", mt: 3, fontSize: "1.2em" }}>
+          <Typography variant="h6" sx={{ textAlign: "center", mb: 2 }}>
+            A rock climbing time line
+          </Typography>
+
+          <Box sx={{ bgcolor: "#f5f5f5", p: 2, mb: 2 }}>
+            <Typography variant="subtitle1" sx={{ textAlign: "center", mb: 1 }}>
+              Late 19th century
             </Typography>
-            <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-              Renew has made a successful business out of designing
-            </Typography>
+            <Box>
+              <Box sx={{ mb: 3 }}>
+                {" "}
+                Some climbers discuss whether pitons and ropes should only be
+                considered
+              </Box>
+              <TextField
+                sx={{ width: "10em", mb: 5, mt: -2.5 }}
+                label="33"
+                variant="standard"
+                size="small"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(32, e.target.value)}
+                value={answers[32]}
+                ref={(el) => (questionRefs.current[6] = el)}
+              />
+              .
+            </Box>
             <TextField
-              sx={{ ml: 1, mr: 1, width: "3em" }}
-              label="32"
-              variant="outlined"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(31, e.target.value)}
-              value={answers[31]}
-              ref={(el) => (questionRefs.current[5] = el)}
-            />
-            <Typography sx={{ display: "inline" }}>
-              On the other hand, Indulge wishes to promote
-            </Typography>
-            <TextField
-              sx={{ ml: 1, mr: 1, width: "3em" }}
-              label="33"
-              variant="outlined"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(32, e.target.value)}
-              value={answers[32]}
-              ref={(el) => (questionRefs.current[6] = el)}
-            />
-            <Typography sx={{ display: "inline" }}>
-              and is expanding to new sites. Large corporations cannot always
-              make quick changes but many make provisions for
-            </Typography>
-            <TextField
-              sx={{ ml: 1, mr: 1, width: "3em" }}
+              sx={{ width: "10em", mt: -2.5, mb: 1 }}
+              variant="standard"
               label="34"
-              variant="outlined"
+              size="small"
               autoComplete="off"
               onChange={(e) => handleInputChange(33, e.target.value)}
               value={answers[33]}
               ref={(el) => (questionRefs.current[7] = el)}
             />
-            <Typography sx={{ display: "inline" }}>
-              , such as the Green Scheme. One a smaller scale, Johann Jensen is
-              experimenting with types of
+            calls for guidelines based on unwritten rules which discourage
+            climbing aids.
+          </Box>
+
+          <Box sx={{ bgcolor: "#f5f5f5", p: 2, mb: 2 }}>
+            <Typography variant="subtitle1" sx={{ textAlign: "center", mb: 1 }}>
+              1940s
+            </Typography>
+            New equipment becomes controversial. Frank Smythe says that Mt
+            Brussels is
+            <Box sx={{ mt: 3, mb: 1 }}>
+              effectively
+              <TextField
+                sx={{ width: "10em", mt: -2.5, ml: 1 }}
+                label="35"
+                variant="standard"
+                size="small"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(34, e.target.value)}
+                value={answers[34]}
+                ref={(el) => (questionRefs.current[8] = el)}
+              />
+              because of the techniques that were used
+            </Box>{" "}
+            in order to scale the mountain.
+          </Box>
+
+          <Box sx={{ bgcolor: "#f5f5f5", p: 2, mb: 2 }}>
+            <Typography variant="subtitle1" sx={{ textAlign: "center", mb: 1 }}>
+              1970s
             </Typography>
             <TextField
-              sx={{ ml: 1, mr: 1, width: "3em" }}
-              label="35"
-              variant="outlined"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(34, e.target.value)}
-              value={answers[34]}
-              ref={(el) => (questionRefs.current[8] = el)}
-            />
-            <Typography sx={{ display: "inline" }}>
-              and is planning other ventures. In contrast, an example of a
-              well-established business is Greener Good, which provides
-            </Typography>
-            <TextField
-              sx={{ ml: 1, mr: 1, width: "3em" }}
+              sx={{ width: "10em", mt: -2.5, mb: 3, mr: 1 }}
               label="36"
-              variant="outlined"
+              variant="standard"
+              size="small"
               autoComplete="off"
               onChange={(e) => handleInputChange(35, e.target.value)}
               value={answers[35]}
               ref={(el) => (questionRefs.current[9] = el)}
             />
-            <Typography sx={{ display: "inline" }}>
-              to a growing market.
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              width: "100%",
-            }}
-          >
-            <img
-              src={image1}
-              alt="Reading Passage Part 2"
-              style={{ width: "50%" }}
-            />
-          </Box>
-          <br />
-          <Typography sx={{ ml: 2, mb: 1 }}>Questions 37 - 40</Typography>
-          <Typography sx={{ ml: 2, mb: 1 }}>
-            Choose the correct letter <b>A, B, C or D</b>.
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              maxWidth: "60rem",
-              alignItems: "flex-start",
-              alignContent: "flex-start",
-            }}
-          >
-            <FormControl>
-              <Accordion
-                sx={{ bgcolor: "#ebebeb" }}
+            is more environmentally friendly.
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <TextField
+                sx={{ width: "10em", mt: -2.5 }}
+                label="37"
+                variant="standard"
+                size="small"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(36, e.target.value)}
+                value={answers[36]}
                 ref={(el) => (questionRefs.current[10] = el)}
-              >
-                <AccordionSummary
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>
-                    <b style={{ marginRight: "2em" }}>37</b> When discussing
-                    ‘conscious consumers’ the writer concludes that
-                  </Typography>
-                </AccordionSummary>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[36] || ""}
-                  onChange={(e) => handleInputChange(36, e.target.value)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) businesses are slow to respond to consumer demand. "
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) consumers and businesses have different interests. "
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C)  businesses and consumers are influencing each other. "
-                  />
-                  <FormControlLabel
-                    value={"D"}
-                    control={<Radio />}
-                    label="D)  consumers should put more pressure on businesses. "
-                  />
-                </RadioGroup>
-              </Accordion>
-            </FormControl>
-            <br />
-            <FormControl>
-              <Accordion
-                sx={{ bgcolor: "#ebebeb" }}
+              />
+              are introduced as a climbing aid.
+            </Box>
+          </Box>
+
+          <Box sx={{ bgcolor: "#f5f5f5", p: 2 }}>
+            <Typography variant="subtitle1" sx={{ textAlign: "center", mb: 1 }}>
+              1980s – today
+            </Typography>
+            Climbers discuss the merits of new techniques for making hand holds,
+            and
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                mt: 3,
+                mb: 3,
+              }}
+            >
+              also of{" "}
+              <TextField
+                sx={{ width: "10em", mt: -2.5 }}
+                label="38"
+                variant="standard"
+                size="small"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(37, e.target.value)}
+                value={answers[37]}
                 ref={(el) => (questionRefs.current[11] = el)}
-              >
-                <AccordionSummary
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>
-                    <b style={{ marginRight: "2em" }}>38</b> The writer refers
-                    to Lucinda Mitchell in order to
-                  </Typography>
-                </AccordionSummary>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[37] || ""}
-                  onChange={(e) => handleInputChange(37, e.target.value)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) explain why SRBs lose out to other businesses."
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) exemplify the way governments often support SRBs."
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C) contrast the approach of different governments to SRBs."
-                  />
-                  <FormControlLabel
-                    value={"D"}
-                    control={<Radio />}
-                    label="D) compare the role of SRBs in different regions."
-                  />
-                </RadioGroup>
-              </Accordion>
-            </FormControl>
-            <br />
-            <FormControl>
-              <Accordion
-                sx={{ bgcolor: "#ebebeb" }}
-                ref={(el) => (questionRefs.current[12] = el)}
-              >
-                <AccordionSummary
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>
-                    <b style={{ marginRight: "2em" }}>39</b> What does the
-                    writer suggest about the goals of SRBs?
-                  </Typography>
-                </AccordionSummary>
-                <RadioGroup
-                  sx={{ ml: "4.5em" }}
-                  value={answers[38] || ""}
-                  onChange={(e) => handleInputChange(38, e.target.value)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) SRBs should have a wider range of goals. "
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B) It is a mistake for an SRB to change goal."
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C) Some goals may make an SRB unprofitable."
-                  />
-                  <FormControlLabel
-                    value={"D"}
-                    control={<Radio />}
-                    label="D) An SRB should not have more than one goal."
-                  />
-                </RadioGroup>
-              </Accordion>
-            </FormControl>
-            <br />
-            <FormControl>
-              <Accordion
-                sx={{ bgcolor: "#ebebeb" }}
-                ref={(el) => (questionRefs.current[13] = el)}
-              >
-                <AccordionSummary
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography>
-                    <b style={{ marginRight: "2em" }}>40</b> Which of the
-                    following best summerises the writer's argument in the final
-                    paragraph?
-                  </Typography>
-                </AccordionSummary>
-                <RadioGroup
-                  sx={{ ml: "5em" }}
-                  value={answers[39] || ""}
-                  onChange={(e) => handleInputChange(39, e.target.value)}
-                >
-                  <FormControlLabel
-                    value={"A"}
-                    control={<Radio />}
-                    label="A) A minority of businesses will inevitably fail."
-                  ></FormControlLabel>
-                  <FormControlLabel
-                    value={"B"}
-                    control={<Radio />}
-                    label="B)  SRBs are more successful than other businesses."
-                  />
-                  <FormControlLabel
-                    value={"C"}
-                    control={<Radio />}
-                    label="C)  Universities should do more research into SRBs."
-                  />
-                  <FormControlLabel
-                    value={"D"}
-                    control={<Radio />}
-                    label="D) The problem faced by SRBs can be overcome."
-                  />
-                </RadioGroup>
-              </Accordion>
-            </FormControl>
+              />
+              . Many say that climbing is now a test of
+            </Box>
+            physical strength and
+            <TextField
+              sx={{ width: "10em", mt: -2.5, ml: 1 }}
+              label="39"
+              variant="standard"
+              size="small"
+              autoComplete="off"
+              onChange={(e) => handleInputChange(38, e.target.value)}
+              value={answers[38]}
+              ref={(el) => (questionRefs.current[12] = el)}
+            />
+            , rather than of courage.
           </Box>
         </Box>
+
+        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Question 40</Typography>
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          Choose the correct letter, A, B, C or D.
+        </Typography>
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          Write the correct letter in box 40 on your answer sheet.
+        </Typography>
+        <Typography sx={{ ml: 1, mb: 2 }}>
+          Choose the most appropriate title for the reading passage.
+        </Typography>
+
+        <FormControl sx={{ ml: 5, width: "90%" }}>
+          <RadioGroup
+            value={answers[39] || ""}
+            onChange={(e) => handleInputChange(39, e.target.value)}
+            ref={(el) => (questionRefs.current[13] = el)}
+          >
+            <FormControlLabel
+              value="A"
+              control={<Radio />}
+              label="A) A history of rock climbing"
+            />
+            <FormControlLabel
+              value="B"
+              control={<Radio />}
+              label="B) Ethics and issues in rock climbing"
+            />
+            <FormControlLabel
+              value="C"
+              control={<Radio />}
+              label="C) Current trends in rock climbing"
+            />
+            <FormControlLabel
+              value="D"
+              control={<Radio />}
+              label="D) Sport climbers versus traditional climbers"
+            />
+          </RadioGroup>
+        </FormControl>
       </Box>
     </Box>
   );
