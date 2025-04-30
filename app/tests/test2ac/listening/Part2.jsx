@@ -21,17 +21,15 @@ const initialAnswers = [
   { id: "H", text: "H) raises awareness of a particular culture" },
 ];
 const Part2 = ({ answers, setAnswers, currentQuestion }) => {
-  const dragDropRef = useRef(null);
-  const multipleChoice1Ref = useRef(null);
-  const multipleChoice2Ref = useRef(null);
+  const questionRefs = useRef(Array(10).fill(null));
 
   useEffect(() => {
-    if (currentQuestion >= 11 && currentQuestion <= 16) {
-      dragDropRef.current?.scrollIntoView({ behavior: "smooth" });
-    } else if (currentQuestion === 17 || currentQuestion === 18) {
-      multipleChoice1Ref.current?.scrollIntoView({ behavior: "smooth" });
-    } else if (currentQuestion === 19 || currentQuestion === 20) {
-      multipleChoice2Ref.current?.scrollIntoView({ behavior: "smooth" });
+    if (currentQuestion >= 11 && currentQuestion <= 20) {
+      const index = currentQuestion - 11;
+      questionRefs.current[index]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [currentQuestion]);
   return (
@@ -39,8 +37,11 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         width: "100%",
+        maxWidth: "60rem",
+        margin: "0 auto",
+        padding: "0 1rem",
       }}
     >
       <Box
@@ -68,24 +69,26 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
         Choose <b>SIX</b> answers from the box and write the correct letter,{" "}
         <b>A-I</b>, next to the questions 11-17.
       </Typography>
-      <Box ref={dragDropRef}>
-        <DragDrop
-          initialQuestions={initialQuestions}
-          initialAnswers={initialAnswers}
-          setAnswers={setAnswers}
-          answers={answers}
-          currentQuestion={currentQuestion}
-          title="Festival workshops"
-          infoTitle="Information"
-        />
-      </Box>
+      <DragDrop
+        initialQuestions={initialQuestions}
+        initialAnswers={initialAnswers}
+        setAnswers={setAnswers}
+        answers={answers}
+        currentQuestion={currentQuestion}
+        title="Festival workshops"
+        infoTitle="Information"
+        questionRefs={questionRefs}
+        startIndex={0}
+      />
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "center",
           width: "100%",
           maxWidth: "60rem",
+          mt: 3,
+          mb: 3,
         }}
       >
         <Typography>Questions 17 and 18</Typography>
@@ -96,7 +99,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
           Which <b>TWO</b> reasons does the speaker give for recommending{" "}
           <i>Alive and Kicking</i>?
         </Typography>
-        <Box ref={multipleChoice1Ref}>
+        <Box ref={(el) => (questionRefs.current[6] = el)}>
           <MultipleChoiceQuestion
             options={[
               { label: "their financial situation", value: "A" },
@@ -116,7 +119,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "center",
           width: "100%",
           maxWidth: "60rem",
         }}
@@ -129,7 +132,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
           Which <b>TWO</b> pieces of advice does the speaker give to parents
           about reading?
         </Typography>
-        <Box ref={multipleChoice2Ref}>
+        <Box ref={(el) => (questionRefs.current[8] = el)}>
           <MultipleChoiceQuestion
             options={[
               {

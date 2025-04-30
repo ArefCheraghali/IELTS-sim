@@ -1,31 +1,64 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Part1 from "./Part1";
+import Part2 from "./Part2";
+import Part3 from "./Part3";
 import {
   Box,
   Button,
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import Part1 from "./Part1";
-import Part2 from "./Part2";
-import Part3 from "./Part3";
-import ExamLayout from "../../../components/ExamLayout";
-import { useExam } from "../../../contexts/ExamContext";
 import useTextHighlight from "app/hooks/useTextHighlight";
 import HighlightContextMenu from "app/components/HighlightContextMenu";
+import ExamLayout from "../../../components/ExamLayout";
+import { useTimer } from "../../../contexts/TimerContext";
+import TestBottomNavigation from "../../../components/TestBottomNavigation";
+import { TEST_DURATIONS } from "../../../config/testDurations";
+
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test2ac.reading;
 
 export default function Test() {
-  const [currentPart, setCurrentPart] = useState(0);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
-  const answersRef = useRef(answers);
+
+  const { timeLeft, startTimer, resetTimer } = useTimer();
+
   const router = useRouter();
-  const { startTimer, timeLeft } = useExam();
+  const answersRef = useRef(answers);
+
+  useEffect(() => {
+    startTimer(TEST_DURATION_MINUTES);
+  }, []);
+
+  // Add auto-submit functionality
+  useEffect(() => {
+    let autoSubmitTimeout;
+    if (timeLeft === 0) {
+      autoSubmitTimeout = setTimeout(() => {
+        console.log("Time is up! Test submitted automatically.");
+        onSubmit();
+      }, 100);
+    }
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft]);
+
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
+
+  const onSubmit = () => {
+    localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
+    handleCloseDialog();
+    resetTimer();
+    router.push("/tests/writing-intro");
+  };
 
   const {
     anchorEl,
@@ -37,31 +70,6 @@ export default function Test() {
     handleClose,
   } = useTextHighlight();
 
-  useEffect(() => {
-    // Start 60-minute timer when component mounts
-    startTimer(60);
-  }, [startTimer]);
-
-  useEffect(() => {
-    answersRef.current = answers;
-  }, [answers]);
-
-  // Auto-submit when time is up
-  useEffect(() => {
-    if (timeLeft === 0) {
-      onSubmit();
-    }
-  }, [timeLeft]);
-
-  const handleNavigation = (direction) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (direction === "next" && currentPart < 2) {
-      setCurrentPart(currentPart + 1);
-    } else if (direction === "prev" && currentPart > 0) {
-      setCurrentPart(currentPart - 1);
-    }
-  };
-
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -70,85 +78,89 @@ export default function Test() {
     setOpenDialog(false);
   };
 
-  const onSubmit = () => {
-    localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
-    handleCloseDialog();
-    router.push("/tests/test2ac/writing");
+  const handleQuestionChange = (questionNumber) => {
+    setCurrentQuestion(questionNumber);
+    // Update the section based on the question number
+    if (questionNumber <= 13) {
+      setCurrentSection(0);
+    } else if (questionNumber <= 26) {
+      setCurrentSection(1);
+    } else {
+      setCurrentSection(2);
+    }
   };
 
-  const content = (
-    <Box sx={{ textAlign: "center", mt: 4, userSelect: "text" }}>
+  return (
+    <ExamLayout sectionName="Reading" onSubmit={handleOpenDialog}>
       <Box
-        onContextMenu={handleContextMenu}
         ref={textRef}
-        sx={{ userSelect: "text" }}
+        onContextMenu={handleContextMenu}
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+        }}
       >
+        {currentSection === 0 && (
+          <Part1
+            answers={answers}
+            setAnswers={setAnswers}
+            currentQuestion={currentQuestion}
+          />
+        )}
+        {currentSection === 1 && (
+          <Part2
+            answers={answers}
+            setAnswers={setAnswers}
+            currentQuestion={currentQuestion}
+          />
+        )}
+        {currentSection === 2 && (
+          <Part3
+            answers={answers}
+            setAnswers={setAnswers}
+            currentQuestion={currentQuestion}
+          />
+        )}
         <HighlightContextMenu
           anchorEl={anchorEl}
           menuPosition={menuPosition}
-          handleClose={handleClose}
           handleHighlight={handleHighlight}
           handleClearHighlights={handleClearHighlights}
+          handleClose={handleClose}
         />
-        <Box sx={{ mt: 4 }}>
-          {currentPart === 0 && (
-            <Part1 answers={answers} setAnswers={setAnswers} />
-          )}
-          {currentPart === 1 && (
-            <Part2 answers={answers} setAnswers={setAnswers} />
-          )}
-          {currentPart === 2 && (
-            <Part3 answers={answers} setAnswers={setAnswers} />
-          )}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => handleNavigation("prev")}
-              disabled={currentPart === 0}
-            >
-              Previous
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => handleNavigation("next")}
-              disabled={currentPart === 2}
-            >
-              Next
-            </Button>
-          </Box>
-          {currentPart === 2 && (
-            <Button
-              onClick={handleOpenDialog}
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-            >
-              Submit
-            </Button>
-          )}
-        </Box>
-        <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>{"Submit Answers?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to submit your answers? You will not be able
-              to change them after submission.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="secondary">
-              Cancel
-            </Button>
-            <Button onClick={onSubmit} color="primary">
-              Submit
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <TestBottomNavigation
+          currentSection={currentSection}
+          setCurrentSection={setCurrentSection}
+          currentQuestion={currentQuestion}
+          setCurrentQuestion={handleQuestionChange}
+          answers={answers}
+          totalSections={3}
+          partQuestions={{
+            0: { start: 1, end: 13 },
+            1: { start: 14, end: 26 },
+            2: { start: 27, end: 40 },
+          }}
+        />
       </Box>
-    </Box>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>{"Submit Answers?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to submit your answers? You will not be able
+            to change them after submission.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={onSubmit} color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </ExamLayout>
   );
-
-  return <ExamLayout sectionName="Reading Test">{content}</ExamLayout>;
 }

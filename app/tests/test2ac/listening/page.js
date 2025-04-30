@@ -39,7 +39,7 @@ export default function Test() {
   const audioRef = useRef(null);
   const answersRef = useRef(answers);
   const { volume } = useVolume();
-  const { timeLeft, startTimer } = useTimer();
+  const { timeLeft, startTimer, resetTimer } = useTimer();
 
   const {
     anchorEl,
@@ -139,13 +139,22 @@ export default function Test() {
       JSON.stringify(answersRef.current)
     );
     handleCloseDialog();
-    router.push("/tests/test2ac/reading");
+    resetTimer();
+    router.push("/tests/reading-intro");
   };
 
-  // Function to check if we should show the submit button
-  const shouldShowSubmitButton = () => {
-    // Show it on the last section (Part 4) or when all questions are answered
-    return currentSection === 3 || answers.every((answer) => answer !== "");
+  const handleQuestionChange = (questionNumber) => {
+    setCurrentQuestion(questionNumber);
+    // Update the section based on the question number
+    if (questionNumber <= 10) {
+      setCurrentSection(0);
+    } else if (questionNumber <= 20) {
+      setCurrentSection(1);
+    } else if (questionNumber <= 30) {
+      setCurrentSection(2);
+    } else {
+      setCurrentSection(3);
+    }
   };
 
   const handleOpenDialog = () => {
@@ -157,8 +166,25 @@ export default function Test() {
   };
 
   return (
-    <ExamLayout sectionName="Listening Test">
-      <Box sx={{ textAlign: "center", mt: 4, userSelect: "text", pb: 16 }}>
+    <ExamLayout sectionName="Listening Test" onSubmit={handleOpenDialog}>
+      <Box sx={{ textAlign: "center", userSelect: "text", pb: 14 }}>
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>{"Submit Answers?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to submit your answers? You will not be able
+              to change them after submission.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="secondary">
+              Cancel
+            </Button>
+            <Button onClick={onSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Box
           onContextMenu={handleContextMenu}
           ref={textRef}
@@ -216,36 +242,8 @@ export default function Test() {
                   currentQuestion={currentQuestion}
                 />
               )}
-
-              {shouldShowSubmitButton() && (
-                <Button
-                  onClick={handleOpenDialog}
-                  variant="contained"
-                  color="primary"
-                  sx={{ mt: 4, mb: 2 }}
-                >
-                  Submit
-                </Button>
-              )}
             </Box>
           )}
-          <Dialog open={openDialog} onClose={handleCloseDialog}>
-            <DialogTitle>{"Submit Answers?"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Are you sure you want to submit your answers? You will not be
-                able to change them after submission.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDialog} color="secondary">
-                Cancel
-              </Button>
-              <Button onClick={onSubmit} color="primary">
-                Submit
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Box>
       </Box>
 
@@ -255,8 +253,15 @@ export default function Test() {
           currentSection={currentSection}
           setCurrentSection={setCurrentSection}
           currentQuestion={currentQuestion}
-          setCurrentQuestion={setCurrentQuestion}
+          setCurrentQuestion={handleQuestionChange}
           answers={answers}
+          totalSections={4}
+          partQuestions={{
+            0: { start: 1, end: 10 },
+            1: { start: 11, end: 20 },
+            2: { start: 21, end: 30 },
+            3: { start: 31, end: 40 },
+          }}
         />
       )}
     </ExamLayout>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   FormControl,
@@ -64,8 +64,53 @@ const initialAnswers = [
   },
 ];
 
-const Part3 = ({ answers, setAnswers }) => {
+const Part3 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = ["YES", "NO", "NOT GIVEN"];
+  const questionRefs = useRef(Array(14).fill(null));
+  const prevQuestionRef = useRef(null); // Add this to track previous question
+
+  useEffect(() => {
+    // Skip if it's the initial mount (prevQuestion is null)
+    if (prevQuestionRef.current === null) {
+      prevQuestionRef.current = currentQuestion;
+      return;
+    }
+
+    // Only scroll if the question actually changed
+    if (prevQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 27 && currentQuestion <= 40) {
+        const index = currentQuestion - 27;
+        const element = questionRefs.current[index];
+        if (element) {
+          // For select elements (questions 27-32)
+          if (index < 6) {
+            const selectButton = element.querySelector("[role='button']");
+            if (selectButton) {
+              selectButton.focus();
+            }
+          }
+          // For radio groups (questions 33-36)
+          else if (index >= 6 && index < 10) {
+            const radioInputs = element.querySelectorAll('input[type="radio"]');
+            const selectedRadio = element.querySelector(
+              'input[type="radio"]:checked'
+            );
+            if (selectedRadio) {
+              selectedRadio.focus();
+            } else if (radioInputs.length > 0) {
+              radioInputs[0].focus();
+            }
+          }
+          // For drag-drop (questions 37-40)
+          // DragDrop component handles its own focus
+
+          // Scroll the question into view
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }
+      prevQuestionRef.current = currentQuestion;
+    }
+  }, [currentQuestion]);
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -75,12 +120,7 @@ const Part3 = ({ answers, setAnswers }) => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "75vh",
-      }}
-    >
+    <Box sx={{ display: "flex", height: "75vh" }}>
       <Box
         sx={{
           width: "50%",
@@ -185,7 +225,11 @@ const Part3 = ({ answers, setAnswers }) => {
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ ml: 5, margin: "1em" }} key={index}>
+            <FormControl
+              sx={{ ml: 5, margin: "1em" }}
+              key={index}
+              ref={(el) => (questionRefs.current[index] = el)}
+            >
               <InputLabel>{`${27 + index}`}</InputLabel>
               <Select
                 sx={{ width: "10em" }}
@@ -210,7 +254,11 @@ const Part3 = ({ answers, setAnswers }) => {
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ margin: "1em" }} key={index}>
+            <FormControl
+              sx={{ margin: "1em" }}
+              key={index}
+              ref={(el) => (questionRefs.current[index + 3] = el)}
+            >
               <InputLabel>{`${30 + index}`}</InputLabel>
               <Select
                 sx={{ width: "10em" }}
@@ -243,7 +291,10 @@ const Part3 = ({ answers, setAnswers }) => {
           }}
         >
           <FormControl>
-            <Accordion sx={{ bgcolor: "#ebebeb" }}>
+            <Accordion
+              sx={{ bgcolor: "#ebebeb" }}
+              ref={(el) => (questionRefs.current[6] = el)}
+            >
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -283,7 +334,10 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ bgcolor: "#ebebeb" }}>
+            <Accordion
+              sx={{ bgcolor: "#ebebeb" }}
+              ref={(el) => (questionRefs.current[7] = el)}
+            >
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -323,7 +377,10 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ bgcolor: "#ebebeb" }}>
+            <Accordion
+              sx={{ bgcolor: "#ebebeb" }}
+              ref={(el) => (questionRefs.current[8] = el)}
+            >
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -334,7 +391,7 @@ const Part3 = ({ answers, setAnswers }) => {
                 </Typography>
               </AccordionSummary>
               <RadioGroup
-                sx={{ ml: "4.5em" }}
+                sx={{ ml: "5em" }}
                 value={answers[34] || ""}
                 onChange={(e) => handleInputChange(34, e.target.value)}
               >
@@ -363,7 +420,10 @@ const Part3 = ({ answers, setAnswers }) => {
           </FormControl>
           <br />
           <FormControl>
-            <Accordion sx={{ bgcolor: "#ebebeb" }}>
+            <Accordion
+              sx={{ bgcolor: "#ebebeb" }}
+              ref={(el) => (questionRefs.current[9] = el)}
+            >
               <AccordionSummary
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -417,6 +477,9 @@ const Part3 = ({ answers, setAnswers }) => {
           answers={answers}
           title=""
           infoTitle=""
+          currentQuestion={currentQuestion}
+          questionRefs={questionRefs}
+          startIndex={10} // Start index for DragDrop questions
         />
       </Box>
     </Box>

@@ -13,7 +13,51 @@ import {
 
 import CollectText from "./text/CollectText";
 
-const Part1 = ({ answers, setAnswers }) => {
+const Part1 = ({ answers, setAnswers, currentQuestion }) => {
+  const questionRefs = React.useRef(Array(13).fill(null));
+  const prevQuestionRef = React.useRef(null); // Add this to track previous question
+
+  React.useEffect(() => {
+    // Skip if it's the initial mount (prevQuestion is null)
+    if (prevQuestionRef.current === null) {
+      prevQuestionRef.current = currentQuestion;
+      return;
+    }
+
+    // Only scroll if the question actually changed
+    if (prevQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 1 && currentQuestion <= 13) {
+        const index = currentQuestion - 1;
+        const element = questionRefs.current[index];
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          // Delay focus/click slightly after scroll
+          setTimeout(() => {
+            // Questions 1-6 (Select - TRUE/FALSE/NOT GIVEN)
+            if (index < 6) {
+              const selectButton = element.querySelector("[role='button']");
+              if (selectButton) {
+                selectButton.focus();
+              }
+            }
+            // Questions 7-13 (TextField)
+            else if (index >= 6) {
+              const input = element.querySelector("input");
+              if (input) {
+                input.focus();
+                input.select();
+              }
+            }
+          }, 150);
+        }
+      }
+      prevQuestionRef.current = currentQuestion;
+    }
+  }, [currentQuestion]);
   const possibleAnswers = ["TRUE", "FALSE", "NOT GIVEN"];
 
   const handleInputChange = (index, value) => {
@@ -49,25 +93,25 @@ const Part1 = ({ answers, setAnswers }) => {
           justifyContent: "flex-start",
           alignContent: "flex-start",
           alignItems: "flex-start",
-          padding: 2,
+          padding: 1,
         }}
       >
         <Typography sx={{ ml: 5, fontSize: "1.1em", mb: 1 }}>
           <b>READING PASSAGE 1</b>
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           You should spend about 20 minutes on <b>Questions 1-13</b>, which are
           based on Reading Passage 1.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 1 - 6</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
+          <b>Questions 1 - 6</b>
+        </Typography>
+        <Typography sx={{ mb: 1 }}>
           Do the following statements agree with the information given in the
-          Reading Passage 1?
+          Reading Passage?
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          In boxes 1-6 below, select
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>In boxes 1-6 below, select</Typography>
+        <Typography sx={{ mb: 1 }}>
           Classify the following characteristics as belonging to
         </Typography>
         <List
@@ -76,7 +120,6 @@ const Part1 = ({ answers, setAnswers }) => {
             flexDirection: "column",
             alignItems: "flex-start",
             pl: "3rem",
-            width: "90%",
           }}
         >
           <ListItem sx={{ display: "flex", flexDirection: "row" }}>
@@ -98,36 +141,53 @@ const Part1 = ({ answers, setAnswers }) => {
             flexDirection: "column",
             alignItems: "flex-start",
             gap: 0,
-            pl: "3rem",
-            width: "90%",
+            pl: "2rem",
           }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>1 </Typography>
+          <ListItem
+            ref={(el) => (questionRefs.current[0] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <Typography sx={{ marginRight: "2rem", ml: -5 }}>1 </Typography>
             Dr Maria Richter believes that people become interested in
             collecting in early childhood.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>2 </Typography>A
+          <ListItem
+            ref={(el) => (questionRefs.current[1] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <Typography sx={{ marginRight: "2rem", ml: -5 }}>2 </Typography>A
             form of collecting may have helped some ancient humans to survive.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>3 </Typography>
+          <ListItem
+            ref={(el) => (questionRefs.current[2] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <Typography sx={{ marginRight: "2rem", ml: -5 }}>3 </Typography>
             Leonard Woolley expected to find the remains of a private collection
             at Ur.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>4 </Typography>
+          <ListItem
+            ref={(el) => (questionRefs.current[3] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <Typography sx={{ marginRight: "2rem", ml: -5 }}>4 </Typography>
             Woolley found writing that identified some of the objects he
             discovered.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>5 </Typography>
+          <ListItem
+            ref={(el) => (questionRefs.current[4] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <Typography sx={{ marginRight: "2rem", ml: -5 }}>5 </Typography>
             Princess Ennigaldi established her collection to show off her
             wealth.
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>6 </Typography>
+          <ListItem
+            ref={(el) => (questionRefs.current[5] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
+            <Typography sx={{ marginRight: "2rem", ml: -5 }}>6 </Typography>
             Displaying artworks was the main purpose of Cabinets of Curiosities.
           </ListItem>
         </List>
@@ -135,11 +195,10 @@ const Part1 = ({ answers, setAnswers }) => {
           sx={{
             display: "flex",
             flexDirection: "row",
-            width: "100%",
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl sx={{ ml: 5, margin: "1em" }} key={index}>
+            <FormControl sx={{ ml: 3, margin: "1em" }} key={index}>
               <InputLabel>{`${1 + index}`}</InputLabel>
               <Select
                 sx={{ width: "10em" }}
@@ -160,7 +219,6 @@ const Part1 = ({ answers, setAnswers }) => {
           sx={{
             display: "flex",
             flexDirection: "row",
-            width: "100%",
           }}
         >
           {Array.from({ length: 3 }).map((_, index) => (
@@ -181,14 +239,13 @@ const Part1 = ({ answers, setAnswers }) => {
             </FormControl>
           ))}
         </Box>
-        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>Questions 7 - 10</Typography>
+        <Typography sx={{ mb: 1, mt: 3 }}>Questions 7 - 10</Typography>
         <Typography>Complete the notes below.</Typography>
         <Typography>
           Write <b>ONE WORD ONLY</b> from the passage for each answer.
         </Typography>
         <Box
           sx={{
-            width: "95%",
             height: "auto",
             maxWidth: "60rem",
             mt: 2,
@@ -199,21 +256,25 @@ const Part1 = ({ answers, setAnswers }) => {
             borderStyle: "solid",
             padding: "1em",
             textAlign: "left",
+            fontSize: "1.1em",
           }}
         >
-          <Typography variant="h6" sx={{ marginLeft: "30%" }}>
+          <Typography variant="h6" sx={{ marginLeft: "5em" }}>
             Some significant private collections
           </Typography>
-          <List sx={{ listStyleType: "circle", ml: "3em" }}>
+          <List sx={{ listStyleType: "circle", ml: "1em" }}>
             <Typography>
               <b>
                 15<sup>th</sup>-17<sup>th</sup> Centuries
               </b>
             </Typography>
-            <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
+            <ListItem
+              ref={(el) => (questionRefs.current[6] = el)}
+              sx={{ display: "list-item", mb: "0.5em", mt: 1 }}
+            >
               The Medici family made their money from
               <TextField
-                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "8em" }}
                 label="7"
                 variant="standard"
                 autoComplete="off"
@@ -222,11 +283,14 @@ const Part1 = ({ answers, setAnswers }) => {
               />
               .
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              ref={(el) => (questionRefs.current[7] = el)}
+              sx={{ display: "list-item", mb: "0.5em" }}
+            >
               At the Palazzo Medici there was a hidden ‘studio’ which had no
-              <Typography sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }}>
                 <TextField
-                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  sx={{ mt: -2.5, ml: 1, mr: 1, width: "7em" }}
                   label="8"
                   variant="standard"
                   autoComplete="off"
@@ -234,15 +298,18 @@ const Part1 = ({ answers, setAnswers }) => {
                   value={answers[7]}
                 />
                 .
-              </Typography>
+              </Box>
             </ListItem>
             <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
               Ole Worm liked to show when other scientists had made mistakes.
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              ref={(el) => (questionRefs.current[8] = el)}
+              sx={{ display: "list-item", mb: "0.5em" }}
+            >
               Ole Worm made an important
               <TextField
-                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "8em" }}
                 label="9"
                 variant="standard"
                 autoComplete="off"
@@ -256,10 +323,13 @@ const Part1 = ({ answers, setAnswers }) => {
                 19<sup>th</sup> Centuries
               </b>
             </Typography>
-            <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
+            <ListItem
+              ref={(el) => (questionRefs.current[9] = el)}
+              sx={{ display: "list-item", mb: "0.5em", mt: 3 }}
+            >
               Lady Charlotte Guest created a collection of
               <TextField
-                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "8em" }}
                 label="10"
                 variant="standard"
                 autoComplete="off"
@@ -268,10 +338,13 @@ const Part1 = ({ answers, setAnswers }) => {
               />
               which she left to a museum.
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              ref={(el) => (questionRefs.current[10] = el)}
+              sx={{ display: "list-item", mb: "0.5em" }}
+            >
               Joseph Mayer paid for
               <TextField
-                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "8em" }}
                 label="11"
                 variant="standard"
                 autoComplete="off"
@@ -285,25 +358,29 @@ const Part1 = ({ answers, setAnswers }) => {
                 20<sup>th</sup> Centuries
               </b>
             </Typography>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              ref={(el) => (questionRefs.current[11] = el)}
+              sx={{ display: "list-item", mb: "0.5em" }}
+            >
               Beatrix Potter did not give away her collection of
-              <Typography sx={{ mt: 3 }}>
-                <TextField
-                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-                  label="12"
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(11, e.target.value)}
-                  value={answers[11]}
-                />
-                .
-              </Typography>
+              <TextField
+                sx={{ mt: -2.5, ml: 1, mr: 1, width: "8em" }}
+                label="12"
+                variant="standard"
+                autoComplete="off"
+                onChange={(e) => handleInputChange(11, e.target.value)}
+                value={answers[11]}
+              />
+              .
             </ListItem>
-            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+            <ListItem
+              ref={(el) => (questionRefs.current[12] = el)}
+              sx={{ display: "list-item", mb: "0.5em" }}
+            >
               Franklin D. Roosevelt believed collecting helped him deal with the
-              <Typography sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }}>
                 <TextField
-                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  sx={{ mt: -2.5, ml: 1, mr: 1, width: "8em" }}
                   label="13"
                   variant="standard"
                   autoComplete="off"
@@ -311,7 +388,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   value={answers[12]}
                 />
                 of this job.
-              </Typography>
+              </Box>
             </ListItem>
           </List>
         </Box>

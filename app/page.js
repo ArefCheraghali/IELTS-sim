@@ -46,8 +46,9 @@ export default function Home() {
     localStorage.setItem("user", JSON.stringify(data.phone));
 
     try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
       const response = await axios.post(
-        "http://127.0.0.1:8000/login",
+        `${backendUrl}/login`,
         {
           phone_number: data.phone,
           password: data.password,

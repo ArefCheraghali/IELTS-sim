@@ -39,11 +39,14 @@ const UserList = () => {
         }
 
         // Fetch users from the API
-        const response = await axios.get("http://127.0.0.1:8000/users", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add the Authorization header
-          },
-        });
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add the Authorization header
+            },
+          }
+        );
 
         if (response.status === 200) {
           setUsers(response.data); // Set the user data
@@ -68,7 +71,7 @@ const UserList = () => {
 
       // Send DELETE request to the API
       const response = await axios.delete(
-        `http://127.0.0.1:8000/users/${phoneNumber}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${phoneNumber}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

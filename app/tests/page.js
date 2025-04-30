@@ -24,7 +24,7 @@ export default function Tests() {
         const token = localStorage.getItem("access_token");
 
         const response = await axios.get(
-          `http://127.0.0.1:8000/users/${phoneNumber}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${phoneNumber}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

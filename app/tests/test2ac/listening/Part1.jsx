@@ -17,14 +17,27 @@ import {
 const Part1 = ({ answers, setAnswers, currentQuestion }) => {
   // Create refs for each text field
   const inputRefs = useRef([]);
+  const prevQuestionRef = useRef(null); // Add this to track previous question
 
   useEffect(() => {
-    // Focus on the text field corresponding to the current question
-    if (currentQuestion >= 1 && currentQuestion <= 10) {
-      const index = currentQuestion - 1;
-      if (inputRefs.current[index]) {
-        inputRefs.current[index].focus();
+    // Skip if it's the initial mount (prevQuestion is null)
+    if (prevQuestionRef.current === null) {
+      prevQuestionRef.current = currentQuestion;
+      return;
+    }
+
+    // Only scroll if the question actually changed
+    if (prevQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 1 && currentQuestion <= 10) {
+        const index = currentQuestion - 1;
+        const element = inputRefs.current[index];
+        if (element) {
+          element.focus();
+          element.select();
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
       }
+      prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
   const handleInputChange = (index, value) => {
@@ -40,8 +53,11 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "center",
           width: "100%",
+          maxWidth: "60rem",
+          margin: "0 auto",
+          padding: "0 1rem",
         }}
       >
         <Box
@@ -50,7 +66,6 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             width: "100%",
-            maxWidth: "60rem",
           }}
         >
           <Typography variant="h5" gutterBottom>
@@ -77,7 +92,6 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             sx={{
               width: "100%",
               height: "auto",
-              maxWidth: "60rem",
               mt: 2,
               display: "flex",
               flexDirection: "column",
@@ -186,7 +200,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
           Write <b>ONE WORD ONLY</b> for each answer.
         </Typography>
         <TableContainer sx={{ mt: 3 }} component={Paper}>
-          <Table>
+          <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
                 <TableCell>Shopping</TableCell>
@@ -223,6 +237,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(7, e.target.value)}
                     value={answers[7]}
+                    inputRef={(el) => (inputRefs.current[7] = el)}
                   />{" "}
                   for dessert
                 </TableCell>
@@ -235,6 +250,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(8, e.target.value)}
                     value={answers[8]}
+                    inputRef={(el) => (inputRefs.current[8] = el)}
                   />
                 </TableCell>
               </TableRow>
@@ -250,6 +266,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(9, e.target.value)}
                     value={answers[9]}
+                    inputRef={(el) => (inputRefs.current[9] = el)}
                   />{" "}
                   tart
                 </TableCell>

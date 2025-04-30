@@ -64,7 +64,7 @@ const NewUserForm = () => {
 
       // Send the form data to the API
       const response = await axios.post(
-        "http://127.0.0.1:8000/signup",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
         requestBody,
         {
           headers: {

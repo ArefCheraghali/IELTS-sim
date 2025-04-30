@@ -1,4 +1,4 @@
-import React from "react";
+import { useRef, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -15,6 +15,21 @@ import {
 } from "@mui/material";
 
 const Part3 = ({ answers, setAnswers, currentQuestion }) => {
+  // Create refs for each question
+  const inputRefs = useRef([]);
+
+  useEffect(() => {
+    // Focus on the radio group or select corresponding to the current question
+    if (currentQuestion >= 21 && currentQuestion <= 30) {
+      const index = currentQuestion - 21;
+      const element = inputRefs.current[index];
+      if (element) {
+        element.focus();
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [currentQuestion]);
+
   const possibleAnswers = [
     "A) size",
     "B) escape",
@@ -38,8 +53,10 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         width: "100%",
+        maxWidth: "1200px",
+        margin: "0 auto",
       }}
     >
       <Box
@@ -92,7 +109,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
               sx={{ ml: "5em" }}
               value={answers[20] || ""}
               onChange={(e) => handleInputChange(20, e.target.value)}
-              autoFocus={currentQuestion === 21}
+              ref={(el) => (inputRefs.current[0] = el)}
             >
               <FormControlLabel
                 value={"A"}
@@ -120,7 +137,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
               sx={{ ml: "5em" }}
               value={answers[21] || ""}
               onChange={(e) => handleInputChange(21, e.target.value)}
-              autoFocus={currentQuestion === 22}
+              ref={(el) => (inputRefs.current[1] = el)}
             >
               <FormControlLabel
                 value={"A"}
@@ -148,7 +165,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
               sx={{ ml: "5em" }}
               value={answers[22] || ""}
               onChange={(e) => handleInputChange(22, e.target.value)}
-              autoFocus={currentQuestion === 23}
+              ref={(el) => (inputRefs.current[2] = el)}
             >
               <FormControlLabel
                 value={"A"}
@@ -176,7 +193,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
               sx={{ ml: "5em" }}
               value={answers[23] || ""}
               onChange={(e) => handleInputChange(23, e.target.value)}
-              autoFocus={currentQuestion === 24}
+              ref={(el) => (inputRefs.current[3] = el)}
             >
               <FormControlLabel
                 value={"A"}
@@ -204,7 +221,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
               sx={{ ml: "5em" }}
               value={answers[24] || ""}
               onChange={(e) => handleInputChange(24, e.target.value)}
-              autoFocus={currentQuestion === 25}
+              ref={(el) => (inputRefs.current[4] = el)}
             >
               <FormControlLabel
                 value={"A"}
@@ -237,7 +254,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
             listStyleType: "upper-roman",
             display: "flex",
             flexDirection: "column",
-            alignItems: "flex-start",
+            alignItems: "center",
             gap: 2,
             pl: "3rem",
             width: "100%",
@@ -261,6 +278,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
                   value={answers[25] || ""}
                   onChange={(e) => handleInputChange(25, e.target.value)}
                   label={26}
+                  ref={(el) => (inputRefs.current[5] = el)}
                 >
                   {possibleAnswers.map((answer) => (
                     <MenuItem key={answer} value={answer}>
@@ -292,6 +310,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
                   value={answers[26] || ""}
                   onChange={(e) => handleInputChange(26, e.target.value)}
                   label={27}
+                  ref={(el) => (inputRefs.current[6] = el)}
                 >
                   {possibleAnswers.map((answer) => (
                     <MenuItem key={answer} value={answer}>
@@ -332,6 +351,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
                     value={answers[27] || ""}
                     onChange={(e) => handleInputChange(27, e.target.value)}
                     label={28}
+                    ref={(el) => (inputRefs.current[7] = el)}
                   >
                     {possibleAnswers.map((answer) => (
                       <MenuItem key={answer} value={answer}>
@@ -372,6 +392,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
                     value={answers[28] || ""}
                     onChange={(e) => handleInputChange(28, e.target.value)}
                     label={29}
+                    ref={(el) => (inputRefs.current[8] = el)}
                   >
                     {possibleAnswers.map((answer) => (
                       <MenuItem key={answer} value={answer}>
@@ -402,6 +423,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
                   value={answers[29] || ""}
                   onChange={(e) => handleInputChange(29, e.target.value)}
                   label={30}
+                  ref={(el) => (inputRefs.current[9] = el)}
                 >
                   {possibleAnswers.map((answer) => (
                     <MenuItem key={answer} value={answer}>

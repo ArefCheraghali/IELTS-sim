@@ -15,6 +15,17 @@ const DragDrop = ({
   const [availableAnswers, setAvailableAnswers] = useState(initialAnswers);
 
   useEffect(() => {
+    // Only assign refs without scrolling
+    questions.forEach((_, index) => {
+      if (questionRefs && startIndex !== undefined) {
+        questionRefs.current[startIndex + index] = null;
+      }
+    });
+  }, [questions, questionRefs, startIndex]);
+
+  const [updatedQuestions, setUpdatedQuestions] = useState(initialQuestions);
+
+  useEffect(() => {
     const updatedQuestions = initialQuestions.map((question) => ({
       ...question,
       answerId: answers[question.id] || null,
@@ -128,7 +139,11 @@ const DragDrop = ({
                 backgroundColor: "white",
                 position: "relative",
               }}
-              ref={questionRefs && startIndex !== undefined ? (el) => (questionRefs.current[startIndex + index] = el) : null}
+              ref={
+                questionRefs && startIndex !== undefined
+                  ? (el) => (questionRefs.current[startIndex + index] = el)
+                  : null
+              }
             >
               <Typography sx={{ mr: 2, fontSize: "0.9rem" }}>
                 {question.text}
