@@ -21,14 +21,47 @@ const image1 = "/images/test3/test3ac reading part2-1.jpg";
 const Part3 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = ["YES", "NO", "NOT GIVEN"];
   const questionRefs = React.useRef(Array(14).fill(null));
+  const prevQuestionRef = React.useRef(null); // Add this line
 
   React.useEffect(() => {
-    if (currentQuestion >= 27 && currentQuestion <= 40) {
-      const index = currentQuestion - 27;
-      questionRefs.current[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+    // Skip if it's the initial mount
+    if (prevQuestionRef.current === null) {
+      prevQuestionRef.current = currentQuestion;
+      return;
+    }
+
+    // Only scroll if the question actually changed
+    if (prevQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 27 && currentQuestion <= 40) {
+        const index = currentQuestion - 27;
+        const element = questionRefs.current[index];
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          // Add delay to ensure scroll completes before focus
+          setTimeout(() => {
+            // For questions 27-32 (Select)
+            if (index < 6) {
+              const select = element.querySelector("[role='button']");
+              if (select) {
+                select.focus();
+              }
+            }
+            // For questions 33-39 (TextField)
+            else {
+              const input = element.querySelector("input");
+              if (input) {
+                input.focus();
+                input.select();
+              }
+            }
+          }, 150);
+        }
+      }
+      prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
 

@@ -19,8 +19,8 @@ const TestResults = () => {
     const listening =
       JSON.parse(localStorage.getItem("listeningAnswers")) || [];
     const reading = JSON.parse(localStorage.getItem("readingAnswers")) || [];
-    const writing = JSON.parse(localStorage.getItem("writings")) || [];
-    const user = JSON.parse(localStorage.getItem("user"));
+    const writing = JSON.parse(localStorage.getItem("writingAnswers")) || [];
+    const user = JSON.parse(localStorage.getItem("userData"));
 
     setListeningAnswers(listening);
     setReadingAnswers(reading);
@@ -56,7 +56,7 @@ const TestResults = () => {
     <Box>
       <Box ref={componentRef} className="print-content">
         <Typography variant="h4" gutterBottom sx={{}}>
-          {user.name}'s Test Results ({user.phone})
+          {user.name} {user.familyName}'s Test Results ({user.phone})
         </Typography>
         {renderAnswersGrid(listeningAnswers, "Listening Answers:")}
         <Divider

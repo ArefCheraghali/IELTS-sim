@@ -37,14 +37,36 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
     "ix",
   ];
   const questionRefs = React.useRef(Array(13).fill(null));
+  const prevQuestionRef = React.useRef(null);
 
   React.useEffect(() => {
-    if (currentQuestion >= 14 && currentQuestion <= 26) {
-      const index = currentQuestion - 14;
-      questionRefs.current[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+    // Skip if it's the initial mount
+    if (prevQuestionRef.current === null) {
+      prevQuestionRef.current = currentQuestion;
+      return;
+    }
+
+    // Only scroll if the question actually changed
+    if (prevQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 14 && currentQuestion <= 26) {
+        const index = currentQuestion - 14;
+        const element = questionRefs.current[index];
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          // Add delay to ensure scroll completes before focus
+          setTimeout(() => {
+            const select = element.querySelector("[role='button']");
+            if (select) {
+              select.focus();
+            }
+          }, 150);
+        }
+      }
+      prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
 

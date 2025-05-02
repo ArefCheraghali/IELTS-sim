@@ -49,24 +49,11 @@ export default function Test() {
   }, [timeLeft]);
 
   const handleSubmit = () => {
-    const testData = JSON.parse(localStorage.getItem("selectedTest"));
     const writingAnswers = answersRef.current;
 
-    const existingAnswers = JSON.parse(
-      localStorage.getItem(`test${testData.testId}Answers`) || "{}"
-    );
+    localStorage.setItem(`writingAnswers`, JSON.stringify(writingAnswers));
 
-    const updatedAnswers = {
-      ...existingAnswers,
-      writing: writingAnswers,
-    };
-
-    localStorage.setItem(
-      `test${testData.testId}Answers`,
-      JSON.stringify(updatedAnswers)
-    );
-
-    router.push("testResult");
+    router.push("/testResult");
   };
 
   const handleConfirmSubmit = () => {

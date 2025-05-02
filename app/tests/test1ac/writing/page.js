@@ -82,22 +82,13 @@ export default function Test() {
       }
     }
 
-    // Merge writing answers into the structure
-    const updatedAnswers = {
-      ...existingAnswers,
-      writing: writingAnswers,
-    };
-
     // Save the updated answers back to localStorage
-    localStorage.setItem(
-      `test${testId}Answers`,
-      JSON.stringify(updatedAnswers)
-    );
+    localStorage.setItem(`writingAnswers`, JSON.stringify(writingAnswers));
 
     console.log(`Writing answers for ${testId} saved:`, writingAnswers);
 
     resetTimer(); // Reset timer before navigating
-    router.push("/tests/completion"); // Navigate to completion page
+    router.push("/testResult"); // Navigate to completion page
   };
 
   const handleConfirmSubmit = () => {

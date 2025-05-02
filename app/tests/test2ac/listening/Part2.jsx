@@ -24,6 +24,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
   const questionRefs = useRef(Array(10).fill(null));
 
   useEffect(() => {
+    // Focus and scroll to first question on mount
     if (currentQuestion >= 11 && currentQuestion <= 20) {
       const index = currentQuestion - 11;
       questionRefs.current[index]?.scrollIntoView({
@@ -32,6 +33,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
       });
     }
   }, [currentQuestion]);
+
   return (
     <Box
       sx={{

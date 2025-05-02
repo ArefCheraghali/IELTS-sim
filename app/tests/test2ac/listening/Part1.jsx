@@ -20,26 +20,18 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
   const prevQuestionRef = useRef(null); // Add this to track previous question
 
   useEffect(() => {
-    // Skip if it's the initial mount (prevQuestion is null)
-    if (prevQuestionRef.current === null) {
-      prevQuestionRef.current = currentQuestion;
-      return;
-    }
-
-    // Only scroll if the question actually changed
-    if (prevQuestionRef.current !== currentQuestion) {
-      if (currentQuestion >= 1 && currentQuestion <= 10) {
-        const index = currentQuestion - 1;
-        const element = inputRefs.current[index];
-        if (element) {
-          element.focus();
-          element.select();
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+    // Focus and scroll to first question on mount
+    if (currentQuestion >= 1 && currentQuestion <= 10) {
+      const index = currentQuestion - 1;
+      const element = inputRefs.current[index];
+      if (element) {
+        element.focus();
+        element.select();
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
-      prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
+
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;

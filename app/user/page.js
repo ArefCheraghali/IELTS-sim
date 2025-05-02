@@ -40,6 +40,15 @@ const UserPage = () => {
 
         if (response.status === 200) {
           setUser(response.data); // Set the user data
+          // Save both phone number and name to localStorage
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({
+              phone: response.data.phone_number,
+              name: response.data.name,
+              familyName: response.data.family_name,
+            })
+          );
         } else {
           setError("Failed to fetch user data.");
         }
@@ -60,6 +69,7 @@ const UserPage = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("role");
     localStorage.removeItem("user");
+    localStorage.removeItem("userData");
 
     // Redirect to the home page
     router.push("/");

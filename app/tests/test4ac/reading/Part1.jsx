@@ -16,14 +16,47 @@ import FoliesBarText from "./text/FoliesBarText";
 const Part1 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = ["A", "B", "C", "D", "E", "F"];
   const questionRefs = React.useRef(Array(13).fill(null));
+  const prevQuestionRef = React.useRef(null); // Add this line
 
   React.useEffect(() => {
-    if (currentQuestion >= 1 && currentQuestion <= 13) {
-      const index = currentQuestion - 1;
-      questionRefs.current[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+    // Skip if it's the initial mount
+    if (prevQuestionRef.current === null) {
+      prevQuestionRef.current = currentQuestion;
+      return;
+    }
+
+    // Only scroll if the question actually changed
+    if (prevQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 1 && currentQuestion <= 13) {
+        const index = currentQuestion - 1;
+        const element = questionRefs.current[index];
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          // Add delay to ensure scroll completes before focus
+          setTimeout(() => {
+            // For questions 1-5 (Select)
+            if (index < 5) {
+              const select = element.querySelector("[role='button']");
+              if (select) {
+                select.focus();
+              }
+            }
+            // For questions 6-10 (TextField)
+            else {
+              const input = element.querySelector("input");
+              if (input) {
+                input.focus();
+                input.select();
+              }
+            }
+          }, 150);
+        }
+      }
+      prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
 

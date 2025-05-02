@@ -264,20 +264,23 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
         <Typography sx={{ mt: 2, mb: 2 }}>
           Which TWO strategies does the tutor suggest for the next seminar?
         </Typography>
-        <Box ref={(el) => (inputRefs.current[6] = el)}>
-          <MultipleChoiceQuestion
-            options={[
-              { label: "speak more frequently", value: "A" },
-              { label: "behave in a confident manner", value: "B" },
-              { label: "sit next to someone helpful", value: "C" },
-              { label: "listen to what other people say", value: "D" },
-              { label: "think of questions to ask", value: "E" },
-            ]}
-            questionIndexes={[26, 27]}
-            answers={answers}
-            setAnswers={setAnswers}
-            currentQuestion={currentQuestion}
-          />
+        <Box>
+          <Box ref={(el) => (inputRefs.current[7] = el)}>
+            <Box ref={(el) => (inputRefs.current[6] = el)} />
+            <MultipleChoiceQuestion
+              options={[
+                { label: "speak more frequently", value: "A" },
+                { label: "behave in a confident manner", value: "B" },
+                { label: "sit next to someone helpful", value: "C" },
+                { label: "listen to what other people say", value: "D" },
+                { label: "think of questions to ask", value: "E" },
+              ]}
+              questionIndexes={[26, 27]}
+              answers={answers}
+              setAnswers={setAnswers}
+              currentQuestion={currentQuestion}
+            />
+          </Box>
         </Box>
 
         <Typography sx={{ mt: 4 }}>Questions 29 and 30</Typography>
@@ -285,20 +288,23 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
         <Typography sx={{ mt: 2, mb: 2 }}>
           Which TWO suggestions does the tutor make about taking notes?
         </Typography>
-        <Box ref={(el) => (inputRefs.current[8] = el)}>
-          <MultipleChoiceQuestion
-            options={[
-              { label: "plan them before the seminar", value: "A" },
-              { label: "note down key words that people say", value: "B" },
-              { label: "note points to say later", value: "C" },
-              { label: "include self-analysis", value: "D" },
-              { label: "rewrite them after the seminar", value: "E" },
-            ]}
-            questionIndexes={[28, 29]}
-            answers={answers}
-            setAnswers={setAnswers}
-            currentQuestion={currentQuestion}
-          />
+        <Box>
+          <Box ref={(el) => (inputRefs.current[9] = el)}>
+            <Box ref={(el) => (inputRefs.current[8] = el)} />
+            <MultipleChoiceQuestion
+              options={[
+                { label: "plan them before the seminar", value: "A" },
+                { label: "note down key words that people say", value: "B" },
+                { label: "note points to say later", value: "C" },
+                { label: "include self-analysis", value: "D" },
+                { label: "rewrite them after the seminar", value: "E" },
+              ]}
+              questionIndexes={[28, 29]}
+              answers={answers}
+              setAnswers={setAnswers}
+              currentQuestion={currentQuestion}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>

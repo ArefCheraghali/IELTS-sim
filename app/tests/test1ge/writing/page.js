@@ -53,7 +53,7 @@ export default function Test() {
 
   const onSubmit = () => {
     console.log("User Answers:", answersRef.current);
-    localStorage.setItem("writings", JSON.stringify(answersRef.current));
+    localStorage.setItem("writingAnswers", JSON.stringify(answersRef.current));
     handleCloseDialog();
     router.push("/testResult");
   };

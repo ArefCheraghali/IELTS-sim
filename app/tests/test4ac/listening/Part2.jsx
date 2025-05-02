@@ -4,11 +4,8 @@ import {
   FormControl,
   Select,
   MenuItem,
-  FormControlLabel,
   List,
   ListItem,
-  Radio,
-  RadioGroup,
   TextField,
   Typography,
 } from "@mui/material";
@@ -25,19 +22,17 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
       if (element) {
         // For text fields (questions 11-17)
         if (index <= 6) {
-          const textField = element.querySelector('input[type="text"]');
-          if (textField) {
-            textField.focus();
-            textField.select();
-          }
+          element.focus();
+          element.select();
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
         } else {
           // For select fields (questions 18-20)
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
           const selectField = element.querySelector("select");
           if (selectField) {
             selectField.focus();
           }
         }
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
   }, [currentQuestion]);
