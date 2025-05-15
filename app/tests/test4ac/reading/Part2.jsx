@@ -130,31 +130,17 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
           <Typography sx={{ mb: 1 }}>
             <b>List of Headings</b>
           </Typography>
+          <Typography>i. A legacy is established</Typography>
+          <Typography>ii. Formal education unhelpful</Typography>
+          <Typography>iii. An education in two parts</Typography>
+          <Typography>iv. Branching out in new directions</Typography>
+          <Typography>v. Childhood and family life</Typography>
+          <Typography>vi. Change necessary to stay creative</Typography>
           <Typography>
-            i A controversial approach to studying laughter
+            vii. Conflicted opinions over Davis’ earlier work
           </Typography>
-          <Typography>
-            ii The physical processes involved in laughter
-          </Typography>
-          <Typography>
-            iii Early attempts to study laughter scientifically
-          </Typography>
-          <Typography>
-            iv The relationship between laughter and social status
-          </Typography>
-          <Typography>
-            v Evidence that laughter can spread between people
-          </Typography>
-          <Typography>vi Claims about the benefits of laughter</Typography>
-          <Typography>
-            vii Reasons why people in different cultures laugh
-          </Typography>
-          <Typography>
-            viii The connection between laughter and human evolution
-          </Typography>
-          <Typography>
-            ix Different levels of brain activity in laughter
-          </Typography>
+          <Typography>viii. Davis’ unique style of trumpet playing</Typography>
+          <Typography>ix. Personal and professional struggles</Typography>
         </Box>
 
         <List
