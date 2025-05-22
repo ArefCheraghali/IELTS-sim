@@ -81,14 +81,16 @@ export default function Home() {
         }, 1500); // 1.5 second delay
       } else {
         setError("Login failed: Invalid credentials");
+        setLoading(false);
       }
     } catch (error) {
       const errorMessage =
         error.response?.data?.detail || "An unexpected error occurred";
       setError(errorMessage);
       console.error("Login error:", error);
-    } finally {
       setLoading(false);
+    } finally {
+      // setLoading(false);
     }
   };
 
