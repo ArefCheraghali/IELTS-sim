@@ -168,10 +168,8 @@ const Section1 = ({ answers, setAnswers }) => {
             <Typography sx={{ fontSize: "0.85rem" }}>
               <b style={{ marginRight: "1em" }}>6</b>
               Each class teacher will count up his or her students and mark
-            </Typography>
-            <Typography sx={{ fontSize: "0.85rem" }}>
               <TextField
-                sx={{ mt: -2, ml: 3, mr: 1, width: "10em" }}
+                sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
                 label="6"
                 variant="standard"
                 autoComplete="off"

@@ -20,16 +20,18 @@ import HighlightContextMenu from "app/components/HighlightContextMenu";
 import ExamLayout from "../../../components/ExamLayout";
 import { useVolume } from "../../../contexts/VolumeContext";
 import { useTimer } from "../../../contexts/TimerContext";
+import TestBottomNavigation from "../../../components/TestBottomNavigation";
 import { TEST_DURATIONS } from "../../../config/testDurations";
 
 const listeningAudio = "/audio/Listening2.mp3";
-const TEST_DURATION_MINUTES = TEST_DURATIONS.test2ge.listening;
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test2ac.listening;
 const QUESTIONS_DELAY_MS = 27000; // Time before showing questions (27 seconds)
 
 export default function Test() {
   const [isReady, setIsReady] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -49,6 +51,7 @@ export default function Test() {
     handleClose,
   } = useTextHighlight();
 
+  // Initialize audio
   useEffect(() => {
     if (typeof window !== "undefined") {
       audioRef.current = new Audio(listeningAudio);
@@ -56,6 +59,15 @@ export default function Test() {
         audioRef.current.volume = volume;
       }
     }
+
+    // Cleanup function to stop and remove audio when component unmounts
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
+    };
   }, []); // Initialize audio only once
 
   // Handle volume changes
@@ -92,29 +104,56 @@ export default function Test() {
 
   // Auto-submit when time is up
   useEffect(() => {
+    let autoSubmitTimeout;
     if (timeLeft === 0 && isReady) {
-      onSubmit();
+      // Add a small delay to ensure state updates are complete
+      autoSubmitTimeout = setTimeout(() => {
+        handleAutoSubmit();
+      }, 100);
     }
+    return () => clearTimeout(autoSubmitTimeout);
   }, [timeLeft, isReady]);
+
+  const handleAutoSubmit = () => {
+    console.log("Time is up! Test submitted automatically.");
+    // Stop audio if it's still playing
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+    onSubmit();
+  };
 
   const onSubmit = () => {
     if (!isReady) return; // Don't submit if test hasn't started
+
+    // Stop audio before saving answers and navigating
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+    }
+
     console.log("User Answers:", answersRef.current);
     localStorage.setItem(
       "listeningAnswers",
       JSON.stringify(answersRef.current)
     );
-    resetTimer(); // Reset timer before navigating
     handleCloseDialog();
-    router.push("/tests/test2ge/reading");
+    resetTimer();
+    router.push("/tests/reading-intro");
   };
 
-  const handleNavigation = (direction) => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    if (direction === "next" && currentSection < 3) {
-      setCurrentSection(currentSection + 1);
-    } else if (direction === "prev" && currentSection > 0) {
-      setCurrentSection(currentSection - 1);
+  const handleQuestionChange = (questionNumber) => {
+    setCurrentQuestion(questionNumber);
+    // Update the section based on the question number
+    if (questionNumber <= 10) {
+      setCurrentSection(0);
+    } else if (questionNumber <= 20) {
+      setCurrentSection(1);
+    } else if (questionNumber <= 30) {
+      setCurrentSection(2);
+    } else {
+      setCurrentSection(3);
     }
   };
 
@@ -127,8 +166,25 @@ export default function Test() {
   };
 
   return (
-    <ExamLayout sectionName="Listening Test">
-      <Box sx={{ textAlign: "center", mt: 4, userSelect: "text" }}>
+    <ExamLayout sectionName="Listening Test" onSubmit={handleOpenDialog}>
+      <Box sx={{ textAlign: "center", userSelect: "text", pb: 14 }}>
+        <Dialog open={openDialog} onClose={handleCloseDialog}>
+          <DialogTitle>{"Submit Answers?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to submit your answers? You will not be able
+              to change them after submission.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="secondary">
+              Cancel
+            </Button>
+            <Button onClick={onSubmit} color="primary">
+              Submit
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Box
           onContextMenu={handleContextMenu}
           ref={textRef}
@@ -143,84 +199,71 @@ export default function Test() {
           />
           {!showQuestions ? (
             <Typography variant="h4" gutterBottom>
-              Listening Test
+              Click whenever you are ready to take the test.
             </Typography>
           ) : null}
           {!isReady && (
             <Button variant="contained" color="primary" onClick={handleStart}>
-              I'm Ready
+              Start test
             </Button>
           )}
           {isReady && !showQuestions && (
             <Typography variant="h6" sx={{ mt: 4 }}>
-              Audio Started...
+              Audio Started, please wait...
             </Typography>
           )}
           {isReady && showQuestions && (
             <Box sx={{ mt: 4 }}>
               {currentSection === 0 && (
-                <Part1 answers={answers} setAnswers={setAnswers} />
+                <Part1
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
               {currentSection === 1 && (
-                <Part2 answers={answers} setAnswers={setAnswers} />
+                <Part2
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
               {currentSection === 2 && (
-                <Part3 answers={answers} setAnswers={setAnswers} />
+                <Part3
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
               {currentSection === 3 && (
-                <Part4 answers={answers} setAnswers={setAnswers} />
-              )}
-              <Box
-                sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}
-              >
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleNavigation("prev")}
-                  disabled={currentSection === 0}
-                >
-                  Previous
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleNavigation("next")}
-                  disabled={currentSection === 3}
-                >
-                  Next
-                </Button>
-              </Box>
-              {currentSection === 3 && (
-                <Button
-                  onClick={handleOpenDialog}
-                  variant="contained"
-                  color="primary"
-                  sx={{ mt: 2 }}
-                >
-                  Submit
-                </Button>
+                <Part4
+                  answers={answers}
+                  setAnswers={setAnswers}
+                  currentQuestion={currentQuestion}
+                />
               )}
             </Box>
           )}
-          <Dialog open={openDialog} onClose={handleCloseDialog}>
-            <DialogTitle>{"Submit Answers?"}</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                Are you sure you want to submit your answers? You will not be
-                able to change them after submission.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDialog} color="secondary">
-                Cancel
-              </Button>
-              <Button onClick={onSubmit} color="primary">
-                Submit
-              </Button>
-            </DialogActions>
-          </Dialog>
         </Box>
       </Box>
+
+      {/* Add the bottom navigation bar when questions are shown */}
+      {isReady && showQuestions && (
+        <TestBottomNavigation
+          currentSection={currentSection}
+          setCurrentSection={setCurrentSection}
+          currentQuestion={currentQuestion}
+          setCurrentQuestion={handleQuestionChange}
+          answers={answers}
+          totalSections={4}
+          partQuestions={{
+            0: { start: 1, end: 10 },
+            1: { start: 11, end: 20 },
+            2: { start: 21, end: 30 },
+            3: { start: 31, end: 40 },
+          }}
+        />
+      )}
     </ExamLayout>
   );
 }

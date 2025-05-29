@@ -20,7 +20,7 @@ import { useTimer } from "../../../contexts/TimerContext";
 import TestBottomNavigation from "../../../components/TestBottomNavigation";
 import { TEST_DURATIONS } from "../../../config/testDurations";
 
-const TEST_DURATION_MINUTES = TEST_DURATIONS.test3ac.reading;
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test4ac.reading;
 
 export default function Test() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -28,8 +28,7 @@ export default function Test() {
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
 
-  const { startTimer, resetTimer } = useTimer();
-
+  const { startTimer, resetTimer, timeLeft } = useTimer();
   const router = useRouter();
   const answersRef = useRef(answers);
 
@@ -40,6 +39,23 @@ export default function Test() {
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
+
+  // Add auto-submit effect like in the listening page
+  useEffect(() => {
+    let autoSubmitTimeout;
+    if (timeLeft === 0) {
+      // Add a small delay to ensure state updates are complete
+      autoSubmitTimeout = setTimeout(() => {
+        handleAutoSubmit();
+      }, 100);
+    }
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft]);
+
+  const handleAutoSubmit = () => {
+    console.log("Time is up! Test submitted automatically.");
+    onSubmit();
+  };
 
   const onSubmit = () => {
     console.log("User Answers:", answersRef.current);

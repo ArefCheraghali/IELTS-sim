@@ -49,7 +49,7 @@ const Section2 = ({ answers, setAnswers }) => {
         sx={{
           width: "50%",
           overflowY: "auto",
-          padding: 2,
+          padding: 1,
           borderRight: "1px solid #ccc",
         }}
       >
@@ -68,23 +68,23 @@ const Section2 = ({ answers, setAnswers }) => {
           padding: 2,
         }}
       >
-        <Typography sx={{ ml: 5, fontSize: "1.1em", mb: 1 }}>
+        <Typography sx={{ ml: 4, fontSize: "1.1em", mb: 1 }}>
           <b>Part 2</b>
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           You should spend about 20 minutes on <b>Questions 14-28</b>, which are
           based on Reading Part 2.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 15 - 21</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>Questions 15 - 21</Typography>
+        <Typography sx={{ mb: 1 }}>
           The text on the left (BENEFICIAL WORK PRACTICES FOR THE KEYBOARD
           OPERATOR) has seven sections, <b>A-G</b>.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           Choose the correct heading for each section from the list of headings
           below.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           Write the correct number, i–x, in boxes 15–21.
         </Typography>
         <Box
@@ -98,17 +98,74 @@ const Section2 = ({ answers, setAnswers }) => {
           <Box
             sx={{
               width: "70%",
+
+              padding: 2,
+              border: "1px solid #ccc",
+              borderRadius: 1,
+              backgroundColor: "#f5f5f5",
             }}
           >
-            <img
-              src={image1}
-              alt="Reading Passage Part 1"
-              style={{ width: "100%", ml: 5 }}
-            />
+            <Typography variant="h6" gutterBottom sx={{ ml: 1 }}>
+              List of Headings
+            </Typography>
+            <List>
+              <ListItem>
+                <Typography>
+                  <strong>i</strong> How can reflection problems be avoided?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>ii</strong> How long should I work without a break?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>iii</strong> What if I experience any problems?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>iv</strong> When is the best time to do filing chores?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>v</strong> What makes a good seat?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>vi</strong> What are the common health problems?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>vii</strong> What is the best kind of lighting to
+                  have?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>viii</strong> What are the roles of management and
+                  workers?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>ix</strong> Why does a VDU create eye fatigue?
+                </Typography>
+              </ListItem>
+              <ListItem>
+                <Typography>
+                  <strong>x</strong> Where should I place the documents?
+                </Typography>
+              </ListItem>
+            </List>
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
             {Array.from({ length: 7 }).map((_, index) => (
-              <FormControl sx={{ mt: 2, margin: "1em" }} key={15 + index}>
+              <FormControl sx={{ mt: 2, mr: 1 }} key={15 + index}>
                 <InputLabel>{`${15 + index}`}</InputLabel>
                 <Select
                   sx={{ width: "5em" }}
@@ -129,21 +186,19 @@ const Section2 = ({ answers, setAnswers }) => {
           </Box>
         </Box>
         <Divider sx={{ mb: 3 }} />
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           <b>Questions 22 - 28</b>
         </Typography>
-        <Typography sx={{ ml: 2, mb: 3 }}>
+        <Typography sx={{ mb: 3 }}>
           Read the second text (Workplace dismissals) and answer Questions
           22–28.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 22 and 23</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Complete the sentences below.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>Questions 22 and 23</Typography>
+        <Typography sx={{ mb: 1 }}>Complete the sentences below.</Typography>
+        <Typography sx={{ mb: 1 }}>
           Choose <b>NO MORE THAN THREE WORDS</b> from the text for each answer
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           Write your answers in boxes 22 and 23
         </Typography>
         <List
@@ -152,7 +207,6 @@ const Section2 = ({ answers, setAnswers }) => {
             flexDirection: "column",
             alignItems: "flex-start",
             gap: 2,
-            pl: "3rem",
             width: "100%",
           }}
         >
@@ -209,15 +263,15 @@ const Section2 = ({ answers, setAnswers }) => {
             </Box>
           </ListItem>
         </List>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 24 - 28</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>Questions 24 - 28</Typography>
+        <Typography sx={{ mb: 1 }}>
           Look at the following descriptions (Questions 24–28) and the list of
           terms in the box below.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           Match each description with the correct term <b>A-E</b>.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           Pick the correct letter in boxes 24-28.
         </Typography>
         <List
@@ -242,7 +296,7 @@ const Section2 = ({ answers, setAnswers }) => {
             <Typography sx={{ marginRight: "1rem" }}>
               <b>25</b>{" "}
             </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
+            <Typography sx={{ mb: 1 }}>
               An employee is pressured to leave his job unless he accepts
               conditions that are very different from those agreed to in the
               beginning.
@@ -252,7 +306,7 @@ const Section2 = ({ answers, setAnswers }) => {
             <Typography sx={{ marginRight: "1rem" }}>
               <b>26</b>{" "}
             </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
+            <Typography sx={{ mb: 1 }}>
               An employer gets rid of an employee without keeping to conditions
               in the contract.
             </Typography>
@@ -261,7 +315,7 @@ const Section2 = ({ answers, setAnswers }) => {
             <Typography sx={{ marginRight: "1rem" }}>
               <b>27</b>{" "}
             </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
+            <Typography sx={{ mb: 1 }}>
               The reason for an employee’s dismissal is not considered good
               enough.
             </Typography>
@@ -270,7 +324,7 @@ const Section2 = ({ answers, setAnswers }) => {
             <Typography sx={{ marginRight: "1rem" }}>
               <b>28</b>{" "}
             </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
+            <Typography sx={{ mb: 1 }}>
               The reasons for an employee’s dismissal are acceptable by law and
               the terms of the employment contract.
             </Typography>
@@ -278,18 +332,24 @@ const Section2 = ({ answers, setAnswers }) => {
         </List>
         <Box
           sx={{
-            width: "100%",
+            width: "30%",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px",
+            ml: 5,
+            border: "1px solid #ddd",
+            padding: 2,
           }}
         >
-          <img
-            src={image2}
-            alt="Reading Passage Part 1"
-            style={{ width: "40%" }}
-          />
+          <Typography>A Fair dismissal</Typography>
+          <Typography>B Summary dismissal</Typography>
+          <Typography>C Unfair dismissal</Typography>
+          <Typography>D Wrongful dismissal</Typography>
+          <Typography>E Constructive dismissal</Typography>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
           {Array.from({ length: 5 }).map((_, index) => (
-            <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
+            <FormControl sx={{ mt: 2, margin: "1em" }} key={index}>
               <InputLabel>{`${24 + index}`}</InputLabel>
               <Select
                 sx={{ width: "5em" }}

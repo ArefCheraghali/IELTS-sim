@@ -7,45 +7,58 @@ import Part3 from "./Part3";
 import {
   Box,
   Button,
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import useTextHighlight from "app/hooks/useTextHighlight";
+import HighlightContextMenu from "app/components/HighlightContextMenu";
+import ExamLayout from "../../../components/ExamLayout";
+import { useTimer } from "../../../contexts/TimerContext";
+import TestBottomNavigation from "../../../components/TestBottomNavigation";
+import { TEST_DURATIONS } from "../../../config/testDurations";
+
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ge.reading;
 
 export default function Test() {
   const [currentSection, setCurrentSection] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(1);
   const [answers, setAnswers] = useState(Array(40).fill(""));
-  const [timeLeft, setTimeLeft] = useState(60 * 60);
   const [openDialog, setOpenDialog] = useState(false);
 
+  const { startTimer, resetTimer, timeLeft } = useTimer();
   const router = useRouter();
   const answersRef = useRef(answers);
 
+  const {
+    anchorEl,
+    menuPosition,
+    textRef,
+    handleContextMenu,
+    handleHighlight,
+    handleClearHighlights,
+    handleClose,
+  } = useTextHighlight();
+
   useEffect(() => {
-    let timerInterval;
-
-    timerInterval = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timerInterval);
-          handleAutoSubmit();
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(timerInterval);
-    };
+    startTimer(TEST_DURATION_MINUTES);
   }, []);
 
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
+
+  useEffect(() => {
+    let autoSubmitTimeout;
+    if (timeLeft === 0) {
+      autoSubmitTimeout = setTimeout(() => {
+        handleAutoSubmit();
+      }, 100);
+    }
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft]);
 
   const handleAutoSubmit = () => {
     console.log("Time is up! Test submitted automatically.");
@@ -56,21 +69,8 @@ export default function Test() {
     console.log("User Answers:", answersRef.current);
     localStorage.setItem("readingAnswers", JSON.stringify(answersRef.current));
     handleCloseDialog();
-    router.push("/tests/test1ge/writing");
-  };
-
-  const handleNavigation = (direction) => {
-    if (direction === "next" && currentSection < 2) {
-      setCurrentSection(currentSection + 1);
-    } else if (direction === "prev" && currentSection > 0) {
-      setCurrentSection(currentSection - 1);
-    }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
+    resetTimer();
+    router.push("/tests/writing-intro");
   };
 
   const handleOpenDialog = () => {
@@ -81,61 +81,70 @@ export default function Test() {
     setOpenDialog(false);
   };
 
+  const handleQuestionChange = (questionNumber) => {
+    setCurrentQuestion(questionNumber);
+    if (questionNumber <= 13) {
+      setCurrentSection(0);
+    } else if (questionNumber <= 26) {
+      setCurrentSection(1);
+    } else {
+      setCurrentSection(2);
+    }
+  };
+
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Box sx={{ mt: 4 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            Reading Test
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            Time Left: {formatTime(timeLeft)}
-          </Typography>
-        </Box>
+    <ExamLayout sectionName="Reading" onSubmit={handleOpenDialog}>
+      <Box
+        ref={textRef}
+        onContextMenu={handleContextMenu}
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+        }}
+      >
         {currentSection === 0 && (
-          <Part1 answers={answers} setAnswers={setAnswers} />
+          <Part1
+            answers={answers}
+            setAnswers={setAnswers}
+            currentQuestion={currentQuestion}
+          />
         )}
         {currentSection === 1 && (
-          <Part2 answers={answers} setAnswers={setAnswers} />
+          <Part2
+            answers={answers}
+            setAnswers={setAnswers}
+            currentQuestion={currentQuestion}
+          />
         )}
         {currentSection === 2 && (
-          <Part3 answers={answers} setAnswers={setAnswers} />
+          <Part3
+            answers={answers}
+            setAnswers={setAnswers}
+            currentQuestion={currentQuestion}
+          />
         )}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleNavigation("prev")}
-            disabled={currentSection === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleNavigation("next")}
-            disabled={currentSection === 2}
-          >
-            Next
-          </Button>
-        </Box>
-        {currentSection === 2 && (
-          <Button
-            onClick={handleOpenDialog}
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Submit
-          </Button>
-        )}
+        <HighlightContextMenu
+          anchorEl={anchorEl}
+          menuPosition={menuPosition}
+          handleHighlight={handleHighlight}
+          handleClearHighlights={handleClearHighlights}
+          handleClose={handleClose}
+        />
+        <TestBottomNavigation
+          currentSection={currentSection}
+          setCurrentSection={setCurrentSection}
+          currentQuestion={currentQuestion}
+          setCurrentQuestion={handleQuestionChange}
+          answers={answers}
+          totalSections={3}
+          partQuestions={{
+            0: { start: 1, end: 13 },
+            1: { start: 14, end: 26 },
+            2: { start: 27, end: 40 },
+          }}
+        />
       </Box>
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>{"Submit Answers?"}</DialogTitle>
@@ -154,6 +163,6 @@ export default function Test() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </ExamLayout>
   );
 }

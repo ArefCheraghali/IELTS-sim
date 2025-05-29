@@ -1,8 +1,8 @@
 export const TEST_DURATIONS = {
   test4ac: {
-    listening: 2,
-    reading: 2,
-    writing: 2,
+    listening: 34,
+    reading: 60,
+    writing: 60,
   },
   test3ac: {
     listening: 33,

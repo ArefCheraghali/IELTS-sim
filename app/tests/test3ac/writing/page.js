@@ -17,6 +17,9 @@ import {
   BottomNavigationAction,
   Paper,
 } from "@mui/material";
+import { TEST_DURATIONS } from "app/config/testDurations";
+
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test3ac.writing;
 
 export default function Test() {
   const [currentSection, setCurrentSection] = useState(0);
@@ -26,10 +29,28 @@ export default function Test() {
   const router = useRouter();
   const answersRef = useRef(answers);
 
-  const { startTimer } = useTimer();
+  // Update the timer hook to include timeLeft and resetTimer
+  const { timeLeft, startTimer, resetTimer } = useTimer();
+
+  // Add auto-submit effect after the existing useEffect hooks
+  useEffect(() => {
+    let autoSubmitTimeout;
+    if (timeLeft === 0) {
+      autoSubmitTimeout = setTimeout(() => {
+        handleAutoSubmit();
+      }, 100);
+    }
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft]);
+
+  // Add handleAutoSubmit function before handleSubmit
+  const handleAutoSubmit = () => {
+    console.log("Time is up! Test submitted automatically.");
+    handleSubmit();
+  };
 
   useEffect(() => {
-    startTimer(60);
+    startTimer(TEST_DURATION_MINUTES);
   }, [startTimer]);
 
   useEffect(() => {

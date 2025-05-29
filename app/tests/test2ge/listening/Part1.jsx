@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -13,7 +14,24 @@ import {
   Typography,
 } from "@mui/material";
 
-const Part1 = ({ answers, setAnswers }) => {
+const Part1 = ({ answers, setAnswers, currentQuestion }) => {
+  // Create refs for each text field
+  const inputRefs = useRef([]);
+  const prevQuestionRef = useRef(null); // Add this to track previous question
+
+  useEffect(() => {
+    // Focus and scroll to first question on mount
+    if (currentQuestion >= 1 && currentQuestion <= 10) {
+      const index = currentQuestion - 1;
+      const element = inputRefs.current[index];
+      if (element) {
+        element.focus();
+        element.select();
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+  }, [currentQuestion]);
+
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
@@ -27,8 +45,11 @@ const Part1 = ({ answers, setAnswers }) => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "flex-start",
+          alignItems: "center",
           width: "100%",
+          maxWidth: "60rem",
+          margin: "0 auto",
+          padding: "0 1rem",
         }}
       >
         <Box
@@ -37,7 +58,6 @@ const Part1 = ({ answers, setAnswers }) => {
             flexDirection: "row",
             justifyContent: "space-between",
             width: "100%",
-            maxWidth: "60rem",
           }}
         >
           <Typography variant="h5" gutterBottom>
@@ -64,7 +84,6 @@ const Part1 = ({ answers, setAnswers }) => {
             sx={{
               width: "100%",
               height: "auto",
-              maxWidth: "60rem",
               mt: 2,
               display: "flex",
               flexDirection: "column",
@@ -90,6 +109,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(0, e.target.value)}
                   value={answers[0]}
+                  inputRef={(el) => (inputRefs.current[0] = el)}
                 />
               </ListItem>
               <b>Fish market</b>
@@ -102,6 +122,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(1, e.target.value)}
                   value={answers[1]}
+                  inputRef={(el) => (inputRefs.current[1] = el)}
                 />
                 and turn right
               </ListItem>
@@ -114,6 +135,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(2, e.target.value)}
                   value={answers[2]}
+                  inputRef={(el) => (inputRefs.current[2] = el)}
                 />
                 pm, earlier than closing time
               </ListItem>
@@ -127,6 +149,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(3, e.target.value)}
                   value={answers[3]}
+                  inputRef={(el) => (inputRefs.current[3] = el)}
                 />
               </ListItem>
               <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
@@ -141,6 +164,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(4, e.target.value)}
                   value={answers[4]}
+                  inputRef={(el) => (inputRefs.current[4] = el)}
                 />
                 outside
               </ListItem>
@@ -154,6 +178,7 @@ const Part1 = ({ answers, setAnswers }) => {
                   autoComplete="off"
                   onChange={(e) => handleInputChange(5, e.target.value)}
                   value={answers[5]}
+                  inputRef={(el) => (inputRefs.current[5] = el)}
                 />
                 minibus, number 289
               </ListItem>
@@ -167,7 +192,7 @@ const Part1 = ({ answers, setAnswers }) => {
           Write <b>ONE WORD ONLY</b> for each answer.
         </Typography>
         <TableContainer sx={{ mt: 3 }} component={Paper}>
-          <Table>
+          <Table sx={{ minWidth: 650 }}>
             <TableHead>
               <TableRow>
                 <TableCell>Shopping</TableCell>
@@ -188,6 +213,7 @@ const Part1 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(6, e.target.value)}
                     value={answers[6]}
+                    inputRef={(el) => (inputRefs.current[6] = el)}
                   />
                   (type of seaweed)
                 </TableCell>
@@ -203,6 +229,7 @@ const Part1 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(7, e.target.value)}
                     value={answers[7]}
+                    inputRef={(el) => (inputRefs.current[7] = el)}
                   />{" "}
                   for dessert
                 </TableCell>
@@ -215,6 +242,7 @@ const Part1 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(8, e.target.value)}
                     value={answers[8]}
+                    inputRef={(el) => (inputRefs.current[8] = el)}
                   />
                 </TableCell>
               </TableRow>
@@ -230,6 +258,7 @@ const Part1 = ({ answers, setAnswers }) => {
                     autoComplete="off"
                     onChange={(e) => handleInputChange(9, e.target.value)}
                     value={answers[9]}
+                    inputRef={(el) => (inputRefs.current[9] = el)}
                   />{" "}
                   tart
                 </TableCell>

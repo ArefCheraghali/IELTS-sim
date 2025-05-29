@@ -28,7 +28,7 @@ export default function Test() {
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
 
-  const { startTimer, resetTimer } = useTimer();
+  const { startTimer, resetTimer, timeLeft } = useTimer();
 
   const router = useRouter();
   const answersRef = useRef(answers);
@@ -77,6 +77,23 @@ export default function Test() {
     } else {
       setCurrentSection(2);
     }
+  };
+
+  // Add this effect after your other useEffect hooks
+  useEffect(() => {
+    let autoSubmitTimeout;
+    if (timeLeft === 0) {
+      autoSubmitTimeout = setTimeout(() => {
+        handleAutoSubmit();
+      }, 100);
+    }
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft]);
+
+  // Add this function before onSubmit
+  const handleAutoSubmit = () => {
+    console.log("Time is up! Test submitted automatically.");
+    onSubmit();
   };
 
   return (
