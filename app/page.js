@@ -11,6 +11,7 @@ import {
   CircularProgress,
   Snackbar,
   Alert,
+  Container,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -20,7 +21,7 @@ const schema = yup.object().shape({
   password: yup.string().required("Password is required"),
   phone: yup
     .string()
-    .matches(/^[0-9]{11}$/, "Phone number is not valid")
+    .matches(/^[0-9]{11}$/, "Phone number is not valid") // Assuming an 11-digit phone number
     .required("Phone number is required"),
 });
 
@@ -32,6 +33,10 @@ export default function Home() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      phone: "",
+      password: "",
+    },
   });
 
   const [loading, setLoading] = useState(false);
@@ -62,128 +67,175 @@ export default function Home() {
       );
 
       if (response.status === 200) {
-        // Save token and role in localStorage
         localStorage.setItem("access_token", response.data.access_token);
         localStorage.setItem("role", response.data.role);
-
         setSuccessMessage("Login successful! Redirecting...");
 
-        // Add a small delay before redirecting
         setTimeout(() => {
-          // Redirect based on role
           if (response.data.role === "admin") {
             router.push("/admin");
           } else if (response.data.role === "user") {
             router.push("/user");
           } else {
             console.error("Unknown role:", response.data.role);
+            setError("Login successful, but user role is undefined.");
+            setLoading(false);
           }
-        }, 1500); // 1.5 second delay
+        }, 1500);
       } else {
-        setError("Login failed: Invalid credentials");
+        setError("Login failed: Invalid credentials or server error.");
         setLoading(false);
       }
     } catch (error) {
       const errorMessage =
-        error.response?.data?.detail || "An unexpected error occurred";
+        error.response?.data?.detail ||
+        "An unexpected error occurred. Please try again.";
       setError(errorMessage);
       console.error("Login error:", error);
       setLoading(false);
-    } finally {
-      // setLoading(false);
     }
   };
 
-  const handleCloseError = () => {
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setError(null);
   };
 
-  const handleCloseSuccess = () => {
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
     setSuccessMessage(null);
   };
 
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Welcome to STTH IELTS Simulator
-      </Typography>
-      <Typography>Please log in to proceed.</Typography>
-      <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
-        <Controller
-          name="phone"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Phone Number"
-              variant="outlined"
-              autoComplete="off"
-              margin="normal"
-              fullWidth
-              error={!!errors.phone}
-              helperText={errors.phone ? errors.phone.message : ""}
-            />
-          )}
-        />
-        <Controller
-          name="password"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <TextField
-              {...field}
-              label="Password"
-              variant="outlined"
-              type="password"
-              margin="normal"
-              fullWidth
-              error={!!errors.password}
-              helperText={errors.password ? errors.password.message : ""}
-            />
-          )}
-        />
-
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
-          disabled={loading}
+    <Container component="main" maxWidth="sm">
+      {" "}
+      {/* Changed from md to sm for a slightly narrower form as per previous discussions */}
+      <Box
+        sx={{
+          marginTop: { xs: 2, sm: 3, md: 4 },
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          padding: { xs: 2 },
+        }}
+      >
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontSize: { xs: "1.8rem", sm: "2.125rem" } }}
         >
-          {loading ? <CircularProgress size={24} /> : "Log in"}
-        </Button>
-      </Box>
+          Welcome to STTH IELTS Simulator
+        </Typography>
+        <Typography variant="body1" sx={{ mb: { xs: 2, sm: 3 } }}>
+          Please log in to proceed.
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{
+            mt: 1,
+            width: "100%",
+          }}
+          noValidate
+        >
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Phone Number"
+                variant="outlined"
+                autoComplete="tel"
+                margin="normal"
+                required
+                fullWidth
+                error={!!errors.phone}
+                helperText={errors.phone ? errors.phone.message : ""}
+              />
+            )}
+          />
+          <Controller
+            name="password"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Password"
+                variant="outlined"
+                type="password"
+                autoComplete="current-password"
+                margin="normal"
+                required
+                fullWidth
+                error={!!errors.password}
+                helperText={errors.password ? errors.password.message : ""}
+              />
+            )}
+          />
 
-      {/* Error Snackbar */}
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth // Ensured button is full width
+            sx={{
+              mt: 3,
+              mb: 2,
+              backgroundColor: "#31393C", // Custom background color
+              color: "#fff", // Set text color to white for contrast
+              "&:hover": {
+                backgroundColor: "#1e2325", // A slightly darker shade for hover
+              },
+              // Optional: if you want to ensure consistent height with other buttons
+              // paddingY: '10px',
+              // fontSize: '0.9375rem',
+            }}
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress size={24} color="inherit" /> // Inherits the white color
+            ) : (
+              "Log in"
+            )}
+          </Button>
+        </Box>
+      </Box>
       <Snackbar
         open={!!error}
         autoHideDuration={6000}
         onClose={handleCloseError}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
           onClose={handleCloseError}
           severity="error"
+          variant="filled"
           sx={{ width: "100%" }}
         >
           {error}
         </Alert>
       </Snackbar>
-
-      {/* Success Snackbar */}
       <Snackbar
         open={!!successMessage}
         autoHideDuration={1500}
         onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
           onClose={handleCloseSuccess}
           severity="success"
+          variant="filled"
           sx={{ width: "100%" }}
         >
           {successMessage}
         </Alert>
       </Snackbar>
-    </Box>
+    </Container>
   );
 }

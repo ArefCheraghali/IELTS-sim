@@ -29,11 +29,15 @@ const useTextHighlight = () => {
 
       setSelectedRange(range);
       setAnchorEl(textRef.current);
-      
+
       // Position menu at mouse position for right-click, otherwise at the bottom of selection
-      const menuX = event?.type === 'contextmenu' ? event.clientX : rect.left + rect.width / 2;
-      const menuY = event?.type === 'contextmenu' ? event.clientY : rect.bottom + 10;
-      
+      const menuX =
+        event?.type === "contextmenu"
+          ? event.clientX
+          : rect.left + rect.width / 2;
+      const menuY =
+        event?.type === "contextmenu" ? event.clientY : rect.bottom + 10;
+
       setMenuPosition({
         mouseX: menuX,
         mouseY: menuY,
@@ -46,7 +50,8 @@ const useTextHighlight = () => {
   // Add event listeners for text selection
   useEffect(() => {
     const handleMouseUp = (event) => {
-      if (event.button === 0) { // Left mouse button
+      if (event.button === 0) {
+        // Left mouse button
         handleTextSelection();
       }
     };

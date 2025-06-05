@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const Task1 = ({ answers, setAnswers }) => {
+const image1 = "/images/test4/Task1 writing.jpg";
+
+const Part1 = ({ answers, setAnswers }) => {
   const wordLimit = 150;
 
   const getWordCount = (text) => {
@@ -33,10 +35,10 @@ const Task1 = ({ answers, setAnswers }) => {
           alignItems: "flex-start",
         }}
       >
-        <Typography variant="h5" sx={{ ml: 1, mb: 2 }}>
+        <Typography variant="h5" sx={{ ml: 4, mb: 2 }}>
           <b>Writing Task 1</b>
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>
+        <Typography sx={{ ml: 4, mb: 1 }}>
           You should spend about 20 minutes on this task.
         </Typography>
         <Box
@@ -48,7 +50,7 @@ const Task1 = ({ answers, setAnswers }) => {
             borderStyle: "solid",
             borderWidth: 1,
             padding: "0.5em",
-            ml: 1,
+            ml: 4,
             mb: 1,
             pl: 2,
             textAlign: "left",
@@ -59,29 +61,24 @@ const Task1 = ({ answers, setAnswers }) => {
               fontSize: "1.1em",
             }}
           >
-            You recently took part in a training course. The organizer of the
-            course has asked you for some feedback.
+            <b>
+              The diagram below shows the stages and equipment used in the
+              process of making matches.
+            </b>
           </Typography>
           <Typography
             sx={{
               fontSize: "1.1em",
             }}
           >
-            Write a letter to the organizer of the course. In your letter:
-            <br />
-            • give details of the course you took part in <br />
-            • say what you found useful on the course
-            <br />• suggest ways the course should be improved
+            <b>
+              Summarise the information by selecting and reporting the main
+              features, and make comparisons where relevant.
+            </b>
           </Typography>
         </Box>
-        <Typography sx={{ ml: 1, mb: 2 }}>
-          <b>You do NOT need to write any addresses.</b>
-        </Typography>
-        <Typography sx={{ ml: 1, mb: 4 }}>
-          Begin your letter as follows: <br />
-          {"\t"}Dear ........,
-        </Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>Write at least 150 words.</Typography>
+        <Typography sx={{ ml: 4, mb: 1 }}>Write at least 150 words.</Typography>
+        <img src={image1} alt="Writing Task 1" style={{ width: "100%" }} />
       </Box>
 
       <Box
@@ -118,4 +115,4 @@ const Task1 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Task1;
+export default Part1;

@@ -16,10 +16,8 @@ export default function AdminPanel() {
   };
 
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Box
-        sx={{ display: "flex", justifyContent: "space-between", gap: 2, mb: 4 }}
-      >
+    <Box sx={{ textAlign: "center", mt: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
         <Button
           onClick={() => setShowForm(!showForm)}
           variant="contained"

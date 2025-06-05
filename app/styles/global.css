@@ -4,7 +4,8 @@
   padding: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
 }
@@ -13,4 +14,9 @@ body {
   font-family: "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.text-highlighted-ielts {
+  background-color: yellow;
+  /* Add any other styling like slight rounded corners or specific text color if needed */
 }

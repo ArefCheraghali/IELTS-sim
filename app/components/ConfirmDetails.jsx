@@ -63,7 +63,7 @@ const ConfirmDetails = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh",
+          minHeight: "70vh",
         }}
       >
         <CircularProgress />
@@ -78,7 +78,7 @@ const ConfirmDetails = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh",
+          minHeight: "70vh",
         }}
       >
         <Typography variant="h5" color="error">
@@ -95,7 +95,7 @@ const ConfirmDetails = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
+        minHeight: "70vh",
         bgcolor: "#f5f5f5",
         padding: 4,
       }}

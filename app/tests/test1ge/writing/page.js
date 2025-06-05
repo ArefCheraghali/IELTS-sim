@@ -1,155 +1,120 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Task1 from "./Task1";
-import Task2 from "./Task2";
+import Task1 from "./Part1";
+import Task2 from "./Part2";
+import ExamLayout from "app/components/ExamLayout"; // Added
+import { useTimer } from "app/contexts/TimerContext"; // Added
 import {
   Box,
   Button,
-  Typography,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  BottomNavigation, // Added
+  BottomNavigationAction, // Added
+  Paper, // Added
 } from "@mui/material";
+import { TEST_DURATIONS } from "app/config/testDurations";
+
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ge.writing;
 
 export default function Test() {
-  const [currentSection, setCurrentSection] = useState(0);
+  const [currentSection, setCurrentSection] = useState(0); // Task 1 is 0, Task 2 is 1
   const [answers, setAnswers] = useState(Array(2).fill(""));
-  const [timeLeft, setTimeLeft] = useState(60 * 60);
   const [openDialog, setOpenDialog] = useState(false);
 
   const router = useRouter();
   const answersRef = useRef(answers);
 
+  const { timeLeft, startTimer } = useTimer();
+
   useEffect(() => {
-    let timerInterval;
+    startTimer(TEST_DURATION_MINUTES);
+  }, [startTimer]);
 
-    timerInterval = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timerInterval);
-          handleAutoSubmit();
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(timerInterval);
-    };
-  }, []);
+  useEffect(() => {
+    let autoSubmitTimeout;
+    if (timeLeft === 0) {
+      autoSubmitTimeout = setTimeout(() => {
+        console.log("Time is up! Test submitted automatically.");
+        handleSubmit();
+      }, 100);
+    }
+    return () => clearTimeout(autoSubmitTimeout);
+  }, [timeLeft]);
 
   useEffect(() => {
     answersRef.current = answers;
   }, [answers]);
 
-  const handleAutoSubmit = () => {
-    console.log("Time is up! Test submitted automatically.");
-    onSubmit();
-  };
-
-  const onSubmit = () => {
-    console.log("User Answers:", answersRef.current);
+  const handleSubmit = () => {
+    console.log("Submitting answers:", answersRef.current);
     localStorage.setItem("writingAnswers", JSON.stringify(answersRef.current));
-    handleCloseDialog();
     router.push("/testResult");
   };
 
-  const handleNavigation = (direction) => {
-    if (direction === "next" && currentSection < 2) {
-      setCurrentSection(currentSection + 1);
-    } else if (direction === "prev" && currentSection > 0) {
-      setCurrentSection(currentSection - 1);
-    }
-  };
-
-  const formatTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-  };
-
-  const handleOpenDialog = () => {
-    setOpenDialog(true);
+  const handleConfirmSubmit = () => {
+    setOpenDialog(false);
+    handleSubmit();
   };
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
 
+  const handleSectionChange = (event, newValue) => {
+    setCurrentSection(newValue);
+  };
+
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Box sx={{ mt: 4 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Typography variant="h4" gutterBottom>
-            Writing Test
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            Time Left: {formatTime(timeLeft)}
-          </Typography>
-        </Box>
+    <ExamLayout sectionName="Writing" onSubmit={() => setOpenDialog(true)}>
+      <Box sx={{ height: "calc(100% - 56px)", overflowY: "auto" }}>
         {currentSection === 0 && (
           <Task1 answers={answers} setAnswers={setAnswers} />
         )}
         {currentSection === 1 && (
           <Task2 answers={answers} setAnswers={setAnswers} />
         )}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => handleNavigation("prev")}
-            disabled={currentSection === 0}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleNavigation("next")}
-            disabled={currentSection === 1}
-          >
-            Next
-          </Button>
-        </Box>
-        {currentSection === 1 && (
-          <Button
-            onClick={handleOpenDialog}
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Submit
-          </Button>
-        )}
       </Box>
+
+      <Paper
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1000,
+        }}
+        elevation={3}
+      >
+        <BottomNavigation
+          value={currentSection}
+          onChange={handleSectionChange}
+          showLabels
+        >
+          <BottomNavigationAction label="Task 1" />
+          <BottomNavigationAction label="Task 2" />
+        </BottomNavigation>
+      </Paper>
+
       <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>{"Submit Answers?"}</DialogTitle>
+        <DialogTitle>Submit Test</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to submit your answers? You will not be able
-            to change them after submission.
+            Are you sure you want to submit your test? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={onSubmit} color="primary">
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleConfirmSubmit} autoFocus>
             Submit
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </ExamLayout>
   );
 }

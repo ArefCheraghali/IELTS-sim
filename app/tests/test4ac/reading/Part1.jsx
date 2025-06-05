@@ -320,11 +320,11 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               >
                 {[
                   "A. wanted to find out if the painting's perspective was realistic",
-                  "B. had to work in a private studio",
-                  "C. needed to show the barmaid's different emotions",
-                  "D. felt disconnected from their real identity",
-                  "E. were fascinated by the mirror's reflection",
-                  "F. preferred to focus on the human aspect",
+                  "B. felt they had to work very hard at boring and difficult jobs",
+                  "C. wanted to understand the lives of ordinary people at the time",
+                  "D. felt like they had to become differnet people",
+                  "E. wanted to manipulate our sense of reality",
+                  "F. wanted to docus on the detail in the painting",
                 ].map((answer) => (
                   <MenuItem key={answer} value={answer.charAt(0)}>
                     {answer}
@@ -358,11 +358,11 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               >
                 {[
                   "A. wanted to find out if the painting's perspective was realistic",
-                  "B. had to work in a private studio",
-                  "C. needed to show the barmaid's different emotions",
-                  "D. felt disconnected from their real identity",
-                  "E. were fascinated by the mirror's reflection",
-                  "F. preferred to focus on the human aspect",
+                  "B. felt they had to work very hard at boring and difficult jobs",
+                  "C. wanted to understand the lives of ordinary people at the time",
+                  "D. felt like they had to become differnet people",
+                  "E. wanted to manipulate our sense of reality",
+                  "F. wanted to docus on the detail in the painting",
                 ].map((answer) => (
                   <MenuItem key={answer} value={answer.charAt(0)}>
                     {answer}
@@ -397,11 +397,11 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               >
                 {[
                   "A. wanted to find out if the painting's perspective was realistic",
-                  "B. had to work in a private studio",
-                  "C. needed to show the barmaid's different emotions",
-                  "D. felt disconnected from their real identity",
-                  "E. were fascinated by the mirror's reflection",
-                  "F. preferred to focus on the human aspect",
+                  "B. felt they had to work very hard at boring and difficult jobs",
+                  "C. wanted to understand the lives of ordinary people at the time",
+                  "D. felt like they had to become differnet people",
+                  "E. wanted to manipulate our sense of reality",
+                  "F. wanted to docus on the detail in the painting",
                 ].map((answer) => (
                   <MenuItem key={answer} value={answer.charAt(0)}>
                     {answer}

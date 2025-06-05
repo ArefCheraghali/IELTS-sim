@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Task1 from "./Task1";
-import Task2 from "./Task2";
+import Task1 from "./Part1";
+import Task2 from "./Part2";
 import ExamLayout from "app/components/ExamLayout";
 import { useTimer } from "app/contexts/TimerContext";
 import {

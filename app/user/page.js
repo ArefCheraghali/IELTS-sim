@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Button, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  CircularProgress,
+  Container,
+  Alert,
+  Paper,
+} from "@mui/material"; // Added Container and Alert
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -12,25 +20,29 @@ const UserPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch user data from the API
     const fetchUserData = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        // Get the user object from localStorage
-        const userData = JSON.parse(localStorage.getItem("user"));
-        if (!userData) {
-          setError("Phone number not found. Please log in again.");
+        // Get the user's phone number, which was stored during login
+        const userPhone = JSON.parse(localStorage.getItem("user"));
+        if (!userPhone) {
+          setError("User session not found. Please log in again.");
           setLoading(false);
+          router.push("/"); // Redirect to login if no user phone
           return;
         }
 
-        const phoneNumber = userData;
-
-        // Get the token from localStorage
         const token = localStorage.getItem("access_token");
+        if (!token) {
+          setError("Authentication token not found. Please log in again.");
+          setLoading(false);
+          router.push("/"); // Redirect to login if no token
+          return;
+        }
 
-        // Fetch user data
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${phoneNumber}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${userPhone}`, // Use userPhone directly
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -39,21 +51,42 @@ const UserPage = () => {
         );
 
         if (response.status === 200) {
-          setUser(response.data); // Set the user data
-          // Save both phone number and name to localStorage
+          setUser(response.data);
+          // Storing more detailed userData (including name) for potential use elsewhere
           localStorage.setItem(
             "userData",
             JSON.stringify({
               phone: response.data.phone_number,
               name: response.data.name,
               familyName: response.data.family_name,
+              // You might want to store other relevant details like allowed_exam here too
             })
           );
         } else {
-          setError("Failed to fetch user data.");
+          setError(`Failed to fetch user data. Status: ${response.status}`);
         }
       } catch (error) {
-        setError("There was an error fetching the user data.");
+        if (error.response) {
+          setError(
+            `Error fetching data: ${
+              error.response.data.detail || error.response.statusText
+            }`
+          );
+          if (error.response.status === 401 || error.response.status === 403) {
+            // Unauthorized or Forbidden, clear session and redirect to login
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("role");
+            localStorage.removeItem("user");
+            localStorage.removeItem("userData");
+            router.push("/");
+          }
+        } else if (error.request) {
+          setError(
+            "Error fetching data: No response from server. Please check your connection."
+          );
+        } else {
+          setError(`An unexpected error occurred: ${error.message}`);
+        }
         console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
@@ -61,129 +94,177 @@ const UserPage = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [router]); // Added router to dependency array as it's used in error handling
 
-  // Handle logout
-  const handleLogout = () => {
-    // Clear the user's session
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userData");
-
-    // Redirect to the home page
-    router.push("/");
-  };
+  // Note: Logout functionality is typically in a shared Navbar or Layout,
+  // but if it were here, it would be:
+  // const handleLogout = () => {
+  //   localStorage.removeItem("access_token");
+  //   localStorage.removeItem("role");
+  //   localStorage.removeItem("user");
+  //   localStorage.removeItem("userData");
+  //   router.push("/");
+  // };
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+      <Container
+        maxWidth="sm"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "80vh",
+        }}
+      >
         <CircularProgress />
-      </Box>
+      </Container>
     );
   }
 
   if (error) {
     return (
-      <Typography
-        variant="h6"
-        color="error"
-        sx={{ textAlign: "center", mt: 4 }}
-      >
-        {error}
-      </Typography>
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+        <Button variant="contained" onClick={() => router.push("/")}>
+          Go to Login
+        </Button>
+      </Container>
     );
   }
 
   if (!user) {
     return (
-      <Typography variant="h6" sx={{ textAlign: "center", mt: 4 }}>
-        No user data found.
-      </Typography>
+      // This state might be brief if error handling/redirects are effective
+      <Container maxWidth="sm" sx={{ mt: 4, textAlign: "center" }}>
+        <Typography variant="h6">
+          No user data found. You may be redirected.
+        </Typography>
+      </Container>
     );
   }
 
+  // Common button styles (except for backgroundColor and hover)
+  const commonButtonSx = {
+    color: "#fff",
+    fontWeight: "bold",
+    textTransform: "none",
+    padding: "10px 20px",
+    borderRadius: "8px",
+    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    minWidth: "150px", // Give buttons a consistent minimum width
+  };
+
   return (
-    <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Welcome, {user.name} {user.family_name}!
-      </Typography>
-
-      <Typography variant="h6" sx={{ mt: 2 }}>
-        User Information
-      </Typography>
-      <Box sx={{ mt: 2, mb: 4 }}>
-        <Typography>Phone Number: {user.phone_number}</Typography>
-        <Typography>
-          Allowed to Take Exam: {user.allowed_exam ? "Yes" : "No"}
-        </Typography>
-      </Box>
-
-      <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-        <Button
-          variant="contained"
-          disabled={!user.allowed_exam} // Disable if allowed_exam is false
-          onClick={() => router.push("/tests")}
-          sx={{
-            backgroundColor: "#856404",
-            "&:hover": {
-              backgroundColor: "#a3790a",
-            },
-            "&:disabled": {
-              backgroundColor: "#ccc",
-              color: "#666",
-            },
-            color: "#fff",
-            fontWeight: "bold",
-            textTransform: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          Take Test
-        </Button>
-
-        <Button
-          variant="contained"
-          onClick={() => router.push("/results")}
-          sx={{
-            backgroundColor: "#007bff",
-            "&:hover": {
-              backgroundColor: "#0056b3",
-            },
-            color: "#fff",
-            fontWeight: "bold",
-            textTransform: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          View Results
-        </Button>
-      </Box>
-
-      <Button
-        onClick={handleLogout}
-        variant="contained"
-        sx={{
-          backgroundColor: "#dc3545",
-          "&:hover": {
-            backgroundColor: "#c82333",
-          },
-          color: "#fff",
-          fontWeight: "bold",
-          textTransform: "none",
-          padding: "10px 20px",
-          borderRadius: "8px",
-          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          mt: 4,
-        }}
+    <Container maxWidth="sm">
+      {" "}
+      {/* Using Container for consistent layout */}
+      <Box
+        sx={{ textAlign: "center", my: { xs: 3, sm: 5 }, p: { xs: 1, sm: 2 } }}
       >
-        Logout
-      </Button>
-    </Box>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ fontSize: { xs: "1.8rem", sm: "2.25rem" } }}
+        >
+          Welcome, {user.name} {user.family_name}!
+        </Typography>
+        <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>
+          User Information
+        </Typography>
+        <Paper
+          elevation={2}
+          sx={{
+            p: { xs: 2, sm: 3 },
+            display: "inline-block",
+            textAlign: "left",
+            mb: 3,
+            width: "100%",
+            maxWidth: "400px",
+          }}
+        >
+          <Typography sx={{ mb: 0.5 }}>
+            <strong>Phone Number:</strong> {user.phone_number}
+          </Typography>
+          <Typography sx={{ mb: 1 }}>
+            <strong>Allowed to Take Exam:</strong>
+            <Box
+              component="span"
+              sx={{
+                color: user.allowed_exam ? "success.main" : "error.main",
+                fontWeight: "bold",
+                ml: 0.5,
+              }}
+            >
+              {user.allowed_exam ? "Yes" : "No"}
+            </Box>
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Please do not take the test on mobile devices.
+            <br /> For the best experience, please use Google Chrome on a
+            desktop.
+          </Typography>
+        </Paper>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "center",
+            gap: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            disabled={!user.allowed_exam}
+            onClick={() => router.push("/tests")} // Assuming this is the correct path for taking tests
+            sx={{
+              ...commonButtonSx,
+              backgroundColor: "#3E96F4", // New color for Take Test
+              "&:hover": {
+                backgroundColor: "#2e7cdA", // Darker shade for hover
+              },
+              "&:disabled": {
+                // Keep or adjust disabled styles
+                backgroundColor: "#ccc",
+                color: "#666",
+              },
+            }}
+          >
+            Take Test
+          </Button>
+          <Button
+            variant="contained"
+            onClick={() => router.push("/user/examResults")} // Path to the new exam history page
+            sx={{
+              ...commonButtonSx,
+              backgroundColor: "#31393C", // New color for View Results
+              "&:hover": {
+                backgroundColor: "#1e2325", // Darker shade for hover
+              },
+            }}
+          >
+            View Results
+          </Button>
+        </Box>
+
+        {/* Logout button has been removed as per request */}
+        {/* If you need a logout button, it's often placed in a global AppBar/Navbar */}
+        {/* Example: 
+        <Button
+          onClick={handleLogout} // Assuming handleLogout is defined if this button is re-added
+          variant="outlined" // Or "contained" with appropriate color
+          color="error" 
+          sx={{ ...commonButtonSx, mt: 4, borderColor: 'error.main', color: 'error.main', '&:hover': { backgroundColor: 'error.lighter' } }}
+        >
+          Logout
+        </Button> 
+        */}
+      </Box>
+    </Container>
   );
 };
 

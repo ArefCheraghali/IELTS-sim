@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const Task2 = ({ answers, setAnswers }) => {
-  const wordLimit = 250;
+const Part1 = ({ answers, setAnswers }) => {
+  const wordLimit = 150;
 
   const getWordCount = (text) => {
     return text.trim().split(/\s+/).length;
@@ -23,7 +23,7 @@ const Task2 = ({ answers, setAnswers }) => {
     >
       <Box
         sx={{
-          width: "40%",
+          width: "50%",
           overflowY: "auto",
           padding: 2,
           borderRight: "1px solid #ccc",
@@ -33,14 +33,11 @@ const Task2 = ({ answers, setAnswers }) => {
           alignItems: "flex-start",
         }}
       >
-        <Typography variant="h5" sx={{ ml: 4, mb: 1 }}>
-          <b>Writing Task 2</b>
+        <Typography variant="h5" sx={{ ml: 1, mb: 2 }}>
+          <b>Writing Task 1</b>
         </Typography>
-        <Typography sx={{ ml: 4, mb: 2 }}>
-          You should spend about 40 minutes on this task.
-        </Typography>
-        <Typography sx={{ ml: 4, mb: 2 }}>
-          You have been asked to write about the following topic.
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          You should spend about 20 minutes on this task.
         </Typography>
         <Box
           sx={{
@@ -51,8 +48,8 @@ const Task2 = ({ answers, setAnswers }) => {
             borderStyle: "solid",
             borderWidth: 1,
             padding: "0.5em",
-            ml: 4,
-            mb: 3,
+            ml: 1,
+            mb: 1,
             pl: 2,
             textAlign: "left",
           }}
@@ -62,33 +59,34 @@ const Task2 = ({ answers, setAnswers }) => {
               fontSize: "1.1em",
             }}
           >
-            <b>
-              Lack of fresh water is becoming a global issue of increasing
-              importance.
-            </b>
+            You recently bought a piece of equipment for your kitchen but it did
+            not work. You phoned the shop but no action was taken.
           </Typography>
           <Typography
             sx={{
               fontSize: "1.1em",
-              mb: 1,
             }}
           >
-            <b>
-              What problems does this shortage cause? <br />
-              What measures could be taken to overcome these problems?
-            </b>
+            Write a letter to the shop manager. In your letter:
+            <br />
+            • describe the problem with the equipment <br />
+            • explain what happened when you phoned the shop
+            <br />• say what you would like the manager to do
           </Typography>
         </Box>
-        <Typography sx={{ ml: 4, mb: 2, textAlign: "left" }}>
-          Give reasons for your answer and include any relevant examples from
-          your own knowledge or experience.
+        <Typography sx={{ ml: 1, mb: 2 }}>
+          <b>You do NOT need to write any addresses.</b>
         </Typography>
-        <Typography sx={{ ml: 4 }}>Write at least 250 words.</Typography>
+        <Typography sx={{ ml: 1, mb: 4 }}>
+          Begin your letter as follows: <br />
+          {"\t"}Dear Sir or Madam,
+        </Typography>
+        <Typography sx={{ ml: 1, mb: 1 }}>Write at least 150 words.</Typography>
       </Box>
 
       <Box
         sx={{
-          width: "55%",
+          width: "50%",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -99,7 +97,7 @@ const Task2 = ({ answers, setAnswers }) => {
         }}
       >
         <Typography variant="body2">
-          Word Count: {getWordCount(answers[1])} / {wordLimit}
+          Word Count: {getWordCount(answers[0])} / {wordLimit}
         </Typography>
         <Box sx={{ mt: 4, width: "100%", height: "100%" }}>
           <TextField
@@ -109,9 +107,9 @@ const Task2 = ({ answers, setAnswers }) => {
             variant="outlined"
             placeholder="Start writing your essay here..."
             autoComplete="off"
-            onChange={(e) => handleInputChange(1, e.target.value)}
+            onChange={(e) => handleInputChange(0, e.target.value)}
             spellCheck={false}
-            value={answers[1]}
+            value={answers[0]}
             sx={{ backgroundColor: "#fff", height: "50vh" }}
           />
         </Box>
@@ -120,4 +118,4 @@ const Task2 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Task2;
+export default Part1;

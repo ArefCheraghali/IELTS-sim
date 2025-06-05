@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const Task2 = ({ answers, setAnswers }) => {
+const Part2 = ({ answers, setAnswers }) => {
   const wordLimit = 250;
 
   const getWordCount = (text) => {
@@ -70,10 +70,9 @@ const Task2 = ({ answers, setAnswers }) => {
         </Box>
         <Typography sx={{ ml: 4, mb: 2 }}>Write at least 250 words.</Typography>
       </Box>
-
       <Box
         sx={{
-          width: "50%",
+          width: "55%",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -90,7 +89,7 @@ const Task2 = ({ answers, setAnswers }) => {
           <TextField
             fullWidth
             multiline
-            rows={25}
+            rows={15}
             variant="outlined"
             placeholder="Start writing your essay here..."
             autoComplete="off"
@@ -105,4 +104,4 @@ const Task2 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Task2;
+export default Part2;

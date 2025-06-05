@@ -140,9 +140,9 @@ export default function Test() {
           answers={answers}
           totalSections={3}
           partQuestions={{
-            0: { start: 1, end: 13 },
-            1: { start: 14, end: 26 },
-            2: { start: 27, end: 40 },
+            0: { start: 1, end: 14 }, // Fixed to include all 14 questions
+            1: { start: 15, end: 28 },
+            2: { start: 29, end: 40 },
           }}
         />
       </Box>

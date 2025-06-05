@@ -37,7 +37,7 @@ const ExamNavbar = ({ sectionName, userName, onSubmit }) => {
 
   const handleExitConfirm = () => {
     setExitDialogOpen(false);
-    router.push("/");
+    router.push("/user");
   };
 
   const handleExitCancel = () => {

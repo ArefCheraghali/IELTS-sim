@@ -2,30 +2,136 @@ import React from "react";
 import {
   Box,
   FormControl,
-  FormControlLabel,
   InputLabel,
   MenuItem,
-  Radio,
-  RadioGroup,
   Select,
   TextField,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
 } from "@mui/material";
 import CalisthenicsText from "./text/CalisthenicsText";
 
-const image3 = "/images/test1/readingAc1-passage3-3.jpg";
+const Part3 = ({ answers, setAnswers, currentQuestion }) => {
+  const paragraphSelectPossibleAnswers = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+  ];
+  // Total questions: 7 (29-35) + 5 (36-40) = 12
+  const questionRefs = React.useRef(Array(12).fill(null));
 
-const Section3 = ({ answers, setAnswers }) => {
-  const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  // Data for Questions 29-35
+  const paragraphMatchingQuestions = [
+    {
+      number: 29,
+      text: "the origin of the word ‘calisthenics’",
+      answerIndex: 28,
+    },
+    {
+      number: 30,
+      text: "the last popular supporter of calisthenics",
+      answerIndex: 29,
+    },
+    {
+      number: 31,
+      text: "the first use of calisthenics as a training method",
+      answerIndex: 30,
+    },
+    {
+      number: 32,
+      text: "a multidisciplinary approach to all-round health and strength",
+      answerIndex: 31,
+    },
+    {
+      number: 33,
+      text: "reasons for the survival of calisthenics throughout the ages",
+      answerIndex: 32,
+    },
+    {
+      number: 34,
+      text: "the use of a medical substance to increase muscle mass and strength",
+      answerIndex: 33,
+    },
+    {
+      number: 35,
+      text: "a reference to travelling showmen who displayed their strength for audiences",
+      answerIndex: 34,
+    },
+  ];
 
-  const handleInputChange = (index, value) => {
+  // Data for Questions 36-40 (TextFields)
+  // answerIndex refers to the index in the global 'answers' array
+  const summaryCompletionQuestions = [
+    {
+      number: 36,
+      promptBefore: "important than",
+      promptAfter: "or having an attractive-looking body.",
+      answerIndex: 35,
+      refIndex: 7,
+    },
+    {
+      number: 37,
+      promptBefore:
+        "in calisthenics but the most famous practitioners became known as",
+      promptAfter: "on account of the impressive size of their muscles.",
+      answerIndex: 36,
+      refIndex: 8,
+    },
+    {
+      number: 38,
+      promptBefore: "females, children and those recovering from",
+      promptAfter: ". Much",
+      answerIndex: 37,
+      refIndex: 9,
+    },
+    {
+      number: 39,
+      promptBefore:
+        "Once a person became skilled at this, he would progress to",
+      promptAfter: ".",
+      answerIndex: 38,
+      refIndex: 10,
+    },
+    {
+      number: 40,
+      promptBefore:
+        "can harm the body leaving it sore, out of balance, and in poor",
+      promptAfter: ".",
+      answerIndex: 39,
+      refIndex: 11,
+    },
+  ];
+
+  React.useEffect(() => {
+    if (currentQuestion >= 29 && currentQuestion <= 40) {
+      const refArrayIndex = currentQuestion - 29; // Calculate index for 0-based questionRefs array
+      const questionElementOrInput = questionRefs.current[refArrayIndex];
+
+      if (questionElementOrInput) {
+        // Scroll the main element (Box wrapper or input itself) into view
+        questionElementOrInput.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        // Auto-focus if it's a TextField question (36-40)
+        // For these questions, the ref is directly on the input element via `inputRef`
+        if (currentQuestion >= 36 && currentQuestion <= 40) {
+          questionElementOrInput.focus();
+        }
+      }
+    }
+  }, [currentQuestion]);
+
+  const handleInputChange = (answerArrayIndex, value) => {
     const newAnswers = [...answers];
-    newAnswers[index] = value;
+    newAnswers[answerArrayIndex] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
+    // console.log(newAnswers); // Keep for debugging if needed
   };
 
   return (
@@ -51,13 +157,10 @@ const Section3 = ({ answers, setAnswers }) => {
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
           padding: 2,
         }}
       >
-        <Typography sx={{ ml: 3, fontSize: "1.1em", mb: 1 }}>
+        <Typography sx={{ ml: 1, fontSize: "1.1em", mb: 1 }}>
           <b>Part 3</b>
         </Typography>
         <Typography sx={{ ml: 1, mb: 1 }}>
@@ -65,160 +168,205 @@ const Section3 = ({ answers, setAnswers }) => {
           based on Reading Passage 3 (CALISTHENICS).
         </Typography>
         <br />
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 29 - 35</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+
+        {/* Questions 29 - 35: Paragraph Matching */}
+        <Typography variant="h6" sx={{ ml: 1, mb: 1, fontSize: "1rem" }}>
+          Questions 29 - 35
+        </Typography>
+        <Typography sx={{ ml: 1, mb: 1 }}>
           Which paragraph contains the following information?
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          The text has eight paragraphs, <b>A-H</b>.
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          The text has eight paragraphs, <b>A-H</b>. Pick the correct letter in
+          boxes 29-35.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Pick the correct letter in boxes 29-35.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b style={{ marginRight: "2em" }}>29</b> the origin of the word
-          ‘calisthenics’
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b style={{ marginRight: "2em" }}>30</b> the last popular supporter of
-          calisthenics
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b style={{ marginRight: "2em" }}>31</b> the first use of calisthenics
-          as a training method
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b style={{ marginRight: "2em" }}>32</b> a multidisciplinary approach
-          to all-round health and strength
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b style={{ marginRight: "2em" }}>33</b> reasons for the survival of
-          calisthenics throughout the ages
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b style={{ marginRight: "2em" }}>34</b> the use of a medical
-          substance to increase muscle mass and strength
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b style={{ marginRight: "2em" }}>35</b> a reference to travelling
-          showmen who displayed their strength for audiences
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-          {Array.from({ length: 7 }).map((_, index) => (
-            <FormControl sx={{ mt: 2, margin: "1em" }} key={index}>
-              <InputLabel>{`${29 + index}`}</InputLabel>
+        {paragraphMatchingQuestions.map((q, index) => (
+          <Box
+            key={q.number}
+            ref={(el) => (questionRefs.current[index] = el)} // index 0-6 for Q29-35
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 1.5,
+              pl: 1,
+              py: 0.5,
+            }}
+          >
+            <FormControl sx={{ mr: 2, minWidth: "5.5em" }}>
+              <InputLabel id={`q${q.number}-label`}>{q.number}</InputLabel>
               <Select
-                sx={{ width: "5em" }}
-                value={answers[28 + index] || ""}
-                onChange={(e) => handleInputChange(28 + index, e.target.value)}
-                label={`${29 + index}`}
+                labelId={`q${q.number}-label`}
+                sx={{ width: "100%" }}
+                value={answers[q.answerIndex] || ""}
+                onChange={(e) =>
+                  handleInputChange(q.answerIndex, e.target.value)
+                }
+                label={`${q.number}`}
               >
-                {possibleAnswers.map((answer) => (
+                {paragraphSelectPossibleAnswers.map((answer) => (
                   <MenuItem key={answer} value={answer}>
                     {answer}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          ))}
-        </Box>
+            <Typography variant="body2">
+              {/* <b>{q.number}</b>  The number is now the label of the select */}
+              {q.text}
+            </Typography>
+          </Box>
+        ))}
         <br />
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 36 - 40</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Complete the summary below.
+
+        {/* Questions 36 - 40: Summary Completion */}
+        <Typography variant="h6" sx={{ ml: 1, mb: 1, mt: 2, fontSize: "1rem" }}>
+          Questions 36 - 40
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Choose <b>NO MORE THAN TWO WORDS</b> from the text for each answer.
+        <Typography sx={{ ml: 1, mb: 1 }}>
+          Complete the summary below. Choose <b>NO MORE THAN TWO WORDS</b> from
+          the text for each answer.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ ml: 1, mb: 2 }}>
           Write your answers in boxes 36-40.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
+        <Typography sx={{ ml: 1, mb: 1 }}>
           During the sixties and seventies, attaining huge muscles became more
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
           important than
+        </Typography>
+        <Typography
+          sx={{
+            ml: 1,
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
           <TextField
-            sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+            sx={{ mx: 0.5, width: "10em", my: 0.5, mt: -1 }}
             label="36"
             variant="standard"
             autoComplete="off"
-            onChange={(e) => handleInputChange(35, e.target.value)}
-            value={answers[35]}
+            onChange={(e) =>
+              handleInputChange(
+                summaryCompletionQuestions[0].answerIndex,
+                e.target.value
+              )
+            }
+            value={answers[summaryCompletionQuestions[0].answerIndex] || ""}
+            inputRef={(el) =>
+              (questionRefs.current[summaryCompletionQuestions[0].refIndex] =
+                el)
+            }
           />
           or having an attractive-looking body.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
+        <Typography sx={{ ml: 1, mt: 1 }}>
           The first people to take up this new sport of body building had a
-          background
+          background in calisthenics but the most famous practitioners became
+          known as
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-          in calisthenics but the most famous practitioners became known as
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
+        <Typography sx={{ ml: 1, mt: 3 }}>
           <TextField
-            sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+            sx={{ mx: 0.5, width: "10em", my: 0.5, mt: -2.5 }}
             label="37"
             variant="standard"
             autoComplete="off"
-            onChange={(e) => handleInputChange(36, e.target.value)}
-            value={answers[36]}
+            onChange={(e) =>
+              handleInputChange(
+                summaryCompletionQuestions[1].answerIndex,
+                e.target.value
+              )
+            }
+            value={answers[summaryCompletionQuestions[1].answerIndex] || ""}
+            inputRef={(el) =>
+              (questionRefs.current[summaryCompletionQuestions[1].refIndex] =
+                el)
+            }
           />
           on account of the impressive size of their muscles.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
+        <Typography sx={{ ml: 1, mt: 1 }}>
           Drugs and mechanical devices were used to develop individual muscles
-          to
+          to a monstrous size. Calisthenics then became the domain of ‘weaker’
+          people: females,
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          a monstrous size. Calisthenics then became the domain of ‘weaker’
-          people:
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-          females, children and those recovering from
+        <Typography sx={{ ml: 1, mt: 3 }}>
+          children and those recovering from
           <TextField
-            sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+            sx={{ mx: 0.5, width: "10em", my: 0.5, mt: -2.5 }}
             label="38"
             variant="standard"
             autoComplete="off"
-            onChange={(e) => handleInputChange(37, e.target.value)}
-            value={answers[37]}
+            onChange={(e) =>
+              handleInputChange(
+                summaryCompletionQuestions[2].answerIndex,
+                e.target.value
+              )
+            }
+            value={answers[summaryCompletionQuestions[2].answerIndex] || ""}
+            inputRef={(el) =>
+              (questionRefs.current[summaryCompletionQuestions[2].refIndex] =
+                el)
+            }
           />
-          . Much
+          . Much of the advanced
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          of the advanced knowledge about calisthenics was lost and the method
-          was
+        <Typography sx={{ ml: 1, mt: 1 }}>
+          knowledge about calisthenics was lost and the method was subsequently
+          downgraded to the status of a simple, userfriendly activity. Once a
+          person became skilled at this,
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          subsequently downgraded to the status of a simple, userfriendly
-          activity.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-          Once a person became skilled at this, he would progress to
+        <Typography
+          sx={{
+            ml: 1,
+            mt: 1,
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          he would progress to
           <TextField
-            sx={{ mt: -3, ml: 1, width: "7em" }}
+            sx={{ mx: 0.5, width: "7em", my: 0.5, mt: -1 }}
             label="39"
             variant="standard"
             autoComplete="off"
-            onChange={(e) => handleInputChange(38, e.target.value)}
-            value={answers[38]}
+            onChange={(e) =>
+              handleInputChange(
+                summaryCompletionQuestions[3].answerIndex,
+                e.target.value
+              )
+            }
+            value={answers[summaryCompletionQuestions[3].answerIndex] || ""}
+            inputRef={(el) =>
+              (questionRefs.current[summaryCompletionQuestions[3].refIndex] =
+                el)
+            }
           />
-          .
+          . Currently a revival of calisthenics is under way
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-          Currently a revival of calisthenics is under way as extreme muscle
-          building
+        <Typography sx={{ ml: 1, mt: 1 }}>
+          as extreme muscle building can harm the body leaving it sore, out of
+          balance, and in
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-          can harm the body leaving it sore, out of balance, and in poor
+        <Typography sx={{ ml: 1, mt: 3 }}>
+          poor
           <TextField
-            sx={{ mt: -3, ml: 1, width: "6em" }}
+            sx={{ mx: 0.5, width: "6em", my: 0.5, mt: -2.5 }}
             label="40"
             variant="standard"
             autoComplete="off"
-            onChange={(e) => handleInputChange(39, e.target.value)}
-            value={answers[39]}
+            onChange={(e) =>
+              handleInputChange(
+                summaryCompletionQuestions[4].answerIndex,
+                e.target.value
+              )
+            }
+            value={answers[summaryCompletionQuestions[4].answerIndex] || ""}
+            inputRef={(el) =>
+              (questionRefs.current[summaryCompletionQuestions[4].refIndex] =
+                el)
+            }
           />
           .
         </Typography>
@@ -227,4 +375,4 @@ const Section3 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Section3;
+export default Part3;

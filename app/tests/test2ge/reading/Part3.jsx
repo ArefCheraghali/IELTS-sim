@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react"; // Added useRef, useEffect, useState
 import {
   Box,
   FormControl,
@@ -12,25 +13,103 @@ import {
   Accordion,
   AccordionSummary,
   TextField,
+  List, // Added for the "List of People"
+  ListItem, // Added
+  Paper, // For better visual grouping if needed
 } from "@mui/material";
-import FishFarmingText from "./text/FishFarmingText";
-const image1 = "/images/test2/test2ge reading part3.jpg";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"; // For Accordion
+import FishFarmingText from "./text/FishFarmingText"; // Assuming this is your reading passage
 
-const Part3 = ({ answers, setAnswers }) => {
-  const possibleAnswers = ["A", "B", "C", "D"];
+// Define question data for Questions 28-32 for easier mapping
+const matchingPeopleStatements = [
+  {
+    number: 28,
+    text: "He believes that traditional fishing will not keep pace with population growth.",
+  },
+  {
+    number: 29,
+    text: "He states that a particular type of fish is suited to being farmed.",
+  },
+  { number: 30, text: "He analyses the taste of food carefully." },
+  {
+    number: 31,
+    text: "He believes that no artificial substances need to be added to the water.",
+  },
+  {
+    number: 32,
+    text: "He found that some people are reluctant to embrace the idea of fish farming.",
+  },
+];
+
+// List of People data (from the image)
+const listOfPeopleData = [
+  { letter: "A", name: "Martin Schreibman" },
+  { letter: "B", name: "Jason Green" },
+  { letter: "C", name: "Sam Yoo" },
+  { letter: "D", name: "Neil Sims" },
+];
+
+const Part3 = ({ answers, setAnswers, currentQuestion }) => {
+  const possibleAnswersMatching = ["A", "B", "C", "D"]; // For Q28-32
+
+  // Questions 28-40 -> 13 questions total
+  // Q28 -> index 0, Q29 -> index 1, ..., Q40 -> index 12
+  const questionRefs = React.useRef(
+    Array(13)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const prevCurrentQuestionRef = useRef();
+  const [expandedAccordion, setExpandedAccordion] = useState(null);
+
+  useEffect(() => {
+    const isQuestionInThisPart = currentQuestion >= 28 && currentQuestion <= 40;
+
+    if (
+      isQuestionInThisPart &&
+      prevCurrentQuestionRef.current !== undefined &&
+      prevCurrentQuestionRef.current !== currentQuestion
+    ) {
+      const index = currentQuestion - 28; // 0-based index for refs array
+      const targetRef = questionRefs.current[index];
+
+      if (targetRef && targetRef.current) {
+        targetRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+
+        // Handle focus for TextFields (Q37-40)
+        if (currentQuestion >= 37 && currentQuestion <= 40) {
+          // targetRef.current is the TextField's input element due to inputRef
+          setTimeout(() => {
+            targetRef.current.focus();
+          }, 100); // Delay for scroll
+        }
+        // Handle accordion expansion (Q33-36)
+        else if (currentQuestion >= 33 && currentQuestion <= 36) {
+          setExpandedAccordion(`panel${currentQuestion}`);
+        }
+      }
+    }
+    prevCurrentQuestionRef.current = currentQuestion;
+  }, [currentQuestion]);
+
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : false);
+  };
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
-    newAnswers[index] = value;
+    newAnswers[index] = value; // Index is already 0-based for answers array
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
     <Box
       sx={{
         display: "flex",
-        height: "75vh",
+        height: "76vh",
       }}
     >
       <Box
@@ -47,349 +126,320 @@ const Part3 = ({ answers, setAnswers }) => {
         sx={{
           width: "50%",
           overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
           padding: 2,
         }}
       >
-        <Typography sx={{ ml: 3, fontSize: "1.1em", mb: 1 }}>
-          <b>READING PASSAGE 3</b>
+        <Typography sx={{ fontSize: "1.1em", mb: 1, fontWeight: "bold" }}>
+          READING PASSAGE 3
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1, textAlign: "left" }}>
+        <Typography sx={{ mb: 1, textAlign: "left" }}>
           You should spend about 20 minutes on <b>Questions 28-40</b>, which are
           based on Reading Passage 3.
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>
-          <b>Questions 28 - 32</b>
+
+        {/* Questions 28 - 32: Matching People */}
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{ fontSize: "1rem", fontWeight: "bold", mt: 2, mb: 1 }}
+        >
+          Questions 28 - 32
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1, textAlign: "left" }}>
-          Look at the following statements (<b>Questions 28-32</b>) an d the
-          list of people (<b>A-D</b>) below.
+        <Typography sx={{ mb: 1, textAlign: "left" }}>
+          Look at the following statements (<b>Questions 28-32</b>) and the list
+          of people (<b>A-D</b>) below.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Match each statement w ith the correct person, A, B, C or D
+        <Typography sx={{ mb: 1 }}>
+          Match each statement with the correct person, A, B, C or D.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Pick the correct letter in boxes 28-32.
+        <Typography sx={{ mb: 1 }}>
+          Write the correct letter in boxes 28-32.
         </Typography>
-        <Box sx={{ textAlign: "left" }}>
-          <Box sx={{ display: "flex" }}>
-            <b style={{ marginRight: "1em" }}>NB</b>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              You may use any letter more than once.
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex" }}>
-            <b style={{ marginRight: "1em" }}>28</b>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              He believes that traditional fishing will not keep pace with
-              population growth.
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex" }}>
-            <b style={{ marginRight: "1em" }}>29</b>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              He states that a particular type of fish is suited to being
-              farmed.
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex" }}>
-            <b style={{ marginRight: "1em" }}>30</b>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              He analyses the taste of food carefully.
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex" }}>
-            <b style={{ marginRight: "1em" }}>31</b>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              He believes that no artificial substances need to be added to the
-              water.
-            </Typography>
-          </Box>
-          <Box sx={{ display: "flex" }}>
-            <b style={{ marginRight: "1em" }}>32</b>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              He found that some people are reluctant to embrace the idea of
-              fish farming.
-            </Typography>
-          </Box>
-        </Box>
-        <img
-          src={image1}
-          alt="Reading Passage Part 2"
-          style={{ width: "35%", marginLeft: "10em" }}
-        />
-        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <FormControl sx={{ mt: 2, mx: "1em" }} key={index}>
-              <InputLabel>{`${28 + index}`}</InputLabel>
+        <Typography sx={{ mb: 2 }}>
+          <b>NB</b> You may use any letter more than once.
+        </Typography>
+
+        {/* List of People - Implemented from Image */}
+        <Paper
+          elevation={1}
+          sx={{
+            p: 2,
+            mb: 3,
+            backgroundColor: "grey.100",
+            width: "fit-content",
+          }}
+        >
+          <Typography
+            variant="subtitle1"
+            sx={{ fontWeight: "bold", mb: 1, textAlign: "center" }}
+          >
+            List of People
+          </Typography>
+          <List dense disablePadding>
+            {listOfPeopleData.map((person) => (
+              <ListItem key={person.letter} sx={{ py: 0.2 }}>
+                <Typography component="span" sx={{ fontWeight: "bold", mr: 2 }}>
+                  {person.letter}
+                </Typography>
+                <Typography component="span">{person.name}</Typography>
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+
+        {matchingPeopleStatements.map((q) => (
+          <Box
+            key={q.number}
+            ref={questionRefs.current[q.number - 28]} // Q28 is index 0
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 1.5,
+              width: "100%",
+              fontSize: "1em",
+            }}
+          >
+            <FormControl
+              sx={{ mr: 2, minWidth: { xs: "80px", sm: "100px" } }}
+              size="small"
+            >
+              <InputLabel id={`q${q.number}-label`}>{q.number}</InputLabel>
               <Select
-                sx={{ width: "5em" }}
-                value={answers[27 + index] || ""}
-                onChange={(e) => handleInputChange(27 + index, e.target.value)}
-                label={`${28 + index}`}
+                labelId={`q${q.number}-label`}
+                label={`${q.number}`}
+                value={answers[q.number - 1] || ""} // answers array is 0-indexed from Q1 overall
+                onChange={(e) =>
+                  handleInputChange(q.number - 1, e.target.value)
+                }
               >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
+                {possibleAnswersMatching.map((answerOption) => (
+                  <MenuItem key={answerOption} value={answerOption}>
+                    {answerOption}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          ))}
-        </Box>
-        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Questions 33 - 36</Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>
+            <Typography variant="body2" sx={{ flexGrow: 1, textAlign: "left" }}>
+              {q.text}
+            </Typography>
+          </Box>
+        ))}
+
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{ fontSize: "1rem", fontWeight: "bold", mt: 3, mb: 1 }}
+        >
+          Questions 33 - 36
+        </Typography>
+        <Typography sx={{ mb: 2 }}>
           Choose the correct letter, <b>A, B, C</b> or <b>D</b>.
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            maxWidth: "60rem",
-            alignItems: "flex-start",
-            alignContent: "flex-start",
-          }}
+        {[
+          {
+            qNum: 33,
+            questionText:
+              "One advantage of aquaponics mentioned in the first paragraph is that",
+            options: [
+              {
+                value: "A",
+                label: "people are quick to adopt it when they understand it.",
+              },
+              {
+                value: "B",
+                label: "plants and animals benefit from each other.",
+              },
+              {
+                value: "C",
+                label:
+                  "many cities are already equipped to put it into practice.",
+              },
+              {
+                value: "D",
+                label: "food can reach customers the same day it is harvested.",
+              },
+            ],
+          },
+          {
+            qNum: 34,
+            questionText:
+              "What problem with fish farming in the ocean is mentioned?",
+            options: [
+              {
+                value: "A",
+                label: "Fish farms are too far from the consumer.",
+              },
+              {
+                value: "B",
+                label: "Diseased fish are becoming immune to medicines used.",
+              },
+              {
+                value: "C",
+                label:
+                  "Conditions are becoming less favourable for some marine creatures.",
+              },
+              {
+                value: "D",
+                label:
+                  "Other marine species may interfere with fish being farmed.",
+              },
+            ],
+          },
+          {
+            qNum: 35,
+            questionText:
+              "A distinctive aspect of the fish farming done by Edenworks is that",
+            options: [
+              { value: "A", label: "they can maximise the use of space." },
+              {
+                value: "B",
+                label: "they produce higher quality fish than other companies.",
+              },
+              { value: "C", label: "they operate in taller buildings." },
+              { value: "D", label: "they make use of artificial lighting." },
+            ],
+          },
+          {
+            qNum: 36,
+            questionText:
+              "What does Green say about designing farms within buildings?",
+            options: [
+              {
+                value: "A",
+                label: "Urban architects have opposed these farms so far.",
+              },
+              {
+                value: "B",
+                label:
+                  "These farms may bring other advantages as well as providing food.",
+              },
+              {
+                value: "C",
+                label:
+                  "These farms should not be located too high up in the building.",
+              },
+              {
+                value: "D",
+                label:
+                  "These farms will work well in a limited set of conditions.",
+              },
+            ],
+          },
+        ].map((item) => (
+          <Accordion
+            key={item.qNum}
+            ref={questionRefs.current[item.qNum - 28]} // Q33 is index 5
+            sx={{
+              width: "100%",
+              maxWidth: { xs: "100%", sm: "calc(100% - 32px)" },
+              bgcolor: "grey.100",
+              mb: 1,
+            }}
+            expanded={expandedAccordion === `panel${item.qNum}`}
+            onChange={handleAccordionChange(`panel${item.qNum}`)}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${item.qNum}-content`}
+              id={`panel${item.qNum}-header`}
+            >
+              <Typography>
+                <b style={{ marginRight: "1em" }}>{item.qNum}</b>{" "}
+                {item.questionText}
+              </Typography>
+            </AccordionSummary>
+            <RadioGroup
+              sx={{ pl: "2em", py: 1 }} // Indent options
+              value={answers[item.qNum - 1] || ""}
+              onChange={(e) => handleInputChange(item.qNum - 1, e.target.value)}
+            >
+              {item.options.map((opt) => (
+                <FormControlLabel
+                  key={opt.value}
+                  value={opt.value}
+                  control={<Radio size="small" />}
+                  label={`${opt.value}) ${opt.label}`}
+                  sx={{ mb: 0.5 }}
+                />
+              ))}
+            </RadioGroup>
+          </Accordion>
+        ))}
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{ fontSize: "1rem", fontWeight: "bold", mt: 3, mb: 1 }}
         >
-          <FormControl>
-            <Accordion sx={{ minWidth: "37em", bgcolor: "lightgray" }}>
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>33</b> One advantage of
-                  aquaponics mentioned in the first paragraph is that
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "4em" }}
-                value={answers[32] || ""}
-                onChange={(e) => handleInputChange(32, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) people are quick to adopt it when they understand it. "
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B)  plants and animals benefit from each other."
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C) many cities are already equipped to put it into practice."
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D) food can reach customers the same day it is harvested. "
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-          <br />
-          <FormControl>
-            <Accordion
-              sx={{ minWidth: "35em", bgcolor: "lightgray", textAlign: "left" }}
-            >
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>34</b> What problem with
-                  fish farming in the ocean is mentioned?
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "4em" }}
-                value={answers[33] || ""}
-                onChange={(e) => handleInputChange(33, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) Fish farms are too far from the consumer."
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B)  Diseased fish are becoming immune to medicines used."
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C)  Conditions are becoming less favourable for some marine creatures. "
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D)  Other marine species may interfere with fish being farmed. "
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-          <br />
-          <FormControl>
-            <Accordion sx={{ minWidth: "35em", bgcolor: "lightgray" }}>
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>35</b> A distinctive aspect
-                  of the fish farming done by Edenworks is that
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "4em" }}
-                value={answers[34] || ""}
-                onChange={(e) => handleInputChange(34, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) they can maximise the use of space. "
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B) they produce higher quality fish than other companies. "
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C) they operate in taller buildings."
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D) they make use of artificial lighting."
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-          <br />
-          <FormControl>
-            <Accordion
-              sx={{ minWidth: "35em", bgcolor: "lightgray", textAlign: "left" }}
-            >
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>36</b> What does Green say
-                  about designing farms within buildings?
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "4em" }}
-                value={answers[35] || ""}
-                onChange={(e) => handleInputChange(35, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) Urban architects have opposed these farms so far. "
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B) These farms may bring other advantages as well as providing food. "
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C) These farms should not be located too high up in the building. "
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D) These farms will work well in a limited set of conditions. "
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-        </Box>
-        <br />
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 37 - 40</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Complete the summary below.
+          Questions 37 - 40
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>Complete the summary below.</Typography>
+        <Typography sx={{ mb: 1 }}>
           Choose <b>ONE WORD ONLY</b> from the text for each answer.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography sx={{ mb: 2 }}>
           Write your answers in boxes 37-40.
         </Typography>
-        <Typography sx={{ fontSize: "1.1em", ml: 20, mt: 1 }}>
-          <b>Bringing back an old concept</b>
+        <Typography
+          sx={{
+            fontSize: "1.05em",
+            fontWeight: "bold",
+            mb: 2,
+            textAlign: "center",
+          }}
+        >
+          Bringing back an old concept
         </Typography>
-        <Box sx={{ textAlign: "left" }}>
-          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-            From 1 ,000 BC Chinese rice farmers made use of aquaponics, which
-            helped
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-            them to increase their
+        <Box sx={{ px: 2, textAlign: "left" }}>
+          <Typography variant="body1" component="p" sx={{ lineHeight: 2.2 }}>
+            {" "}
+            {/* Increased line-height for readability */}
+            From 1,000 BC Chinese rice farmers made use of aquaponics, which
+            helped them to increase their
             <TextField
-              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+              variant="standard"
               label="37"
-              variant="standard"
+              size="small"
               autoComplete="off"
+              sx={{ width: "12em", mx: 0.5, verticalAlign: "baseline" }} // Align with the text baseline
               onChange={(e) => handleInputChange(36, e.target.value)}
-              value={answers[36]}
+              value={answers[36] || ""}
+              inputRef={questionRefs.current[37 - 28]} // Q37 is index 9
             />
-            . They allowed fish into the rice
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-            paddies and the
+            . They allowed fish into the rice paddies and the
             <TextField
-              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+              variant="standard"
               label="38"
-              variant="standard"
+              size="small"
               autoComplete="off"
+              sx={{ width: "12em", mx: 0.5, verticalAlign: "baseline" }}
               onChange={(e) => handleInputChange(37, e.target.value)}
-              value={answers[37]}
+              value={answers[37] || ""}
+              inputRef={questionRefs.current[38 - 28]} // Q38 is index 10
             />
-            from the fish naturally enriched their
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-            crops. Edenworks is looking at ways to incorporate that idea, but
-            with a
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
-            system that is not connected to the
+            from the fish naturally enriched their crops. Edenworks is looking
+            at ways to incorporate that idea, but with a system that is not
+            connected to the
             <TextField
-              sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
+              variant="standard"
               label="39"
-              variant="standard"
+              size="small"
               autoComplete="off"
+              sx={{ width: "12em", mx: 0.5, verticalAlign: "baseline" }}
               onChange={(e) => handleInputChange(38, e.target.value)}
-              value={answers[38]}
+              value={answers[38] || ""}
+              inputRef={questionRefs.current[39 - 28]} // Q39 is index 11
             />
-            . They are trying
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-            to find a way to produce food that tastes great by duplicating the
-            qualities of
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 2 }}>
+            . They are trying to find a way to produce food that tastes great by
+            duplicating the qualities of
             <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="40"
               variant="standard"
+              label="40"
+              size="small"
               autoComplete="off"
+              sx={{ width: "10em", mx: 0.5, verticalAlign: "baseline" }}
               onChange={(e) => handleInputChange(39, e.target.value)}
-              value={answers[39]}
+              value={answers[39] || ""}
+              inputRef={questionRefs.current[40 - 28]} // Q40 is index 12
             />
             found in nature.
           </Typography>

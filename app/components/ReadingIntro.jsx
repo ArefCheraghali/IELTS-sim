@@ -63,7 +63,7 @@ const ReadingIntro = () => {
           alignItems: "flex-start",
           p: 3,
           bgcolor: "#f5f5f5",
-          minHeight: "100vh",
+          minHeight: "140vh",
         }}
       >
         <Paper

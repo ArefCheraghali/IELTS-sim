@@ -24,7 +24,7 @@ import TestBottomNavigation from "../../../components/TestBottomNavigation";
 import { TEST_DURATIONS } from "../../../config/testDurations";
 
 const listeningAudio = "/audio/Listening1.mp3";
-const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ac.listening;
+const TEST_DURATION_MINUTES = TEST_DURATIONS.test1ge.listening;
 const QUESTIONS_DELAY_MS = 27000; // Time before showing questions (27 seconds)
 
 export default function Test() {

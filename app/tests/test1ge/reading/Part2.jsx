@@ -16,7 +16,7 @@ import KeyboardText from "./text/KeyboardText";
 const image1 = "/images/test1/readingGe1-passage2-1.jpg";
 const image2 = "/images/test1/readingGe1-passage2-2.jpg";
 
-const Section2 = ({ answers, setAnswers }) => {
+const Part2 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = ["A", "B", "C", "D", "E"];
   const possibleAnswers2 = [
     "i",
@@ -30,6 +30,56 @@ const Section2 = ({ answers, setAnswers }) => {
     "ix",
     "x",
   ];
+
+  const questionRefs = React.useRef(Array(14).fill(null));
+  const prevQuestionRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (prevQuestionRef.current === null) {
+      prevQuestionRef.current = currentQuestion;
+      return;
+    }
+
+    if (prevQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 14 && currentQuestion <= 28) {
+        const index = currentQuestion - 14;
+        const element = questionRefs.current[index];
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          // Add delay to ensure scroll completes before focus
+          setTimeout(() => {
+            // For questions 15-21 (Select with Roman numerals)
+            if (index >= 1 && index <= 7) {
+              const select = element.querySelector("[role='button']");
+              if (select) {
+                select.focus();
+              }
+            }
+            // For questions 22-23 (TextField)
+            else if (index === 8 || index === 9) {
+              const input = element.querySelector("input");
+              if (input) {
+                input.focus();
+                input.select();
+              }
+            }
+            // For questions 24-28 (Select with letters)
+            else if (index >= 10 && index <= 14) {
+              const select = element.querySelector("[role='button']");
+              if (select) {
+                select.focus();
+              }
+            }
+          }, 150);
+        }
+      }
+      prevQuestionRef.current = currentQuestion;
+    }
+  }, [currentQuestion]);
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
@@ -75,7 +125,9 @@ const Section2 = ({ answers, setAnswers }) => {
           You should spend about 20 minutes on <b>Questions 14-28</b>, which are
           based on Reading Part 2.
         </Typography>
-        <Typography sx={{ mb: 1 }}>Questions 15 - 21</Typography>
+        <Typography ref={(el) => (questionRefs.current[0] = el)} sx={{ mb: 1 }}>
+          Questions 15 - 21
+        </Typography>
         <Typography sx={{ mb: 1 }}>
           The text on the left (BENEFICIAL WORK PRACTICES FOR THE KEYBOARD
           OPERATOR) has seven sections, <b>A-G</b>.
@@ -165,7 +217,11 @@ const Section2 = ({ answers, setAnswers }) => {
           </Box>
           <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
             {Array.from({ length: 7 }).map((_, index) => (
-              <FormControl sx={{ mt: 2, mr: 1 }} key={15 + index}>
+              <FormControl
+                sx={{ mt: 2, mr: 1 }}
+                key={15 + index}
+                ref={(el) => (questionRefs.current[1 + index] = el)}
+              >
                 <InputLabel>{`${15 + index}`}</InputLabel>
                 <Select
                   sx={{ width: "5em" }}
@@ -211,6 +267,7 @@ const Section2 = ({ answers, setAnswers }) => {
           }}
         >
           <ListItem
+            ref={(el) => (questionRefs.current[8] = el)}
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -237,6 +294,7 @@ const Section2 = ({ answers, setAnswers }) => {
             </Box>
           </ListItem>
           <ListItem
+            ref={(el) => (questionRefs.current[9] = el)}
             sx={{
               display: "flex",
               flexDirection: "row",
@@ -274,62 +332,6 @@ const Section2 = ({ answers, setAnswers }) => {
         <Typography sx={{ mb: 1 }}>
           Pick the correct letter in boxes 24-28.
         </Typography>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            pl: "1rem",
-            width: "90%",
-          }}
-        >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "1rem" }}>
-              <b>24</b>{" "}
-            </Typography>
-            <Typography sx={{ ml: 2 }}>
-              An employee is asked to leave work straight away because he has
-              done something really bad.
-            </Typography>
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "1rem" }}>
-              <b>25</b>{" "}
-            </Typography>
-            <Typography sx={{ mb: 1 }}>
-              An employee is pressured to leave his job unless he accepts
-              conditions that are very different from those agreed to in the
-              beginning.
-            </Typography>
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "1rem" }}>
-              <b>26</b>{" "}
-            </Typography>
-            <Typography sx={{ mb: 1 }}>
-              An employer gets rid of an employee without keeping to conditions
-              in the contract.
-            </Typography>
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "1rem" }}>
-              <b>27</b>{" "}
-            </Typography>
-            <Typography sx={{ mb: 1 }}>
-              The reason for an employee’s dismissal is not considered good
-              enough.
-            </Typography>
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "1rem" }}>
-              <b>28</b>{" "}
-            </Typography>
-            <Typography sx={{ mb: 1 }}>
-              The reasons for an employee’s dismissal are acceptable by law and
-              the terms of the employment contract.
-            </Typography>
-          </ListItem>
-        </List>
         <Box
           sx={{
             width: "30%",
@@ -339,36 +341,70 @@ const Section2 = ({ answers, setAnswers }) => {
             ml: 5,
             border: "1px solid #ddd",
             padding: 2,
+            mb: 2,
           }}
         >
-          <Typography>A Fair dismissal</Typography>
-          <Typography>B Summary dismissal</Typography>
-          <Typography>C Unfair dismissal</Typography>
-          <Typography>D Wrongful dismissal</Typography>
-          <Typography>E Constructive dismissal</Typography>
+          <Typography>A) Fair dismissal</Typography>
+          <Typography>B) Summary dismissal</Typography>
+          <Typography>C) Unfair dismissal</Typography>
+          <Typography>D) Wrongful dismissal</Typography>
+          <Typography>E) Constructive dismissal</Typography>
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            pl: "1rem",
+            width: "90%",
+          }}
+        >
           {Array.from({ length: 5 }).map((_, index) => (
-            <FormControl sx={{ mt: 2, margin: "1em" }} key={index}>
-              <InputLabel>{`${24 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "5em" }}
-                value={answers[23 + index] || ""}
-                onChange={(e) => handleInputChange(23 + index, e.target.value)}
-                label={`${24 + index}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <ListItem
+              key={index}
+              ref={(el) => (questionRefs.current[10 + index] = el)}
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <FormControl sx={{ minWidth: "5em", mr: 2 }}>
+                <InputLabel>{`${24 + index}`}</InputLabel>
+                <Select
+                  sx={{ width: "5em" }}
+                  value={answers[23 + index] || ""}
+                  onChange={(e) =>
+                    handleInputChange(23 + index, e.target.value)
+                  }
+                  label={`${24 + index}`}
+                >
+                  {possibleAnswers.map((answer) => (
+                    <MenuItem key={answer} value={answer}>
+                      {answer}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Typography>
+                {index === 0 &&
+                  "An employee is asked to leave work straight away because he has done something really bad."}
+                {index === 1 &&
+                  "An employee is pressured to leave his job unless he accepts conditions that are very different from those agreed to in the beginning."}
+                {index === 2 &&
+                  "An employer gets rid of an employee without keeping to conditions in the contract."}
+                {index === 3 &&
+                  "The reason for an employee's dismissal is not considered good enough."}
+                {index === 4 &&
+                  "The reasons for an employee's dismissal are acceptable by law and the terms of the employment contract."}
+              </Typography>
+            </ListItem>
           ))}
-        </Box>
+        </List>
       </Box>
     </Box>
   );
 };
 
-export default Section2;
+export default Part2;

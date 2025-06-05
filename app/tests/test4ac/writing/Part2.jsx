@@ -1,10 +1,8 @@
 import React from "react";
 import { Box, TextField, Typography } from "@mui/material";
 
-const image1 = "/images/test4/Task1 writing.jpg";
-
-const Task1 = ({ answers, setAnswers }) => {
-  const wordLimit = 150;
+const Part2 = ({ answers, setAnswers }) => {
+  const wordLimit = 250;
 
   const getWordCount = (text) => {
     return text.trim().split(/\s+/).length;
@@ -25,7 +23,7 @@ const Task1 = ({ answers, setAnswers }) => {
     >
       <Box
         sx={{
-          width: "50%",
+          width: "40%",
           overflowY: "auto",
           padding: 2,
           borderRight: "1px solid #ccc",
@@ -35,11 +33,14 @@ const Task1 = ({ answers, setAnswers }) => {
           alignItems: "flex-start",
         }}
       >
-        <Typography variant="h5" sx={{ ml: 4, mb: 2 }}>
-          <b>Writing Task 1</b>
+        <Typography variant="h5" sx={{ ml: 4, mb: 1 }}>
+          <b>Writing Task 2</b>
         </Typography>
-        <Typography sx={{ ml: 4, mb: 1 }}>
-          You should spend about 20 minutes on this task.
+        <Typography sx={{ ml: 4, mb: 2 }}>
+          You should spend about 40 minutes on this task.
+        </Typography>
+        <Typography sx={{ ml: 4, mb: 2 }}>
+          You have been asked to write about the following topic.
         </Typography>
         <Box
           sx={{
@@ -51,7 +52,7 @@ const Task1 = ({ answers, setAnswers }) => {
             borderWidth: 1,
             padding: "0.5em",
             ml: 4,
-            mb: 1,
+            mb: 3,
             pl: 2,
             textAlign: "left",
           }}
@@ -62,28 +63,32 @@ const Task1 = ({ answers, setAnswers }) => {
             }}
           >
             <b>
-              The diagram below shows the stages and equipment used in the
-              process of making matches.
+              Lack of fresh water is becoming a global issue of increasing
+              importance.
             </b>
           </Typography>
           <Typography
             sx={{
               fontSize: "1.1em",
+              mb: 1,
             }}
           >
             <b>
-              Summarise the information by selecting and reporting the main
-              features, and make comparisons where relevant.
+              What problems does this shortage cause? <br />
+              What measures could be taken to overcome these problems?
             </b>
           </Typography>
         </Box>
-        <Typography sx={{ ml: 4, mb: 1 }}>Write at least 150 words.</Typography>
-        <img src={image1} alt="Writing Task 1" style={{ width: "100%" }} />
+        <Typography sx={{ ml: 4, mb: 2, textAlign: "left" }}>
+          Give reasons for your answer and include any relevant examples from
+          your own knowledge or experience.
+        </Typography>
+        <Typography sx={{ ml: 4 }}>Write at least 250 words.</Typography>
       </Box>
 
       <Box
         sx={{
-          width: "50%",
+          width: "55%",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -94,7 +99,7 @@ const Task1 = ({ answers, setAnswers }) => {
         }}
       >
         <Typography variant="body2">
-          Word Count: {getWordCount(answers[0])} / {wordLimit}
+          Word Count: {getWordCount(answers[1])} / {wordLimit}
         </Typography>
         <Box sx={{ mt: 4, width: "100%", height: "100%" }}>
           <TextField
@@ -104,9 +109,9 @@ const Task1 = ({ answers, setAnswers }) => {
             variant="outlined"
             placeholder="Start writing your essay here..."
             autoComplete="off"
-            onChange={(e) => handleInputChange(0, e.target.value)}
+            onChange={(e) => handleInputChange(1, e.target.value)}
             spellCheck={false}
-            value={answers[0]}
+            value={answers[1]}
             sx={{ backgroundColor: "#fff", height: "50vh" }}
           />
         </Box>
@@ -115,4 +120,4 @@ const Task1 = ({ answers, setAnswers }) => {
   );
 };
 
-export default Task1;
+export default Part2;

@@ -23,7 +23,7 @@ const Instructions = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "100vh",
+        minHeight: "70vh",
         bgcolor: "#f5f5f5",
         padding: 4,
       }}
@@ -58,8 +58,8 @@ const Instructions = () => {
         <Typography variant="body1" component="div">
           <ul>
             <li>
-              The test consists of four sections: Listening, Reading, Writing,
-              and Speaking.
+              The test consists of three sections: Listening, Reading and
+              Writing.
             </li>
             <li>You will start with the Listening section.</li>
             <li>
@@ -70,10 +70,15 @@ const Instructions = () => {
               lost.
             </li>
             <li>
-              You can use the navigation buttons to move between questions.
+              You can use the navigation buttons at the bottom of the test page
+              to move between questions.
             </li>
             <li>
               Click the "Submit" button when you have completed each section.
+            </li>
+            <li>
+              If you run out of time, your answers will be submitted
+              automatically.
             </li>
           </ul>
         </Typography>
