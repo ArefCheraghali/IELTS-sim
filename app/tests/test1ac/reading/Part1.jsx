@@ -1,14 +1,15 @@
+"use client";
 import React, { useRef, useEffect } from "react";
 import {
   Box,
+  Typography,
   FormControl,
   InputLabel,
+  Select,
+  MenuItem,
   List,
   ListItem,
-  MenuItem,
-  Select,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useHighlight } from "app/contexts/HighlightContext";
 import ReadingHighlightMenu from "app/components/ReadingHighlightMenu";
@@ -17,48 +18,55 @@ import SeaweedText from "./text/seaweedText";
 const image4 = "/images/test1/readingAc1-passage1-4.jpg";
 
 const Part1 = ({ answers, setAnswers, currentQuestion }) => {
-  const questionRefs = useRef(Array(13).fill(null)); // Renamed refs to questionRefs
+  const questionRefs = useRef(Array(13).fill(null));
+  const prevCurrentQuestionRef = useRef(); // To store the previous currentQuestion
   const { handleContextMenu, textRef } = useHighlight();
 
   useEffect(() => {
-    if (currentQuestion >= 1 && currentQuestion <= 13) {
-      const index = currentQuestion - 1;
-      const element = questionRefs.current[index];
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+    // Only scroll/focus if currentQuestion has actually changed to a new value
+    if (
+      prevCurrentQuestionRef.current !== undefined &&
+      prevCurrentQuestionRef.current !== currentQuestion
+    ) {
+      if (currentQuestion >= 1 && currentQuestion <= 13) {
+        const index = currentQuestion - 1;
+        const element = questionRefs.current[index];
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
 
-        // Delay focus/click slightly after scroll
-        setTimeout(() => {
-          // Questions 1-6 (Select)
-          if (index < 6) {
-            const selectButton = element.querySelector("[role='button']"); // Target the button part of the Select
-            if (selectButton) {
-              selectButton.focus(); // Focus the button
-              // selectButton.click(); // Optionally click to open dropdown
+          // Delay focus/click slightly after scroll
+          setTimeout(() => {
+            // Questions 1-6 (Select)
+            if (index < 6) {
+              const selectButton = element.querySelector("[role='button']");
+              if (selectButton) {
+                selectButton.focus();
+              }
             }
-          }
-          // Questions 7-10 (TextField)
-          else if (index >= 6 && index < 10) {
-            const input = element.querySelector("input");
-            if (input) {
-              input.focus();
-              input.select();
+            // Questions 7-10 (TextField)
+            else if (index >= 6 && index < 10) {
+              const input = element.querySelector("input");
+              if (input) {
+                input.focus();
+                input.select();
+              }
             }
-          }
-          // Questions 11-13 (Select)
-          else if (index >= 10) {
-            const selectButton = element.querySelector("[role='button']"); // Target the button part of the Select
-            if (selectButton) {
-              selectButton.focus(); // Focus the button
-              // selectButton.click(); // Optionally click to open dropdown
+            // Questions 11-13 (Select)
+            else if (index >= 10) {
+              const selectButton = element.querySelector("[role='button']");
+              if (selectButton) {
+                selectButton.focus();
+              }
             }
-          }
-        }, 150); // Slightly increased timeout for stability
+          }, 150);
+        }
       }
     }
+    // Update the ref for the next comparison
+    prevCurrentQuestionRef.current = currentQuestion;
   }, [currentQuestion]);
 
   const possibleAnswers = [
@@ -77,16 +85,10 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "75vh",
-      }}
-    >
+    <Box sx={{ display: "flex", height: "calc(100vh - 120px - 26px )" }}>
       <Box
         ref={textRef}
         onContextMenu={handleContextMenu}
@@ -107,9 +109,6 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
           padding: 2,
         }}
       >
@@ -197,11 +196,11 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
                 <InputLabel>{`${1 + index}`}</InputLabel>
                 <Select
-                  ref={(el) => (questionRefs.current[index] = el)} // Use questionRefs
+                  ref={(el) => (questionRefs.current[index] = el)}
                   sx={{ width: "5em" }}
                   value={answers[index] || ""}
                   onChange={(e) => handleInputChange(index, e.target.value)}
-                  label={`${1 + index}`}
+                  label={`Paragraph ${String.fromCharCode(65 + index)}`}
                 >
                   {possibleAnswers.map((answer) => (
                     <MenuItem key={answer} value={answer}>
@@ -224,11 +223,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
         <Typography sx={{ ml: 2, mb: 1 }}>
           Write your answers in boxes 7-10
         </Typography>
-        <Box
-          sx={{
-            width: "100%",
-          }}
-        >
+        <Box sx={{ width: "100%" }}>
           <img
             src={image4}
             alt="Reading Passage Part 1"
@@ -241,13 +236,11 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             width: "100%",
             display: "flex",
             flexDirection: "row",
-            alignItems: "center",
             justifyContent: "center",
-            justifyItems: "center",
           }}
         >
           <TextField
-            ref={(el) => (questionRefs.current[6] = el)} // Use questionRefs
+            ref={(el) => (questionRefs.current[6] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="7"
             autoComplete="off"
@@ -255,7 +248,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             value={answers[6]}
           />
           <TextField
-            ref={(el) => (questionRefs.current[7] = el)} // Use questionRefs
+            ref={(el) => (questionRefs.current[7] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="8"
             autoComplete="off"
@@ -263,7 +256,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             value={answers[7]}
           />
           <TextField
-            ref={(el) => (questionRefs.current[8] = el)} // Use questionRefs
+            ref={(el) => (questionRefs.current[8] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="9"
             autoComplete="off"
@@ -271,7 +264,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             value={answers[8]}
           />
           <TextField
-            ref={(el) => (questionRefs.current[9] = el)} // Use questionRefs
+            ref={(el) => (questionRefs.current[9] = el)}
             sx={{ mt: -2, ml: 1, mr: 1, width: "10em" }}
             label="10"
             autoComplete="off"
@@ -309,7 +302,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl>
                 <InputLabel>11</InputLabel>
                 <Select
-                  ref={(el) => (questionRefs.current[10] = el)} // Use questionRefs
+                  ref={(el) => (questionRefs.current[10] = el)}
                   sx={{ width: "5em" }}
                   value={answers[10] || ""}
                   label="11"
@@ -329,7 +322,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl>
                 <InputLabel>12</InputLabel>
                 <Select
-                  ref={(el) => (questionRefs.current[11] = el)} // Use questionRefs
+                  ref={(el) => (questionRefs.current[11] = el)}
                   sx={{ width: "5em" }}
                   value={answers[11] || ""}
                   label="12"
@@ -349,7 +342,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <FormControl>
                 <InputLabel>13</InputLabel>
                 <Select
-                  ref={(el) => (questionRefs.current[12] = el)} // Use questionRefs
+                  ref={(el) => (questionRefs.current[12] = el)}
                   sx={{ width: "5em" }}
                   value={answers[12] || ""}
                   label="13"
@@ -367,5 +360,4 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
     </Box>
   );
 };
-
 export default Part1;

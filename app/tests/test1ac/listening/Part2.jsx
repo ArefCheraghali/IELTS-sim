@@ -26,23 +26,40 @@ const answerOptions = [
 ];
 
 export default function Part2({ answers, setAnswers, currentQuestion }) {
-  // Create refs for each text field
   const inputRefs = useRef([]);
   const questionRefs = useRef([]);
+  const prevCurrentQuestionRef = useRef();
 
   useEffect(() => {
-    // Focus on the text field corresponding to the current question
-    if (currentQuestion >= 11 && currentQuestion <= 20) {
-      const index = currentQuestion - 11;
-      if (inputRefs.current[index]) {
-        inputRefs.current[index].focus();
-        questionRefs.current[index]?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+    // Only scroll/focus if currentQuestion has actually changed to a new value
+    if (
+      prevCurrentQuestionRef.current !== undefined &&
+      prevCurrentQuestionRef.current !== currentQuestion
+    ) {
+      if (currentQuestion >= 11 && currentQuestion <= 20) {
+        const index = currentQuestion - 11;
+        const questionElement = questionRefs.current[index];
+        const inputElement = inputRefs.current[index];
+
+        if (questionElement) {
+          questionElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+
+        // A small timeout ensures the scroll has started before focusing
+        if (inputElement) {
+          setTimeout(() => {
+            inputElement.focus();
+          }, 100);
+        }
       }
     }
+    // Update the ref for the next comparison
+    prevCurrentQuestionRef.current = currentQuestion;
   }, [currentQuestion]);
+
   const possibleAnswers = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 
   const handleInputChange = (index, value) => {

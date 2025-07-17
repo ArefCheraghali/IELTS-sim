@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from "react";
+"use client";
+import React, { useRef, useEffect, useState } from "react";
 import {
   Box,
   FormControl,
@@ -14,32 +15,59 @@ import {
   List,
   ListItem,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import JellyfishText from "./text/JellyfishText";
 import DragDrop from "../../../components/DragDrop";
 
+const yesNoQuestionsData = [
+  {
+    number: 27,
+    text: "It is surprising that many people have negative views of jellyfish.",
+  },
+  {
+    number: 28,
+    text: "In the 20th century, scientists should have conducted more studies of jellyfish",
+  },
+  {
+    number: 29,
+    text: "Some jellyfish species that used to live in shallow water may be moving to deep water.",
+  },
+  {
+    number: 30,
+    text: "Dr Karen Hansen’s views about jellyfish need to be confirmed by additional research.",
+  },
+  {
+    number: 31,
+    text: "It is possible to reverse the consequences of climate change.",
+  },
+  {
+    number: 32,
+    text: "The research findings of Paul Dewar have been accepted by other academics.",
+  },
+];
+
 const initialQuestions = [
   {
-    id: "36",
+    id: "37",
     text: "37. Researchers working in Norway and the Arctic have shown that",
     answerId: null,
   },
   {
-    id: "37",
+    id: "38",
     text: "38. The use of DNA sequencing and isotope analysis has proved that",
     answerId: null,
   },
   {
-    id: "38",
+    id: "39",
     text: "39. Research into ‘upside-down jellyfish’ showed that",
     answerId: null,
   },
   {
-    id: "39",
+    id: "40",
     text: "40. Following research in the Mediterranean Sea, it has been claimed that",
     answerId: null,
   },
 ];
-
 const initialAnswers = [
   { id: "A", text: "A) it was wrong to assume that jellyfish do not sleep." },
   {
@@ -66,61 +94,58 @@ const initialAnswers = [
 
 const Part3 = ({ answers, setAnswers, currentQuestion }) => {
   const possibleAnswers = ["YES", "NO", "NOT GIVEN"];
-  const questionRefs = useRef(Array(14).fill(null));
-  const prevQuestionRef = useRef(null); // Add this to track previous question
+  const questionRefs = useRef(
+    Array(14)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const prevQuestionRef = useRef(null);
+  const [expandedAccordion, setExpandedAccordion] = useState(null);
 
   useEffect(() => {
-    // Skip if it's the initial mount (prevQuestion is null)
     if (prevQuestionRef.current === null) {
       prevQuestionRef.current = currentQuestion;
       return;
     }
 
-    // Only scroll if the question actually changed
     if (prevQuestionRef.current !== currentQuestion) {
       if (currentQuestion >= 27 && currentQuestion <= 40) {
         const index = currentQuestion - 27;
-        const element = questionRefs.current[index];
-        if (element) {
-          // For select elements (questions 27-32)
-          if (index < 6) {
-            const selectButton = element.querySelector("[role='button']");
-            if (selectButton) {
-              selectButton.focus();
-            }
-          }
-          // For radio groups (questions 33-36)
-          else if (index >= 6 && index < 10) {
-            const radioInputs = element.querySelectorAll('input[type="radio"]');
-            const selectedRadio = element.querySelector(
-              'input[type="radio"]:checked'
-            );
-            if (selectedRadio) {
-              selectedRadio.focus();
-            } else if (radioInputs.length > 0) {
-              radioInputs[0].focus();
-            }
-          }
-          // For drag-drop (questions 37-40)
-          // DragDrop component handles its own focus
-
-          // Scroll the question into view
+        const targetRef = questionRefs.current[index];
+        if (targetRef && targetRef.current) {
+          const element = targetRef.current;
           element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          setTimeout(() => {
+            if (index < 6) {
+              const selectButton = element.querySelector("[role='button']");
+              if (selectButton) selectButton.focus();
+            } else if (index >= 6 && index < 10) {
+              setExpandedAccordion(`panel${currentQuestion}`);
+              const radioInputs = element.querySelectorAll(
+                'input[type="radio"]'
+              );
+              if (radioInputs.length > 0) radioInputs[0].focus();
+            }
+          }, 150);
         }
       }
       prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
 
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpandedAccordion(isExpanded ? panel : false);
+  };
+
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
-    <Box sx={{ display: "flex", height: "75vh" }}>
+    <Box sx={{ display: "flex", height: "calc(100vh - 120px - 26px )" }}>
       <Box
         sx={{
           width: "50%",
@@ -135,340 +160,262 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
         sx={{
           width: "50%",
           overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
           padding: 2,
         }}
       >
-        <Typography sx={{ ml: 3, fontSize: "1.1em", mb: 1 }}>
-          <b>READING PASSAGE 3</b>
+        <Typography sx={{ fontSize: "1.1em", mb: 1, fontWeight: "bold" }}>
+          READING PASSAGE 3
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           You should spend about 20 minutes on <b>Questions 27-40</b>, which are
           based on Reading Passage 3.
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Questions 27 - 32</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{ fontSize: "1rem", fontWeight: "bold", mt: 2, mb: 1 }}
+        >
+          Questions 27 - 32
+        </Typography>
+        <Typography sx={{ mb: 1 }}>
           Do the following statements agree with the claims of the writer in the
           passage 3?
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>In boxes 27-32, pick</Typography>
+        <Typography sx={{ mb: 1 }}>In boxes 27-32, pick</Typography>
         <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            pl: "3rem",
-            width: "90%",
-          }}
+          dense
+          sx={{ pl: 2, mb: 2, listStyleType: "none", paddingLeft: 0 }}
         >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "4.8em" }}>YES</b> if the statement agrees
-            with the claims of the writer
+          <ListItem sx={{ py: 0.2 }}>
+            <Typography
+              component="span"
+              sx={{ fontWeight: "bold", minWidth: "90px" }}
+            >
+              YES
+            </Typography>
+            <Typography component="span" sx={{ fontSize: "0.9rem", ml: 2 }}>
+              if the statement agrees with the claims of the writer
+            </Typography>
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "4.5em" }}>NO</b> if the statement
-            contradicts the claims of the writer
+          <ListItem sx={{ py: 0.2 }}>
+            <Typography
+              component="span"
+              sx={{ fontWeight: "bold", minWidth: "90px" }}
+            >
+              NO
+            </Typography>
+            <Typography component="span" sx={{ fontSize: "0.9rem", ml: 2 }}>
+              if the statement contradicts the claims of the writer
+            </Typography>
           </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <b style={{ marginRight: "2em" }}>NOT GIVEN</b> If it is impossible
-            to say what the writer thinks about this
+          <ListItem sx={{ py: 0.2 }}>
+            <Typography
+              component="span"
+              sx={{ fontWeight: "bold", minWidth: "90px" }}
+            >
+              NOT GIVEN
+            </Typography>
+            <Typography component="span" sx={{ fontSize: "0.9rem", ml: 2 }}>
+              If it is impossible to say what the writer thinks about this
+            </Typography>
           </ListItem>
         </List>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 0,
-            pl: "3rem",
-            width: "90%",
-          }}
-        >
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>27 </Typography>
-            It is surprising that many people have negative views of jellyfish.
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>28 </Typography>
-            In the 20<sup>th</sup> century, scientists should have conducted
-            more studies of jellyfish
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>29 </Typography>
-            Some jellyfish species that used to live in shallow water may be
-            moving to deep water.
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>30 </Typography>
-            Dr Karen Hansen’s views about jellyfish need to be confirmed by
-            additional research.
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>31 </Typography>
-            It is possible to reverse the consequences of climate change.
-          </ListItem>
-          <ListItem sx={{ display: "flex", flexDirection: "row" }}>
-            <Typography sx={{ marginRight: "3rem", ml: -5 }}>32 </Typography>
-            The research findings of Paul Dewar have been accepted by other
-            academics.
-          </ListItem>
-        </List>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-          }}
-        >
-          {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl
-              sx={{ ml: 5, margin: "1em" }}
-              key={index}
-              ref={(el) => (questionRefs.current[index] = el)}
-            >
-              <InputLabel>{`${27 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "10em" }}
-                value={answers[26 + index] || ""}
-                onChange={(e) => handleInputChange(26 + index, e.target.value)}
-                label={`${27 + index}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ))}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-          }}
-        >
-          {Array.from({ length: 3 }).map((_, index) => (
-            <FormControl
-              sx={{ margin: "1em" }}
-              key={index}
-              ref={(el) => (questionRefs.current[index + 3] = el)}
-            >
-              <InputLabel>{`${30 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "10em" }}
-                value={answers[29 + index] || ""}
-                onChange={(e) => handleInputChange(29 + index, e.target.value)}
-                label={`${30 + index}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ))}
-        </Box>
 
-        <Typography sx={{ ml: 1, mb: 1, mt: 2 }}>Questions 33 - 36</Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>
+        {yesNoQuestionsData.map((q) => (
+          <Box
+            key={q.number}
+            ref={questionRefs.current[q.number - 27]} // Q27 is index 0
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 1.5,
+              width: "100%",
+            }}
+          >
+            <FormControl
+              sx={{ mr: 2, minWidth: { xs: "100px", sm: "160px" } }}
+              size="small"
+            >
+              <InputLabel id={`q${q.number}-label`}>{q.number}</InputLabel>
+              <Select
+                labelId={`q${q.number}-label`}
+                label={`${q.number}`}
+                value={answers[q.number - 1] || ""}
+                onChange={(e) =>
+                  handleInputChange(q.number - 1, e.target.value)
+                }
+              >
+                {possibleAnswers.map((answerOption) => (
+                  <MenuItem key={answerOption} value={answerOption}>
+                    {answerOption}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Typography variant="body2" sx={{ flexGrow: 1, textAlign: "left" }}>
+              {q.text}
+            </Typography>
+          </Box>
+        ))}
+
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{ fontSize: "1rem", fontWeight: "bold", mt: 3, mb: 1 }}
+        >
+          Questions 33 - 36
+        </Typography>
+        <Typography sx={{ mb: 2 }}>
           Choose the correct letter, <b>A, B, C</b> or <b>D</b>.
         </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-            maxWidth: "60rem",
-            alignItems: "flex-start",
-            alignContent: "flex-start",
-          }}
+        {[
+          {
+            qNum: 33,
+            questionText: "What is the writer doing in the fourth paragraph?",
+            options: [
+              {
+                value: "A",
+                label: "comparing several different types of jellyfish",
+              },
+              {
+                value: "B",
+                label: "dismissing some common ideas about jellyfish",
+              },
+              {
+                value: "C",
+                label: "contrasting various early theories about jellyfish",
+              },
+              {
+                value: "D",
+                label: "rejecting some scientific findings regarding jellyfish",
+              },
+            ],
+          },
+          {
+            qNum: 34,
+            questionText:
+              "What does the writer conclude in the fifth paragraph?",
+            options: [
+              {
+                value: "A",
+                label:
+                  "Jellyfish have advantages and disadvantages for humans.",
+              },
+              {
+                value: "B",
+                label:
+                  "Humans have had a serious negative impact on jellyfish.",
+              },
+              {
+                value: "C",
+                label:
+                  "Jellyfish will cause problems for humans in the future.",
+              },
+              {
+                value: "D",
+                label: "Humans and jellyfish are fundamentally similar.",
+              },
+            ],
+          },
+          {
+            qNum: 35,
+            questionText:
+              "What is the writer’s main point in the sixth paragraph?",
+            options: [
+              {
+                value: "A",
+                label: "Jellyfish may once have inhabited dry land.",
+              },
+              {
+                value: "B",
+                label: "Jellyfish improve the environment they live in.",
+              },
+              {
+                value: "C",
+                label: "Jellyfish have proved able to survive over time.",
+              },
+              {
+                value: "D",
+                label:
+                  "Jellyfish have caused other species to become endangered.",
+              },
+            ],
+          },
+          {
+            qNum: 36,
+            questionText: "The writer refers to the ‘scyphozoa’ in order to",
+            options: [
+              {
+                value: "A",
+                label: "exemplify the great size of some jellyfish.",
+              },
+              {
+                value: "B",
+                label: "illustrate that jellyfish are biologically complex.",
+              },
+              {
+                value: "C",
+                label: "explain why certain jellyfish may become extinct.",
+              },
+              {
+                value: "D",
+                label: "suggest that scientists still misunderstand jellyfish.",
+              },
+            ],
+          },
+        ].map((item) => (
+          <Accordion
+            key={item.qNum}
+            ref={questionRefs.current[item.qNum - 27]}
+            sx={{
+              width: "100%",
+              maxWidth: "calc(100% - 16px)",
+              bgcolor: "grey.100",
+              mb: 1,
+            }}
+            expanded={expandedAccordion === `panel${item.qNum}`}
+            onChange={handleAccordionChange(`panel${item.qNum}`)}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel${item.qNum}-content`}
+              id={`panel${item.qNum}-header`}
+            >
+              <Typography>
+                <b style={{ marginRight: "1em" }}>{item.qNum}</b>{" "}
+                {item.questionText}
+              </Typography>
+            </AccordionSummary>
+            <RadioGroup
+              sx={{ pl: "2em", py: 1 }}
+              value={answers[item.qNum - 1] || ""}
+              onChange={(e) => handleInputChange(item.qNum - 1, e.target.value)}
+            >
+              {item.options.map((opt) => (
+                <FormControlLabel
+                  key={opt.value}
+                  value={opt.value}
+                  control={<Radio size="small" />}
+                  label={`${opt.value}) ${opt.label}`}
+                  sx={{ mb: 0.5 }}
+                />
+              ))}
+            </RadioGroup>
+          </Accordion>
+        ))}
+
+        <Typography
+          variant="h6"
+          component="h3"
+          sx={{ fontSize: "1rem", fontWeight: "bold", mt: 3, mb: 1 }}
         >
-          <FormControl>
-            <Accordion
-              sx={{ bgcolor: "#ebebeb" }}
-              ref={(el) => (questionRefs.current[6] = el)}
-            >
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>33</b> What is the writer
-                  doing in the fourth paragraph?
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "5em" }}
-                value={answers[32] || ""}
-                onChange={(e) => handleInputChange(32, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) comparing several different types of jellyfish"
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B) dismissing some common ideas about jellyfish"
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C) contrasting various early theories about jellyfish"
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D) rejecting some scientific findings regarding jellyfish"
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-          <br />
-          <FormControl>
-            <Accordion
-              sx={{ bgcolor: "#ebebeb" }}
-              ref={(el) => (questionRefs.current[7] = el)}
-            >
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>34</b> What does the writer
-                  conclude in the fifth paragraph?
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "5em" }}
-                value={answers[33] || ""}
-                onChange={(e) => handleInputChange(33, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) Jellyfish have advantages and disadvantages for humans."
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B) Humans have had a serious negative impact on jellyfish."
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C) Jellyfish will cause problems for humans in the future."
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D) Humans and jellyfish are fundamentally similar."
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-          <br />
-          <FormControl>
-            <Accordion
-              sx={{ bgcolor: "#ebebeb" }}
-              ref={(el) => (questionRefs.current[8] = el)}
-            >
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>35</b> What is the writer’s
-                  main point in the sixth paragraph?
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "5em" }}
-                value={answers[34] || ""}
-                onChange={(e) => handleInputChange(34, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) Jellyfish may once have inhabited dry land."
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B) Jellyfish improve the environment they live in."
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C) Jellyfish have proved able to survive over time."
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D) Jellyfish have caused other species to become endangered."
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-          <br />
-          <FormControl>
-            <Accordion
-              sx={{ bgcolor: "#ebebeb" }}
-              ref={(el) => (questionRefs.current[9] = el)}
-            >
-              <AccordionSummary
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography>
-                  <b style={{ marginRight: "2em" }}>36</b> The writer refers to
-                  the ‘scyphozoa’ in order to
-                </Typography>
-              </AccordionSummary>
-              <RadioGroup
-                sx={{ ml: "5em" }}
-                value={answers[35] || ""}
-                onChange={(e) => handleInputChange(35, e.target.value)}
-              >
-                <FormControlLabel
-                  value={"A"}
-                  control={<Radio />}
-                  label="A) exemplify the great size of some jellyfish."
-                ></FormControlLabel>
-                <FormControlLabel
-                  value={"B"}
-                  control={<Radio />}
-                  label="B) illustrate that jellyfish are biologically complex."
-                />
-                <FormControlLabel
-                  value={"C"}
-                  control={<Radio />}
-                  label="C) explain why certain jellyfish may become extinct."
-                />
-                <FormControlLabel
-                  value={"D"}
-                  control={<Radio />}
-                  label="D) suggest that scientists still misunderstand jellyfish."
-                />
-              </RadioGroup>
-            </Accordion>
-          </FormControl>
-        </Box>
-        <br />
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 37 - 40</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
+          Questions 37 - 40
+        </Typography>
+        <Typography sx={{ mb: 1 }}>
           Complete each sentence with the correct ending, <b>A-F</b>, below.
         </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Drag the correct letter <b>A-F</b> in boxes 37-40.
+        <Typography sx={{ mb: 2 }}>
+          Write the correct letter <b>A-F</b> in boxes 37-40.
         </Typography>
         <DragDrop
           initialQuestions={initialQuestions}
@@ -479,7 +426,8 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
           infoTitle=""
           currentQuestion={currentQuestion}
           questionRefs={questionRefs}
-          startIndex={10} // Start index for DragDrop questions
+          startIndex={10}
+          startQuestionNumber={37}
         />
       </Box>
     </Box>

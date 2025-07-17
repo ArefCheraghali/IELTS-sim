@@ -1,7 +1,9 @@
+"use client";
 import { Box, Typography } from "@mui/material";
 import DragDrop from "../../../components/DragDrop";
 import MultipleChoiceQuestion from "../../../components/MultipleChoiceQuestion";
 import { useRef, useEffect } from "react";
+
 const initialQuestions = [
   { id: "10", text: "11 Superheroes", answerId: null },
   { id: "11", text: "12 Just do it", answerId: null },
@@ -20,22 +22,41 @@ const initialAnswers = [
   { id: "G", text: "G) explores an unhappy feeling" },
   { id: "H", text: "H) raises awareness of a particular culture" },
 ];
+
 const Part2 = ({ answers, setAnswers, currentQuestion }) => {
   const questionRefs = useRef(Array(10).fill(null));
+  const topOfPartRef = useRef(null); // Ref for the main container of this part
 
+  // This new useEffect runs only once when the component mounts
   useEffect(() => {
-    // Focus and scroll to first question on mount
+    // Scroll to the top of the component's container
+    if (topOfPartRef.current) {
+      // This targets the top of this specific component
+      topOfPartRef.current.scrollIntoView({ behavior: "auto" });
+    }
+  }, []); // The empty dependency array [] ensures this runs only on mount
+
+  // This useEffect handles scrolling to a specific question when currentQuestion changes
+  useEffect(() => {
+    // NOTE: We should prevent this from running on initial mount as well,
+    // to avoid a conflict with the scroll-to-top effect.
+    // However, since the parent effect scrolls to top instantly ('auto'),
+    // this one will trigger on the first meaningful question change.
     if (currentQuestion >= 11 && currentQuestion <= 20) {
       const index = currentQuestion - 11;
-      questionRefs.current[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      // Add a small delay to ensure the top-scroll has finished.
+      setTimeout(() => {
+        questionRefs.current[index]?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 50); // Small delay
     }
   }, [currentQuestion]);
 
   return (
     <Box
+      ref={topOfPartRef} // Attach the ref to the main container
       sx={{
         display: "flex",
         flexDirection: "column",

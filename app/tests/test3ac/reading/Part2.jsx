@@ -52,7 +52,10 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
   React.useEffect(() => {
     if (currentQuestion >= 14 && currentQuestion <= 26) {
       const index = currentQuestion - 14;
-      questionRefs.current[index]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      questionRefs.current[index]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [currentQuestion]);
 
@@ -67,7 +70,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
     <Box
       sx={{
         display: "flex",
-        height: "75vh",
+        height: "calc(100vh - 120px - 26px )",
       }}
     >
       <Box
@@ -122,7 +125,10 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
             width: "90%",
           }}
         >
-          <ListItem ref={(el) => (questionRefs.current[0] = el)} sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[0] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem" }}>
               <b>14</b>
             </Typography>
@@ -130,7 +136,10 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
               the claim that it is very hard for people to pretend to laugh
             </Typography>
           </ListItem>
-          <ListItem ref={(el) => (questionRefs.current[1] = el)} sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[1] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem" }}>
               <b>15</b>
             </Typography>
@@ -139,7 +148,10 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
               they laugh
             </Typography>
           </ListItem>
-          <ListItem ref={(el) => (questionRefs.current[2] = el)} sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[2] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem" }}>
               <b>16</b>
             </Typography>
@@ -147,7 +159,10 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
               the reason why people can sometimes stop themselves laughing
             </Typography>
           </ListItem>
-          <ListItem ref={(el) => (questionRefs.current[3] = el)} sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[3] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem" }}>
               <b>17</b>
             </Typography>
@@ -156,7 +171,10 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
               laughing
             </Typography>
           </ListItem>
-          <ListItem ref={(el) => (questionRefs.current[4] = el)} sx={{ display: "flex", flexDirection: "row" }}>
+          <ListItem
+            ref={(el) => (questionRefs.current[4] = el)}
+            sx={{ display: "flex", flexDirection: "row" }}
+          >
             <Typography sx={{ marginRight: "3rem" }}>
               <b>18</b>
             </Typography>

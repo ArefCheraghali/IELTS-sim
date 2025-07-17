@@ -20,7 +20,7 @@ const Part1 = ({ answers, setAnswers }) => {
     <Box
       sx={{
         display: "flex",
-        height: "75vh",
+        height: "calc(100vh - 120px - 26px )",
       }}
     >
       <Box

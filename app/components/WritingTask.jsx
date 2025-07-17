@@ -33,7 +33,7 @@ const WritingTask = ({
     <Box
       sx={{
         display: "flex",
-        height: "75vh",
+        height: "80vh",
       }}
     >
       <Box

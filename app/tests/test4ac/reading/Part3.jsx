@@ -76,7 +76,7 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
     <Box
       sx={{
         display: "flex",
-        height: "75vh",
+        height: "calc(100vh - 120px - 26px )",
       }}
     >
       <Box

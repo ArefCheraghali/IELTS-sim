@@ -1,3 +1,4 @@
+"use client";
 import React, {
   createContext,
   useContext,
@@ -18,17 +19,15 @@ export function HighlightProvider({ children }) {
   const textRef = useRef(null);
 
   const handleTextSelection = (event) => {
+    // This function remains the same
     const selection = window.getSelection();
     if (selection.rangeCount > 0 && !selection.isCollapsed) {
       const range = selection.getRangeAt(0);
       const selectedText = range.toString().trim();
 
-      // Only show menu if selected text is longer than 1 character
       if (selectedText.length <= 1) {
         return;
       }
-
-      const rect = range.getBoundingClientRect();
 
       if (!isRangeValid(range)) {
         alert("Please select text only.");
@@ -38,17 +37,10 @@ export function HighlightProvider({ children }) {
       setSelectedRange(range);
       setAnchorEl(textRef.current);
 
-      // Position menu at mouse position for right-click, otherwise at the bottom of selection
-      const menuX =
-        event?.type === "contextmenu"
-          ? event.clientX
-          : rect.left + rect.width / 2;
-      const menuY =
-        event?.type === "contextmenu" ? event.clientY : rect.bottom + 10;
-
+      // This logic now only applies to the contextmenu event
       setMenuPosition({
-        mouseX: menuX,
-        mouseY: menuY,
+        mouseX: event.clientX,
+        mouseY: event.clientY,
       });
     } else {
       setAnchorEl(null);
@@ -56,26 +48,25 @@ export function HighlightProvider({ children }) {
   };
 
   useEffect(() => {
-    const handleMouseUp = (event) => {
-      if (event.button === 0) {
-        // Left mouse button
-        handleTextSelection();
-      }
-    };
-
+    // This useEffect is now simplified
     const handleContextMenu = (event) => {
       event.preventDefault();
       handleTextSelection(event);
     };
 
-    document.addEventListener("mouseup", handleMouseUp);
-    textRef.current?.addEventListener("contextmenu", handleContextMenu);
+    // The 'mouseup' event listener has been REMOVED.
+    // We only attach the right-click context menu listener.
+    const textRefElement = textRef.current;
+    if (textRefElement) {
+      textRefElement.addEventListener("contextmenu", handleContextMenu);
+    }
 
     return () => {
-      document.removeEventListener("mouseup", handleMouseUp);
-      textRef.current?.removeEventListener("contextmenu", handleContextMenu);
+      if (textRefElement) {
+        textRefElement.removeEventListener("contextmenu", handleContextMenu);
+      }
     };
-  }, []);
+  }, []); // The dependency array is empty as it only runs on mount/unmount
 
   const isRangeValid = (range) => {
     const commonAncestor = range.commonAncestorContainer;
@@ -111,7 +102,7 @@ export function HighlightProvider({ children }) {
       highlightedSpans.forEach((span) => {
         const parent = span.parentNode;
         parent.replaceChild(document.createTextNode(span.textContent), span);
-        parent.normalize(); // Merge adjacent text nodes
+        parent.normalize();
       });
     }
     setAnchorEl(null);
@@ -125,7 +116,7 @@ export function HighlightProvider({ children }) {
     anchorEl,
     menuPosition,
     textRef,
-    handleContextMenu: (e) => handleTextSelection(e),
+    handleContextMenu: (e) => handleTextSelection(e), // Keep this for direct use if needed
     handleHighlight,
     handleClearHighlights,
     handleClose,

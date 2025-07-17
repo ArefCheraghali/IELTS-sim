@@ -102,7 +102,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
     <Box
       sx={{
         display: "flex",
-        height: "75vh",
+        height: "calc(100vh - 120px - 26px )",
       }}
     >
       <Box
@@ -204,7 +204,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
                 gridTemplateColumns: "repeat(2, 1fr)",
                 gap: 2,
                 width: "100%",
-                padding: "1rem",
+                padding: "0.5rem",
               }}
             >
               {Array.from({ length: 6 }).map((_, index) => (

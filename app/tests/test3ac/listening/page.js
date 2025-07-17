@@ -242,6 +242,13 @@ export default function Test() {
           currentQuestion={currentQuestion}
           setCurrentQuestion={setCurrentQuestion}
           answers={answers}
+          totalSections={4}
+          partQuestions={{
+            0: { start: 1, end: 10 },
+            1: { start: 11, end: 20 },
+            2: { start: 21, end: 30 },
+            3: { start: 32, end: 40 },
+          }}
         />
       )}
     </ExamLayout>

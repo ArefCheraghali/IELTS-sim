@@ -74,6 +74,15 @@ const Instructions = () => {
               to move between questions.
             </li>
             <li>
+              You can use the Highlighting funtion by selecting a part of the
+              text and then right-clicking on the selected text.
+            </li>
+            <li>
+              Please be carefull when draging and droping text in reading tests.
+              Check to see if there is a space character included. If there is,
+              remove it. it may result in incorrect answer.
+            </li>
+            <li>
               Click the "Submit" button when you have completed each section.
             </li>
             <li>
