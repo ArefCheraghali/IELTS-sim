@@ -281,9 +281,20 @@ export default function Tests() {
             >
               Test 2 General
             </Button>
-            {/* Add more General Training tests here if any */}
           </Box>
         </Box>
+        <Button
+          variant="outlined"
+          onClick={() => router.back()}
+          sx={{
+            mb: 3,
+            borderColor: "#31393C",
+            color: "#31393C",
+            "&:hover": { backgroundColor: "#f0f0f0", borderColor: "#1e2325" },
+          }}
+        >
+          ← Go Back
+        </Button>
       </Box>
     </Container>
   );

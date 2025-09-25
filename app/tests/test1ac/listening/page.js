@@ -18,8 +18,7 @@ import {
 import useTextHighlight from "app/hooks/useTextHighlight";
 import HighlightContextMenu from "app/components/HighlightContextMenu";
 import ExamLayout from "../../../components/ExamLayout";
-import { useVolume } from "../../../contexts/VolumeContext";
-import { useTimer } from "../../../contexts/TimerContext";
+import { useExam } from "../../../contexts/ExamContext";
 import TestBottomNavigation from "../../../components/TestBottomNavigation";
 import { TEST_DURATIONS } from "../../../config/testDurations";
 
@@ -38,8 +37,7 @@ export default function Test() {
   const router = useRouter();
   const audioRef = useRef(null);
   const answersRef = useRef(answers);
-  const { volume } = useVolume();
-  const { timeLeft, startTimer, resetTimer } = useTimer();
+  const { volume, timeLeft, startTimer, resetTimer } = useExam();
 
   const {
     anchorEl,
@@ -134,10 +132,12 @@ export default function Test() {
     }
 
     console.log("User Answers:", answersRef.current);
-    localStorage.setItem(
-      "listeningAnswers",
-      JSON.stringify(answersRef.current)
-    );
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "listeningAnswers",
+        JSON.stringify(answersRef.current)
+      );
+    }
     handleCloseDialog();
     resetTimer();
     router.push("/tests/reading-intro");
