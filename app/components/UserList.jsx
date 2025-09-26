@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -15,7 +15,16 @@ import {
   Container,
   CircularProgress,
   Alert,
-  Tooltip, // Added for tooltips
+  Tooltip,
+  Chip,
+  TextField,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  TableSortLabel,
+  TablePagination,
+  Grid,
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -28,256 +37,301 @@ const UserList = () => {
   const [error, setError] = useState(null);
   const router = useRouter();
 
+  // State for features
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sort, setSort] = useState("created_at");
+  const [order, setOrder] = useState("desc");
+
+  // State for filter inputs
+  const [filters, setFilters] = useState({
+    name: "",
+    phone_number: "",
+    role: "",
+  });
+  const [searchTerms, setSearchTerms] = useState(filters);
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const token = localStorage.getItem("access_token");
-        const role = localStorage.getItem("role");
+    const timerId = setTimeout(() => {
+      setPage(0); // Reset to page 1 when filters change
+      setSearchTerms(filters);
+    }, 500);
 
-        if (role !== "admin") {
-          setError("You do not have permission to view this page.");
-          setLoading(false);
-          return;
-        }
-        if (!token) {
-          setError("Authentication token not found. Please log in.");
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/users`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          setUsers(response.data);
-        } else {
-          setError(`Failed to fetch users. Status: ${response.status}`);
-        }
-      } catch (error) {
-        if (error.response) {
-          setError(
-            `Error fetching users: ${
-              error.response.data.detail || error.response.statusText
-            }`
-          );
-        } else if (error.request) {
-          setError("Error fetching users: No response from server.");
-        } else {
-          setError(`Error fetching users: ${error.message}`);
-        }
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false);
-      }
+    // Clean up the timer if filters change again before it fires
+    return () => {
+      clearTimeout(timerId);
     };
+  }, [filters]);
 
-    fetchUsers();
-  }, []);
-
-  const handleDelete = async (phoneNumber, userName) => {
-    if (
-      !window.confirm(
-        `Are you sure you want to delete user "${userName}" (Phone: ${phoneNumber})? This action cannot be undone.`
-      )
-    ) {
-      return;
-    }
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
       const token = localStorage.getItem("access_token");
-      const response = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${phoneNumber}`,
+      if (localStorage.getItem("role") !== "admin") {
+        throw new Error("You do not have permission to view this page.");
+      }
+      if (!token) {
+        throw new Error("Authentication token not found. Please log in.");
+      }
+
+      const params = new URLSearchParams({
+        page: page + 1,
+        page_size: rowsPerPage,
+        sort,
+        order,
+      });
+
+      if (searchTerms.name) params.append("name", searchTerms.name);
+      if (searchTerms.phone_number)
+        params.append("phone_number", searchTerms.phone_number);
+      if (searchTerms.role) params.append("role", searchTerms.role);
+
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users?${params.toString()}`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      if (response.status === 200) {
-        setUsers(users.filter((user) => user.phone_number !== phoneNumber));
-        // Optionally, show a success notification (e.g., with a Snackbar)
-        // alert(`User ${userName} deleted successfully.`);
+      if (response.data && Array.isArray(response.data.items)) {
+        setUsers(response.data.items);
+        setTotalUsers(response.data.total || 0);
       } else {
-        console.error("Failed to delete user:", response.data);
-        alert(
-          `Failed to delete user: ${response.data.detail || "Unknown error"}`
-        );
+        throw new Error("Received an unexpected data format from the server.");
       }
-    } catch (error) {
-      console.error("There was an error deleting the user:", error);
-      alert(
-        `Error deleting user: ${
-          error.response?.data?.detail || error.message || "Please try again."
-        }`
+    } catch (err) {
+      console.error("Failed to fetch users:", err);
+      setError(
+        err.message ||
+          err.response?.data?.message ||
+          "An unexpected error occurred."
       );
+    } finally {
+      setLoading(false);
     }
+  }, [page, rowsPerPage, sort, order, searchTerms]); // Depends on searchTerms now
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const handleFilterChange = (event) => {
+    // Update the filter state immediately on every keystroke
+    const { name, value } = event.target;
+    setFilters((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdate = (phoneNumber) => {
+  const handleSort = (property) => {
+    const isAsc = sort === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setSort(property);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleEdit = (phoneNumber) => {
     router.push(`/admin/update-user/${phoneNumber}`);
   };
 
-  if (loading) {
-    return (
-      <Container maxWidth="lg" sx={{ mt: 4, textAlign: "center" }}>
-        <CircularProgress />
-        <Typography sx={{ mt: 1 }}>Loading users...</Typography>
-      </Container>
-    );
-  }
+  const handleDelete = async (phoneNumber, name) => {
+    if (window.confirm(`Are you sure you want to delete user: ${name}?`)) {
+      try {
+        const token = localStorage.getItem("access_token");
+        await axios.delete(
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/${phoneNumber}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        fetchUsers(); // Re-fetch data to reflect the deletion
+      } catch (err) {
+        console.error("Failed to delete user:", err);
+        setError(err.response?.data?.message || "Failed to delete user.");
+      }
+    }
+  };
 
-  if (error) {
-    return (
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Alert severity="error">{error}</Alert>
-      </Container>
-    );
-  }
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const headCells = [
+    { id: "name", label: "Name" },
+    { id: "phone_number", label: "Phone Number" },
+    { id: "role", label: "Role" },
+    { id: "allowed_exam", label: "Exam Allowed", sortable: false },
+    { id: "updated_at", label: "Last Updated" },
+    { id: "actions", label: "Actions", sortable: false, align: "right" },
+  ];
 
   return (
-    <Container maxWidth="lg" sx={{ mb: 4 }}>
-      <Typography variant="h4" component="h1" sx={{ mb: 2, mt: -4 }}>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom>
         User Management
       </Typography>
-      {users.length === 0 && !loading && (
-        <Typography variant="subtitle1" sx={{ textAlign: "center", my: 5 }}>
-          No users found.
-        </Typography>
+
+      <Paper sx={{ p: 2, mb: 3, display: "flex" }}>
+        <TextField
+          fullWidth
+          label="Search by Name"
+          name="name"
+          variant="outlined"
+          size="small"
+          defaultValue={filters.name}
+          onChange={handleFilterChange}
+        />
+        <TextField
+          fullWidth
+          label="Search by Phone"
+          name="phone_number"
+          variant="outlined"
+          size="small"
+          defaultValue={filters.phone_number}
+          onChange={handleFilterChange}
+        />
+        <FormControl fullWidth size="small">
+          <InputLabel>Role</InputLabel>
+          <Select
+            name="role"
+            value={filters.role}
+            label="Role"
+            onChange={handleFilterChange}
+          >
+            <MenuItem value="">
+              <em>All Roles</em>
+            </MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
+            <MenuItem value="user">User</MenuItem>
+          </Select>
+        </FormControl>
+      </Paper>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
       )}
-      {users.length > 0 && (
-        <Paper elevation={3} sx={{ overflow: "hidden" }}>
-          <TableContainer>
-            <Table sx={{ minWidth: 750 }} aria-label="user list table">
-              <TableHead
-                sx={{ backgroundColor: (theme) => theme.palette.grey[100] }}
-              >
+
+      <Paper sx={{ overflow: "hidden" }}>
+        <TableContainer>
+          <Table stickyHeader aria-label="user list table">
+            <TableHead>
+              <TableRow>
+                {headCells.map((headCell) => (
+                  <TableCell
+                    key={headCell.id}
+                    align={headCell.align || "left"}
+                    sortDirection={sort === headCell.id ? order : false}
+                  >
+                    {headCell.sortable !== false ? (
+                      <TableSortLabel
+                        active={sort === headCell.id}
+                        direction={sort === headCell.id ? order : "asc"}
+                        onClick={() => handleSort(headCell.id)}
+                      >
+                        {headCell.label}
+                      </TableSortLabel>
+                    ) : (
+                      headCell.label
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {loading ? (
                 <TableRow>
-                  <TableCell sx={{ fontWeight: "bold", py: 1.5 }}>
-                    Name
-                  </TableCell>{" "}
-                  {/* Adjusted padding */}
-                  <TableCell sx={{ fontWeight: "bold", py: 1.5 }}>
-                    Family Name
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", py: 1.5 }}>
-                    Phone Number
-                  </TableCell>
                   <TableCell
-                    sx={{ fontWeight: "bold", py: 1.5 }}
+                    colSpan={headCells.length}
                     align="center"
+                    sx={{ py: 4 }}
                   >
-                    Allowed Exam
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", py: 1.5 }}>
-                    Role
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", py: 1.5 }}>
-                    Created At
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold", py: 1.5 }}>
-                    Updated At
-                  </TableCell>
-                  <TableCell
-                    sx={{ fontWeight: "bold", py: 1.5 }}
-                    align="center"
-                  >
-                    Actions
+                    <CircularProgress />
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {users.map((user) => (
-                  <TableRow
-                    key={user.phone_number || user.id}
-                    hover
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
+              ) : users.length > 0 ? (
+                users.map((user) => (
+                  <TableRow key={user.phone_number} hover>
                     <TableCell component="th" scope="row">
-                      {user.name || "-"}
+                      {`${user.name || ""} ${user.family_name || ""}`.trim()}
                     </TableCell>
-                    <TableCell>{user.family_name || "-"}</TableCell>
                     <TableCell>{user.phone_number}</TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: user.allowed_exam
-                            ? "success.main"
-                            : "error.main",
-                          fontWeight: "medium",
-                        }}
-                      >
-                        {user.allowed_exam ? "Yes" : "No"}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>{user.role}</TableCell>
                     <TableCell>
-                      {user.created_at
-                        ? new Date(user.created_at).toLocaleString()
-                        : "-"}
+                      <Chip
+                        label={user.role}
+                        color={user.role === "admin" ? "secondary" : "primary"}
+                        size="small"
+                      />
                     </TableCell>
-                    <TableCell>
-                      {user.updated_at
-                        ? new Date(user.updated_at).toLocaleString()
-                        : "-"}
-                    </TableCell>
-                    <TableCell align="center">
-                      <Tooltip
-                        title={`Edit user ${user.name || user.phone_number}`}
-                      >
+                    <TableCell>{user.allowed_exam ? "Yes" : "No"}</TableCell>
+                    <TableCell>{formatDate(user.updated_at)}</TableCell>
+                    <TableCell align="right">
+                      <Tooltip title="Edit">
                         <IconButton
-                          onClick={() => handleUpdate(user.phone_number)}
+                          onClick={() => handleEdit(user.phone_number)}
                           color="primary"
-                          aria-label={`edit user ${
-                            user.name || user.phone_number
-                          }`}
                           size="small"
-                          sx={{
-                            "&:hover": { backgroundColor: "primary.lighter" },
-                          }} // Subtle hover effect
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip
-                        title={`Delete user ${user.name || user.phone_number}`}
-                      >
+                      <Tooltip title="Delete">
                         <IconButton
                           onClick={() =>
-                            handleDelete(
-                              user.phone_number,
-                              user.name || user.phone_number
-                            )
+                            handleDelete(user.phone_number, user.name)
                           }
                           color="error"
-                          aria-label={`delete user ${
-                            user.name || user.phone_number
-                          }`}
                           size="small"
-                          sx={{
-                            ml: 1,
-                            "&:hover": { backgroundColor: "error.lighter" },
-                          }} // Subtle hover effect
+                          sx={{ ml: 1 }}
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      )}
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={headCells.length}
+                    align="center"
+                    sx={{ py: 4 }}
+                  >
+                    <Typography>
+                      No users found for the selected filters.
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={totalUsers}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </Container>
   );
 };
