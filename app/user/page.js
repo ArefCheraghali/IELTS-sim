@@ -12,6 +12,7 @@ import {
 } from "@mui/material"; // Added Container and Alert
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import ResetPassword from "app/components/ResetPassword";
 
 const UserPage = () => {
   const [user, setUser] = useState(null);
@@ -29,7 +30,7 @@ const UserPage = () => {
         if (!userPhone) {
           setError("User session not found. Please log in again.");
           setLoading(false);
-          router.push("/"); // Redirect to login if no user phone
+          router.push("/");
           return;
         }
 
@@ -37,7 +38,7 @@ const UserPage = () => {
         if (!token) {
           setError("Authentication token not found. Please log in again.");
           setLoading(false);
-          router.push("/"); // Redirect to login if no token
+          router.push("/");
           return;
         }
 
@@ -52,7 +53,6 @@ const UserPage = () => {
 
         if (response.status === 200) {
           setUser(response.data);
-          // Storing more detailed userData (including name) for potential use elsewhere
           localStorage.setItem(
             "userData",
             JSON.stringify({
@@ -203,8 +203,10 @@ const UserPage = () => {
             </Box>
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Please do not take the test on mobile devices.
-            <br /> For the best experience, please use Google Chrome on a
+            - If you are not allowed to take a test, contact Mrs. Mohammadi or
+            the person responsible.
+            <br /> - Please do not take the test on mobile devices.
+            <br /> - For the best experience, please use Google Chrome on a
             desktop.
           </Typography>
         </Paper>
@@ -249,6 +251,7 @@ const UserPage = () => {
           >
             View Results
           </Button>
+          <ResetPassword commonButtonSx={commonButtonSx} />
         </Box>
 
         {/* Logout button has been removed as per request */}

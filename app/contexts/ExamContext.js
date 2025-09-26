@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 const ExamContext = createContext();
 
@@ -8,7 +14,7 @@ export function ExamProvider({ children }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  // Persist volume changes to localStorage
+  // Load saved volume from localStorage on mount
   useEffect(() => {
     const savedVolume = localStorage.getItem("examVolume");
     if (savedVolume !== null) {
@@ -16,12 +22,14 @@ export function ExamProvider({ children }) {
     }
   }, []);
 
+  // Persist volume changes to localStorage
   const handleVolumeChange = (newVolume) => {
     const clampedVolume = Math.min(1, Math.max(0, newVolume));
     setVolume(clampedVolume);
     localStorage.setItem("examVolume", clampedVolume.toString());
   };
 
+  // Timer logic
   useEffect(() => {
     if (!isRunning || timeLeft <= 0) return;
 
@@ -39,32 +47,22 @@ export function ExamProvider({ children }) {
     return () => clearInterval(timer);
   }, [isRunning, timeLeft]);
 
-  const startTimer = (durationInMinutes) => {
+  const startTimer = useCallback((durationInMinutes) => {
     setDuration(durationInMinutes);
     setTimeLeft(durationInMinutes * 60);
     setIsRunning(true);
-  };
+  }, []);
 
-  const pauseTimer = () => {
+  const resetTimer = useCallback(() => {
     setIsRunning(false);
-  };
+    setTimeLeft(0);
+  }, []);
 
-  const resumeTimer = () => {
-    if (timeLeft > 0) {
-      setIsRunning(true);
-    }
-  };
-
-  const resetTimer = () => {
-    setTimeLeft(duration * 60);
-    setIsRunning(false);
-  };
-
-  const formatTime = (seconds) => {
+  const formatTime = useCallback((seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
-  };
+  }, []);
 
   const value = {
     volume,
@@ -72,8 +70,6 @@ export function ExamProvider({ children }) {
     timeLeft,
     formatTime,
     startTimer,
-    pauseTimer,
-    resumeTimer,
     resetTimer,
     isRunning,
   };

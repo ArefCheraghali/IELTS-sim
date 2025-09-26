@@ -5,11 +5,11 @@ import { useState, useEffect } from "react";
 import InfoIcon from "@mui/icons-material/Info";
 import HeadphonesIcon from "@mui/icons-material/Headphones";
 import ExamLayout from "./ExamLayout";
-import { useVolume } from "../contexts/VolumeContext";
+import { useExam } from "../contexts/ExamContext";
 
 const SoundCheck = () => {
   const router = useRouter();
-  const { volume } = useVolume();
+  const { volume } = useExam();
   const [selectedTest, setSelectedTest] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioElement, setAudioElement] = useState(null);
@@ -18,21 +18,18 @@ const SoundCheck = () => {
     const testData = JSON.parse(localStorage.getItem("selectedTest"));
     setSelectedTest(testData);
 
-    // Create audio element
     const audio = new Audio("/audio/check-sound.mp3");
-    audio.volume = volume; // Set initial volume
+    audio.volume = volume;
     setAudioElement(audio);
 
     return () => {
-      // Cleanup function
       if (audio) {
         audio.pause();
         audio.src = "";
       }
     };
-  }, []); // Remove volume from dependency array
+  }, []);
 
-  // Update audio volume when volume context changes
   useEffect(() => {
     if (audioElement) {
       audioElement.volume = volume;
@@ -41,7 +38,7 @@ const SoundCheck = () => {
 
   const handlePlaySound = () => {
     if (audioElement) {
-      audioElement.currentTime = 0; // Reset to beginning
+      audioElement.currentTime = 0;
       audioElement.play();
       setIsPlaying(true);
 
@@ -53,7 +50,6 @@ const SoundCheck = () => {
 
   const handleContinue = () => {
     if (selectedTest) {
-      // First we'll go to the listening introduction
       router.push(`/tests/listening-intro`);
     }
   };

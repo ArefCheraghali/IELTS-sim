@@ -11,157 +11,147 @@ import {
   Paper,
   Typography,
   IconButton,
-  Box,
   Container,
   CircularProgress,
   Alert,
   Tooltip,
-  Chip,
   TextField,
+  Button,
+  Pagination,
+  Stack,
+  Snackbar,
   MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  TableSortLabel,
-  TablePagination,
-  Grid,
+  Chip,
+  Box, // Box is better for flexible layouts
 } from "@mui/material";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import LockResetIcon from "@mui/icons-material/LockReset";
 
 const UserList = () => {
+  // --- Your existing state and logic (unchanged) ---
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const router = useRouter();
 
-  // State for features
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sort, setSort] = useState("created_at");
-  const [order, setOrder] = useState("desc");
-
-  // State for filter inputs
   const [filters, setFilters] = useState({
     name: "",
+    family_name: "", // Added family_name to state
     phone_number: "",
     role: "",
   });
-  const [searchTerms, setSearchTerms] = useState(filters);
-
-  useEffect(() => {
-    const timerId = setTimeout(() => {
-      setPage(0); // Reset to page 1 when filters change
-      setSearchTerms(filters);
-    }, 500);
-
-    // Clean up the timer if filters change again before it fires
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [filters]);
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem("access_token");
-      if (localStorage.getItem("role") !== "admin") {
+      const role = localStorage.getItem("role");
+
+      if (role !== "admin") {
         throw new Error("You do not have permission to view this page.");
       }
       if (!token) {
         throw new Error("Authentication token not found. Please log in.");
       }
 
-      const params = new URLSearchParams({
-        page: page + 1,
-        page_size: rowsPerPage,
-        sort,
-        order,
-      });
-
-      if (searchTerms.name) params.append("name", searchTerms.name);
-      if (searchTerms.phone_number)
-        params.append("phone_number", searchTerms.phone_number);
-      if (searchTerms.role) params.append("role", searchTerms.role);
+      const params = {
+        page,
+        page_size: pageSize,
+        ...Object.fromEntries(
+          Object.entries(filters).filter(([_, v]) => v !== "")
+        ),
+      };
 
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users?${params.toString()}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users`,
         {
           headers: { Authorization: `Bearer ${token}` },
+          params,
         }
       );
 
-      if (response.data && Array.isArray(response.data.items)) {
-        setUsers(response.data.items);
-        setTotalUsers(response.data.total || 0);
+      if (response.status === 200) {
+        setUsers(response.data.items || []);
+        setTotalPages(response.data.total_pages || 1);
       } else {
-        throw new Error("Received an unexpected data format from the server.");
+        throw new Error(`Failed to fetch users. Status: ${response.status}`);
       }
-    } catch (err) {
-      console.error("Failed to fetch users:", err);
-      setError(
-        err.message ||
-          err.response?.data?.message ||
-          "An unexpected error occurred."
-      );
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.detail ||
+        error.message ||
+        "An unexpected error occurred.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, sort, order, searchTerms]); // Depends on searchTerms now
+  }, [page, pageSize, filters]); // Added filters to dependency array
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+  }, [fetchUsers]); // fetchUsers is now stable due to useCallback
 
-  const handleFilterChange = (event) => {
-    // Update the filter state immediately on every keystroke
-    const { name, value } = event.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1); // Reset to page 1 for new search
+    // fetchUsers is already called by the useEffect when filters change
   };
 
-  const handleSort = (property) => {
-    const isAsc = sort === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setSort(property);
+  const handleCloseSuccess = () => {
+    setSuccess(null);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleDelete = async (phoneNumber, userName) => {
+    if (!window.confirm(`Delete user "${userName}" (Phone: ${phoneNumber})?`))
+      return;
+    try {
+      const token = localStorage.getItem("access_token");
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/${phoneNumber}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setSuccess(`User "${userName}" deleted successfully.`);
+      fetchUsers(); // Refresh list
+    } catch (error) {
+      alert(
+        `Error deleting user: ${error.response?.data?.detail || error.message}`
+      );
+    }
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  const handleEdit = (phoneNumber) => {
+  const handleUpdate = (phoneNumber) => {
     router.push(`/admin/update-user/${phoneNumber}`);
   };
 
-  const handleDelete = async (phoneNumber, name) => {
-    if (window.confirm(`Are you sure you want to delete user: ${name}?`)) {
-      try {
-        const token = localStorage.getItem("access_token");
-        await axios.delete(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/${phoneNumber}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        fetchUsers(); // Re-fetch data to reflect the deletion
-      } catch (err) {
-        console.error("Failed to delete user:", err);
-        setError(err.response?.data?.message || "Failed to delete user.");
-      }
+  const handleResetPassword = async (phoneNumber, userName) => {
+    if (!window.confirm(`Reset password for "${userName}"?`)) return;
+    try {
+      const token = localStorage.getItem("access_token");
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/admin/users/${phoneNumber}/reset-password`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setSuccess(`Password for "${userName}" reset successfully.`);
+    } catch (error) {
+      alert(
+        `Error resetting password: ${
+          error.response?.data?.detail || error.message
+        }`
+      );
     }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
+    if (!dateString) return "–";
     return new Date(dateString).toLocaleString("en-US", {
       year: "numeric",
       month: "short",
@@ -171,14 +161,24 @@ const UserList = () => {
     });
   };
 
-  const headCells = [
-    { id: "name", label: "Name" },
-    { id: "phone_number", label: "Phone Number" },
-    { id: "role", label: "Role" },
-    { id: "allowed_exam", label: "Exam Allowed", sortable: false },
-    { id: "updated_at", label: "Last Updated" },
-    { id: "actions", label: "Actions", sortable: false, align: "right" },
-  ];
+  // --- UI Rendering ---
+
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, textAlign: "center" }}>
+        <CircularProgress />
+        <Typography sx={{ mt: 2 }}>Loading users...</Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -186,92 +186,97 @@ const UserList = () => {
         User Management
       </Typography>
 
-      <Paper sx={{ p: 2, mb: 3, display: "flex" }}>
-        <TextField
-          fullWidth
-          label="Search by Name"
-          name="name"
-          variant="outlined"
-          size="small"
-          defaultValue={filters.name}
-          onChange={handleFilterChange}
-        />
-        <TextField
-          fullWidth
-          label="Search by Phone"
-          name="phone_number"
-          variant="outlined"
-          size="small"
-          defaultValue={filters.phone_number}
-          onChange={handleFilterChange}
-        />
-        <FormControl fullWidth size="small">
-          <InputLabel>Role</InputLabel>
-          <Select
-            name="role"
-            value={filters.role}
+      <Paper component="form" onSubmit={handleSearch} sx={{ p: 2, mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap", // Allows items to wrap on smaller screens
+            gap: 2, // Consistent spacing between items
+            alignItems: "center",
+          }}
+        >
+          <TextField
+            label="Name"
+            name="name"
+            size="small"
+            value={filters.name}
+            onChange={(e) => setFilters({ ...filters, name: e.target.value })}
+            sx={{ flexGrow: 1, minWidth: "150px" }}
+          />
+          <TextField
+            label="Family Name"
+            name="family_name"
+            size="small"
+            value={filters.family_name}
+            onChange={(e) =>
+              setFilters({ ...filters, family_name: e.target.value })
+            }
+            sx={{ flexGrow: 1, minWidth: "150px" }}
+          />
+          <TextField
+            label="Phone Number"
+            name="phone_number"
+            size="small"
+            value={filters.phone_number}
+            onChange={(e) =>
+              setFilters({ ...filters, phone_number: e.target.value })
+            }
+            sx={{ flexGrow: 1, minWidth: "180px" }}
+          />
+          <TextField
+            select
             label="Role"
-            onChange={handleFilterChange}
+            name="role"
+            size="small"
+            value={filters.role}
+            onChange={(e) => setFilters({ ...filters, role: e.target.value })}
+            sx={{ flexGrow: 1, minWidth: 120 }}
           >
             <MenuItem value="">
-              <em>All Roles</em>
+              <em>All</em>
             </MenuItem>
-            <MenuItem value="admin">Admin</MenuItem>
             <MenuItem value="user">User</MenuItem>
-          </Select>
-        </FormControl>
+            <MenuItem value="admin">Admin</MenuItem>
+          </TextField>
+          <Button type="submit" variant="contained">
+            Search
+          </Button>
+        </Box>
       </Paper>
-
-      {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
-        </Alert>
-      )}
 
       <Paper sx={{ overflow: "hidden" }}>
         <TableContainer>
           <Table stickyHeader aria-label="user list table">
             <TableHead>
-              <TableRow>
-                {headCells.map((headCell) => (
-                  <TableCell
-                    key={headCell.id}
-                    align={headCell.align || "left"}
-                    sortDirection={sort === headCell.id ? order : false}
-                  >
-                    {headCell.sortable !== false ? (
-                      <TableSortLabel
-                        active={sort === headCell.id}
-                        direction={sort === headCell.id ? order : "asc"}
-                        onClick={() => handleSort(headCell.id)}
-                      >
-                        {headCell.label}
-                      </TableSortLabel>
-                    ) : (
-                      headCell.label
-                    )}
-                  </TableCell>
-                ))}
+              <TableRow sx={{ "& th": { fontWeight: "bold" } }}>
+                <TableCell>Name</TableCell>
+                <TableCell>Family Name</TableCell>
+                <TableCell>Phone Number</TableCell>
+                <TableCell align="center">Allowed Exam</TableCell>
+                <TableCell>Role</TableCell>
+                <TableCell>Created At</TableCell>
+                <TableCell>Updated At</TableCell>
+                <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? (
+              {users.length === 0 ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={headCells.length}
-                    align="center"
-                    sx={{ py: 4 }}
-                  >
-                    <CircularProgress />
+                  <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
+                    <Typography>
+                      No users found for the selected filters.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ) : users.length > 0 ? (
+              ) : (
                 users.map((user) => (
                   <TableRow key={user.phone_number} hover>
-                    <TableCell component="th" scope="row">
-                      {`${user.name || ""} ${user.family_name || ""}`.trim()}
-                    </TableCell>
+                    <TableCell>{user.name || "–"}</TableCell>
+                    <TableCell>{user.family_name || "–"}</TableCell>
                     <TableCell>{user.phone_number}</TableCell>
+                    <TableCell align="center">
+                      {user.allowed_exam ? "Yes" : "No"}
+                    </TableCell>
                     <TableCell>
                       <Chip
                         label={user.role}
@@ -279,12 +284,23 @@ const UserList = () => {
                         size="small"
                       />
                     </TableCell>
-                    <TableCell>{user.allowed_exam ? "Yes" : "No"}</TableCell>
+                    <TableCell>{formatDate(user.created_at)}</TableCell>
                     <TableCell>{formatDate(user.updated_at)}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">
+                      <Tooltip title="Reset Password">
+                        <IconButton
+                          onClick={() =>
+                            handleResetPassword(user.phone_number, user.name)
+                          }
+                          color="warning"
+                          size="small"
+                        >
+                          <LockResetIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title="Edit">
                         <IconButton
-                          onClick={() => handleEdit(user.phone_number)}
+                          onClick={() => handleUpdate(user.phone_number)}
                           color="primary"
                           size="small"
                         >
@@ -298,7 +314,6 @@ const UserList = () => {
                           }
                           color="error"
                           size="small"
-                          sx={{ ml: 1 }}
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
@@ -306,32 +321,37 @@ const UserList = () => {
                     </TableCell>
                   </TableRow>
                 ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={headCells.length}
-                    align="center"
-                    sx={{ py: 4 }}
-                  >
-                    <Typography>
-                      No users found for the selected filters.
-                    </Typography>
-                  </TableCell>
-                </TableRow>
               )}
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={totalUsers}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+
+        {totalPages > 1 && (
+          <Stack alignItems="center" sx={{ my: 2 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_, value) => setPage(value)}
+              color="primary"
+            />
+          </Stack>
+        )}
       </Paper>
+
+      <Snackbar
+        open={!!success}
+        autoHideDuration={4000}
+        onClose={handleCloseSuccess}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleCloseSuccess}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {success}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

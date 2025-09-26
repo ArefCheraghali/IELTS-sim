@@ -10,6 +10,7 @@ const DragDrop = ({
   infoTitle,
   questionRefs,
   startIndex,
+  startQuestionNumber,
 }) => {
   const [questions, setQuestions] = useState(initialQuestions);
   const [availableAnswers, setAvailableAnswers] = useState(initialAnswers);
@@ -65,7 +66,8 @@ const DragDrop = ({
 
     setAnswers((prevAnswers) => {
       const newAnswers = [...prevAnswers];
-      newAnswers[parseInt(questionId)] = answerId;
+      const targetIndex = startIndex + (questionId - startQuestionNumber);
+      newAnswers[targetIndex] = answerId;
       return newAnswers;
     });
 
@@ -91,12 +93,9 @@ const DragDrop = ({
     ]);
 
     setAnswers((prevAnswers) => {
-      const newAnswers = Array(prevAnswers.length).fill(null);
-      prevAnswers.forEach((answer, index) => {
-        if (index !== parseInt(questionId)) {
-          newAnswers[index] = answer;
-        }
-      });
+      const newAnswers = [...prevAnswers];
+      const targetIndex = startIndex + (questionId - startQuestionNumber);
+      newAnswers[targetIndex] = null;
       return newAnswers;
     });
   };

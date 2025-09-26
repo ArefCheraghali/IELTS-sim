@@ -101,7 +101,8 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
         title="Festival workshops"
         infoTitle="Information"
         questionRefs={questionRefs}
-        startIndex={0}
+        startIndex={10}
+        startQuestionNumber={11}
       />
       <Box
         sx={{

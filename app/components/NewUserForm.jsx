@@ -43,26 +43,25 @@ const NewUserForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null); // ✅ success state
   const [allowedToTakeTest, setAllowedToTakeTest] = useState(false);
 
   const handleSubmitForm = async (data) => {
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
-      // Prepare the request body
       const requestBody = {
         name: data.name,
         family_name: data.family_name,
         phone_number: data.phoneNumber,
         password: data.password,
-        allowed_exam: allowedToTakeTest, // Include the checkbox value
+        allowed_exam: allowedToTakeTest,
       };
 
-      // Get the token from localStorage
       const token = localStorage.getItem("access_token");
 
-      // Send the form data to the API
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/signup`,
         requestBody,
@@ -76,15 +75,14 @@ const NewUserForm = () => {
 
       if (response.status === 200) {
         console.log("User created successfully:", response.data);
-
-        // Reset the form after successful submission
+        setSuccess("User created successfully!");
         reset({
           name: "",
           family_name: "",
           phoneNumber: "",
           password: "",
         });
-        setAllowedToTakeTest(false); // Reset the checkbox
+        setAllowedToTakeTest(false);
       } else {
         setError("Failed to create user. Please try again.");
       }
@@ -98,6 +96,10 @@ const NewUserForm = () => {
 
   const handleCloseError = () => {
     setError(null);
+  };
+
+  const handleCloseSuccess = () => {
+    setSuccess(null);
   };
 
   return (
@@ -127,7 +129,7 @@ const NewUserForm = () => {
             fullWidth
             label="Name"
             error={!!errors.name}
-            helperText={errors.name ? errors.name.message : ""}
+            helperText={errors.name?.message || ""}
             sx={{ mb: 2 }}
           />
         )}
@@ -143,7 +145,7 @@ const NewUserForm = () => {
             fullWidth
             label="Family Name"
             error={!!errors.family_name}
-            helperText={errors.family_name ? errors.family_name.message : ""}
+            helperText={errors.family_name?.message || ""}
             sx={{ mb: 2 }}
           />
         )}
@@ -159,7 +161,7 @@ const NewUserForm = () => {
             fullWidth
             label="Phone Number"
             error={!!errors.phoneNumber}
-            helperText={errors.phoneNumber ? errors.phoneNumber.message : ""}
+            helperText={errors.phoneNumber?.message || ""}
             sx={{ mb: 2 }}
           />
         )}
@@ -176,7 +178,7 @@ const NewUserForm = () => {
             label="Password"
             type="password"
             error={!!errors.password}
-            helperText={errors.password ? errors.password.message : ""}
+            helperText={errors.password?.message || ""}
             sx={{ mb: 2 }}
           />
         )}
@@ -197,7 +199,20 @@ const NewUserForm = () => {
         {loading ? <CircularProgress size={24} /> : "Add User"}
       </Button>
 
-      {/* Error Snackbar */}
+      <Snackbar
+        open={!!success}
+        autoHideDuration={6000}
+        onClose={handleCloseSuccess}
+      >
+        <Alert
+          onClose={handleCloseSuccess}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {success}
+        </Alert>
+      </Snackbar>
+
       <Snackbar
         open={!!error}
         autoHideDuration={6000}

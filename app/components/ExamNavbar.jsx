@@ -15,17 +15,15 @@ import {
 } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeDownIcon from "@mui/icons-material/VolumeDown";
-import { useVolume } from "../contexts/VolumeContext";
+import { useExam } from "../contexts/ExamContext";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { useTimer } from "../contexts/TimerContext";
 import { useRouter } from "next/navigation";
 
 const ExamNavbar = ({ sectionName, userName, onSubmit }) => {
   const [exitDialogOpen, setExitDialogOpen] = useState(false);
   const router = useRouter();
-  const { volume, setVolume } = useVolume();
-  const { timeLeft, formatTime } = useTimer();
+  const { volume, setVolume, timeLeft, formatTime } = useExam();
 
   const handleVolumeChange = (event, newValue) => {
     setVolume(newValue);

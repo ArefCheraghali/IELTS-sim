@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { getEnv } from "./utils/env";
 
 // Validation schema
 const schema = yup.object().shape({
@@ -48,10 +49,13 @@ export default function Home() {
     setError(null);
     setSuccessMessage(null);
 
-    localStorage.setItem("user", JSON.stringify(data.phone));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(data.phone));
+    }
 
     try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const { NEXT_PUBLIC_BACKEND_URL } = getEnv();
+      const backendUrl = NEXT_PUBLIC_BACKEND_URL;
       const response = await axios.post(
         `${backendUrl}/login`,
         {
@@ -67,8 +71,10 @@ export default function Home() {
       );
 
       if (response.status === 200) {
-        localStorage.setItem("access_token", response.data.access_token);
-        localStorage.setItem("role", response.data.role);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("access_token", response.data.access_token);
+          localStorage.setItem("role", response.data.role);
+        }
         setSuccessMessage("Login successful! Redirecting...");
 
         setTimeout(() => {

@@ -426,8 +426,8 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
           infoTitle=""
           currentQuestion={currentQuestion}
           questionRefs={questionRefs}
-          startIndex={10}
-          startQuestionNumber={37}
+          startIndex={36}
+          startQuestionNumber={36}
         />
       </Box>
     </Box>

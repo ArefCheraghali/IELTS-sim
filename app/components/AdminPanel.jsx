@@ -5,24 +5,18 @@ import { Box, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import UserList from "./UserList";
 import NewUserForm from "./NewUserForm";
+import ExamList from "./ExamList";
+import NewExam from "./NewExam";
+const Assessments = () => <div>Assessments will go here</div>;
 
 export default function AdminPanel() {
-  const [showForm, setShowForm] = useState(false);
+  const [activeTab, setActiveTab] = useState("users");
+  const [showUserForm, setShowUserForm] = useState(false);
+  const [showExamForm, setShowExamForm] = useState(false);
   const router = useRouter();
 
-  // Navigation handlers
   const handleExamNavigation = () => {
-    router.push("/tests");
-  };
-
-  const handleAddTestNavigation = () => {
-    // Replace with the actual path to your "Add Test" page
-    router.push("/admin/new-test");
-  };
-
-  const handleAssessmentsNavigation = () => {
-    // Replace with the actual path to your "Assessments" page
-    router.push("/admin/assessments");
+    router.push("/tests"); // existing route for selecting/taking test
   };
 
   const commonButtonSx = {
@@ -37,76 +31,99 @@ export default function AdminPanel() {
 
   return (
     <Box sx={{ p: { xs: 1, sm: 2 }, textAlign: "center" }}>
+      {/* Top navigation */}
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap", // Allow wrapping on small screens
-          gap: 2, // Add gap between items when they wrap
-          mb: 3, // Margin below the button bar
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: 2,
+          mb: 3,
         }}
       >
         <Button
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => setActiveTab("users")}
           variant="contained"
           sx={{
             ...commonButtonSx,
-            backgroundColor: "#856404",
-            "&:hover": { backgroundColor: "#a3790a" },
-            "&:active": { backgroundColor: "#6b4f03" },
+            backgroundColor: activeTab === "users" ? "#856404" : "#aaa",
           }}
         >
-          {showForm ? "Show Users" : "New User"}
+          User Management
         </Button>
-
-        <Box
+        <Button
+          onClick={() => setActiveTab("exams")}
+          variant="contained"
           sx={{
-            display: "flex",
-            gap: { xs: 1, sm: 2 }, // Smaller gap on mobile
-            flexWrap: "wrap", // Allow these buttons to wrap if needed
-            justifyContent: "flex-end", // Align to the end
+            ...commonButtonSx,
+            backgroundColor: activeTab === "exams" ? "#2196f3" : "#aaa",
           }}
         >
-          <Button
-            onClick={handleExamNavigation}
-            variant="contained"
-            sx={{
-              ...commonButtonSx,
-              backgroundColor: "#2196f3", // Blue color
-              "&:hover": { backgroundColor: "#1976d2" },
-              "&:active": { backgroundColor: "#1565c0" },
-            }}
-          >
-            Exam
-          </Button>
-          <Button
-            onClick={handleAddTestNavigation}
-            variant="contained"
-            sx={{
-              ...commonButtonSx,
-              backgroundColor: "#4caf50", // Green color for "Add"
-              "&:hover": { backgroundColor: "#388e3c" },
-              "&:active": { backgroundColor: "#2e7d32" },
-            }}
-          >
-            Add Test
-          </Button>
-          <Button
-            onClick={handleAssessmentsNavigation}
-            variant="contained"
-            sx={{
-              ...commonButtonSx,
-              backgroundColor: "#673ab7", // Deep purple for "Assessments"
-              "&:hover": { backgroundColor: "#512da8" },
-              "&:active": { backgroundColor: "#4527a0" },
-            }}
-          >
-            Assessments
-          </Button>
-        </Box>
+          Exam Management
+        </Button>
+        <Button
+          onClick={() => setActiveTab("assessments")}
+          variant="contained"
+          sx={{
+            ...commonButtonSx,
+            backgroundColor: activeTab === "assessments" ? "#673ab7" : "#aaa",
+          }}
+        >
+          Assessments
+        </Button>
+        <Button
+          onClick={handleExamNavigation}
+          variant="contained"
+          sx={{
+            ...commonButtonSx,
+            backgroundColor: "#ff9800",
+          }}
+        >
+          Take Test
+        </Button>
       </Box>
-      {showForm ? <NewUserForm /> : <UserList />}
+
+      {/* Content area */}
+      <Box>
+        {/* User management tab */}
+        {activeTab === "users" && (
+          <>
+            <Button
+              onClick={() => setShowUserForm(!showUserForm)}
+              variant="contained"
+              sx={{
+                ...commonButtonSx,
+                backgroundColor: "#856404",
+                mb: 2,
+              }}
+            >
+              {showUserForm ? "Show Users" : "New User"}
+            </Button>
+            {showUserForm ? <NewUserForm /> : <UserList />}
+          </>
+        )}
+
+        {/* Exam management tab */}
+        {activeTab === "exams" && (
+          <>
+            <Button
+              onClick={() => setShowExamForm(!showExamForm)}
+              variant="contained"
+              sx={{
+                ...commonButtonSx,
+                backgroundColor: "#2196f3",
+                mb: 2,
+              }}
+            >
+              {showExamForm ? "Show Exams" : "New Exam"}
+            </Button>
+            {showExamForm ? <NewExam /> : <ExamList />}
+          </>
+        )}
+
+        {/* Assessments tab */}
+        {activeTab === "assessments" && <Assessments />}
+      </Box>
     </Box>
   );
 }

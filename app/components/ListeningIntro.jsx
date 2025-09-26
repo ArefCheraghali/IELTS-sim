@@ -11,7 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useVolume } from "../contexts/VolumeContext";
+import { useExam } from "../contexts/ExamContext";
 import ExamLayout from "./ExamLayout";
 
 const ListeningIntro = () => {
@@ -19,7 +19,7 @@ const ListeningIntro = () => {
   const [selectedTest, setSelectedTest] = useState(null);
   const [expanded, setExpanded] = useState(true);
   const videoRef = useRef(null);
-  const { volume } = useVolume();
+  const { volume } = useExam(); // Updated
 
   useEffect(() => {
     const testData = JSON.parse(localStorage.getItem("selectedTest"));

@@ -255,6 +255,7 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
           infoTitle=""
           questionRefs={questionRefs}
           startIndex={6} // Start from index 6 for questions 20-23
+          startQuestionNumber={20}
         />
         <Typography sx={{ ml: 2, mb: 1 }}>Questions 24 - 26</Typography>
         <Typography sx={{ ml: 2, mb: 1 }}>
