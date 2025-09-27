@@ -20,7 +20,7 @@ const Task1 = ({ answers, setAnswers }) => {
     <Box
       sx={{
         display: "flex",
-        height: "calc(100vh - 120px - 26px )",
+        height: "calc(97vh - 120px - 24px )",
       }}
     >
       <Box

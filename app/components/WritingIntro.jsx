@@ -1,3 +1,5 @@
+// app/components/WritingIntro.jsx
+
 "use client";
 import {
   Box,
@@ -11,7 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useVolume } from "../contexts/VolumeContext";
+import { useExam } from "../contexts/ExamContext"; // ✅ Use the correct hook
 import ExamLayout from "./ExamLayout";
 
 const WritingIntro = () => {
@@ -19,7 +21,7 @@ const WritingIntro = () => {
   const [selectedTest, setSelectedTest] = useState(null);
   const [expanded, setExpanded] = useState(true);
   const videoRef = useRef(null);
-  const { volume } = useVolume();
+  const { volume } = useExam(); // ✅ Use the correct hook
 
   useEffect(() => {
     const testData = JSON.parse(localStorage.getItem("selectedTest"));
@@ -28,6 +30,7 @@ const WritingIntro = () => {
 
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.volume = volume;
       if (expanded) {
         videoRef.current.play().catch((error) => {
           console.log("Autoplay prevented:", error);
@@ -35,12 +38,11 @@ const WritingIntro = () => {
       } else {
         videoRef.current.pause();
       }
-      videoRef.current.volume = volume;
     }
   }, [expanded, volume]);
 
-  const handleAccordionChange = () => {
-    setExpanded(!expanded);
+  const handleAccordionChange = (event, isExpanded) => {
+    setExpanded(isExpanded);
   };
 
   const handleConfirm = () => {
@@ -55,7 +57,7 @@ const WritingIntro = () => {
   };
 
   return (
-    <ExamLayout sectionName="Listening">
+    <ExamLayout sectionName="Writing">
       <Box
         sx={{
           display: "flex",
@@ -87,7 +89,7 @@ const WritingIntro = () => {
               Not Completed
             </Typography>
             <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
-              Timing : 60 minutes
+              Timing: 60 minutes
             </Typography>
 
             <Accordion
@@ -95,9 +97,7 @@ const WritingIntro = () => {
               onChange={handleAccordionChange}
               sx={{
                 boxShadow: "none",
-                "&:before": {
-                  display: "none",
-                },
+                "&:before": { display: "none" },
                 bgcolor: "#f8f8f8",
                 mt: 1,
               }}
@@ -108,9 +108,7 @@ const WritingIntro = () => {
                   bgcolor: "#f0f0f0",
                   borderRadius: "4px",
                   minHeight: "48px",
-                  "& .MuiAccordionSummary-content": {
-                    margin: "8px 0",
-                  },
+                  "& .MuiAccordionSummary-content": { margin: "8px 0" },
                 }}
               >
                 <Typography variant="body2" component="span">
@@ -125,14 +123,14 @@ const WritingIntro = () => {
                   Not Confirmed
                 </Typography>
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails sx={{ p: 3 }}>
                 <Box sx={{ width: "100%", mb: 4 }}>
                   <video
                     ref={videoRef}
                     controls
                     width="100%"
                     height="auto"
-                    src="/video/writing.mp4"
+                    src="/video/writing.mp4" // ✅ Updated video source
                   >
                     Your browser does not support the video tag.
                   </video>
@@ -159,9 +157,7 @@ const WritingIntro = () => {
                       bgcolor: "black",
                       color: "white",
                       textTransform: "none",
-                      "&:hover": {
-                        bgcolor: "#333",
-                      },
+                      "&:hover": { bgcolor: "#333" },
                     }}
                   >
                     ✓ I Confirm

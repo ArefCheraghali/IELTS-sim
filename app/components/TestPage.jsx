@@ -15,7 +15,7 @@ import {
 import ExamLayout from "./ExamLayout";
 import TestBottomNavigation from "./TestBottomNavigation";
 import HighlightContextMenu from "./HighlightContextMenu";
-import { useExam } from "../contexts/ExamContext"; // Use the consolidated context
+import { useExam } from "../contexts/ExamContext";
 
 const TestPage = ({ testData }) => {
   const { testType, timeLimit, sections, partQuestions, audioSrc, audioDelay } =
@@ -26,8 +26,7 @@ const TestPage = ({ testData }) => {
   const [answers, setAnswers] = useState(Array(40).fill(""));
   const [openDialog, setOpenDialog] = useState(false);
 
-  // States for Listening Test
-  const [isReady, setIsReady] = useState(!audioSrc); // Ready immediately if not listening
+  const [isReady, setIsReady] = useState(!audioSrc);
   const [showQuestions, setShowQuestions] = useState(!audioSrc);
 
   const {
@@ -38,7 +37,6 @@ const TestPage = ({ testData }) => {
     textRef,
     anchorEl,
     menuPosition,
-    handleContextMenu,
     handleHighlight,
     handleClearHighlights,
     handleCloseHighlightMenu,
@@ -51,9 +49,6 @@ const TestPage = ({ testData }) => {
   useEffect(() => {
     if (audioSrc && typeof window !== "undefined") {
       audioRef.current = new Audio(audioSrc);
-      if (audioRef.current) {
-        audioRef.current.volume = volume;
-      }
     }
     return () => {
       if (audioRef.current) {
@@ -61,7 +56,13 @@ const TestPage = ({ testData }) => {
         audioRef.current = null;
       }
     };
-  }, [audioSrc, volume]);
+  }, [audioSrc]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume]);
 
   const handleStartListeningTest = () => {
     setIsReady(true);
@@ -170,12 +171,12 @@ const TestPage = ({ testData }) => {
     <ExamLayout sectionName={testType} onSubmit={handleOpenDialog}>
       <Box
         ref={textRef}
-        onContextMenu={handleContextMenu}
         sx={{
           flex: 1,
           display: "flex",
           flexDirection: "column",
           position: "relative",
+          pb: 12,
         }}
       >
         <CurrentSectionComponent

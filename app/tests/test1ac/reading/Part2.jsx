@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import TwoColumnLayout from "@/app/components/TwoColumnLayout";
+import TwoColumnLayout from "@/components/TwoColumnLayout";
 import CrowText from "./text/CrowText";
 
 const image3 = "/images/test1/readingAc1-passage2-3.jpg";
@@ -46,28 +46,29 @@ const trueFalseQuestionsData = [
 
 const Part2 = ({ answers, setAnswers, currentQuestion }) => {
   const questionRefs = useRef([]);
+  const isInitialMount = useRef(true); // Ref to track initial mount
+  const topOfPartRef = useRef(null); // Ref for the top of the component
 
-  // This effect handles scrolling to and focusing on the current question
   useEffect(() => {
-    // Questions in this part are 14-26. The index for refs is 0-12.
-    const questionIndex = currentQuestion - 14;
-    if (questionIndex >= 0 && questionIndex < 13) {
-      const element = questionRefs.current[questionIndex];
-      if (element) {
-        element.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+    // On initial mount, scroll to the top of the component
+    if (isInitialMount.current && topOfPartRef.current) {
+      topOfPartRef.current.scrollIntoView({ behavior: "auto" });
+      isInitialMount.current = false; // Set to false after first render
+      return;
+    }
 
-        setTimeout(() => {
-          const input = element.querySelector('input, [role="button"]');
-          if (input) {
-            input.focus();
-            if (input.tagName === "INPUT") {
-              input.select();
-            }
-          }
-        }, 300);
+    // On subsequent renders (user clicks), scroll to the specific question
+    if (!isInitialMount.current) {
+      if (currentQuestion >= 11 && currentQuestion <= 20) {
+        const index = currentQuestion - 11;
+        const questionElement = questionRefs.current[index];
+
+        if (questionElement) {
+          questionElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
       }
     }
   }, [currentQuestion]);

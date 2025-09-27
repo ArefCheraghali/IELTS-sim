@@ -25,7 +25,7 @@ const Task2 = ({ answers, setAnswers }) => {
     <Box
       sx={{
         display: "flex",
-        height: "calc(100vh - 120px - 26px )",
+        height: "calc(97vh - 120px - 26px )",
       }}
     >
       <Box
@@ -110,7 +110,7 @@ const Task2 = ({ answers, setAnswers }) => {
           <TextField
             fullWidth
             multiline
-            rows={15}
+            rows={19}
             variant="outlined"
             placeholder="Start writing your essay here..."
             autoComplete="off"

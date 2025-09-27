@@ -79,6 +79,7 @@ export default function Part2({ answers, setAnswers, currentQuestion }) {
         margin: "0 auto",
         maxWidth: "1200px",
         padding: "0 2rem",
+        pt: 2,
       }}
     >
       <Box

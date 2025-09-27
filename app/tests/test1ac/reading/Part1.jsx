@@ -1,3 +1,5 @@
+// app/tests/test1ac/reading/Part1.jsx
+
 "use client";
 import React, { useRef, useEffect } from "react";
 import {
@@ -11,19 +13,25 @@ import {
   ListItem,
   TextField,
 } from "@mui/material";
-import TwoColumnLayout from "@/app/components/TwoColumnLayout";
+import TwoColumnLayout from "@/components/TwoColumnLayout";
 import SeaweedText from "./text/SeaweedText";
 
 const image4 = "/images/test1/readingAc1-passage1-4.jpg";
 
 const Part1 = ({ answers, setAnswers, currentQuestion }) => {
   const questionRefs = useRef([]);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     const questionIndex = currentQuestion - 1;
     if (questionIndex >= 0 && questionIndex < 13) {
       const element = questionRefs.current[questionIndex];
       if (element) {
+        // Scroll the question into the center of the view.
         element.scrollIntoView({
           behavior: "smooth",
           block: "center",
@@ -37,7 +45,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               input.select();
             }
           }
-        }, 300);
+        }, 200);
       }
     }
   }, [currentQuestion]);
@@ -88,6 +96,29 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
           maxWidth: "60rem",
         }}
       >
+        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <FormControl
+              sx={{ mt: 2, margin: "2em" }}
+              key={index}
+              ref={(el) => (questionRefs.current[index] = el)}
+            >
+              <InputLabel>{`${1 + index}`}</InputLabel>
+              <Select
+                sx={{ width: "5em" }}
+                value={answers[index] || ""}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+                label={`Paragraph ${String.fromCharCode(65 + index)}`}
+              >
+                {possibleAnswers.map((answer) => (
+                  <MenuItem key={answer} value={answer}>
+                    {answer}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          ))}
+        </Box>
         <Box
           sx={{
             width: "70%",
@@ -101,7 +132,6 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             List of Headings
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            {/* List of Headings */}
             <Box sx={{ display: "flex", gap: 2 }}>
               <Typography sx={{ minWidth: "2rem" }}>i</Typography>
               <Typography>
@@ -141,29 +171,6 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
               <Typography>Why seaweeds don't sink or dry out</Typography>
             </Box>
           </Box>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-          {Array.from({ length: 6 }).map((_, index) => (
-            <FormControl
-              sx={{ mt: 2, margin: "2em" }}
-              key={index}
-              ref={(el) => (questionRefs.current[index] = el)}
-            >
-              <InputLabel>{`${1 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "5em" }}
-                value={answers[index] || ""}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                label={`Paragraph ${String.fromCharCode(65 + index)}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ))}
         </Box>
       </Box>
       <Typography sx={{ ml: 2, mb: 1 }}>Questions 7 - 10</Typography>
@@ -210,9 +217,15 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
         Classify the following characteristics as belonging to
       </Typography>
       <List>
-        <ListItem>A) brown seaweed</ListItem>
-        <ListItem>B) green seaweed</ListItem>
-        <ListItem>C) red seaweed</ListItem>
+        <ListItem>
+          <Typography>A) brown seaweed</Typography>
+        </ListItem>
+        <ListItem>
+          <Typography>B) green seaweed</Typography>
+        </ListItem>
+        <ListItem>
+          <Typography>C) red seaweed</Typography>
+        </ListItem>
       </List>
       <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
         Pick the correct, A, B or C, in boxes 11-13.
@@ -241,7 +254,7 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
             ref={(el) => (questionRefs.current[10 + index] = el)}
           >
             <Typography sx={{ marginRight: "3rem", ml: -5 }}>{num}</Typography>
-            {text}
+            <Typography>{text}</Typography>
             <Box sx={{ minWidth: 120, ml: "1em" }}>
               <FormControl>
                 <InputLabel>{num}</InputLabel>

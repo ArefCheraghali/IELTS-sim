@@ -1,20 +1,19 @@
-import {
+import React, {
   createContext,
   useContext,
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
 
 const ExamContext = createContext();
 
 export function ExamProvider({ children }) {
   const [volume, setVolume] = useState(1);
-  const [duration, setDuration] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
 
-  // Load saved volume from localStorage on mount
   useEffect(() => {
     const savedVolume = localStorage.getItem("examVolume");
     if (savedVolume !== null) {
@@ -22,33 +21,13 @@ export function ExamProvider({ children }) {
     }
   }, []);
 
-  // Persist volume changes to localStorage
   const handleVolumeChange = (newVolume) => {
     const clampedVolume = Math.min(1, Math.max(0, newVolume));
     setVolume(clampedVolume);
     localStorage.setItem("examVolume", clampedVolume.toString());
   };
 
-  // Timer logic
-  useEffect(() => {
-    if (!isRunning || timeLeft <= 0) return;
-
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
-          setIsRunning(false);
-          clearInterval(timer);
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [isRunning, timeLeft]);
-
   const startTimer = useCallback((durationInMinutes) => {
-    setDuration(durationInMinutes);
     setTimeLeft(durationInMinutes * 60);
     setIsRunning(true);
   }, []);
@@ -58,20 +37,110 @@ export function ExamProvider({ children }) {
     setTimeLeft(0);
   }, []);
 
+  useEffect(() => {
+    if (!isRunning || timeLeft <= 0) return;
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => (prevTime > 1 ? prevTime - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isRunning, timeLeft]);
+
   const formatTime = useCallback((seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   }, []);
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedRange, setSelectedRange] = useState(null);
+  const [menuPosition, setMenuPosition] = useState({
+    mouseX: null,
+    mouseY: null,
+  });
+  const textRef = useRef(null);
+
+  const handleTextSelection = (event) => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0 && !selection.isCollapsed) {
+      const range = selection.getRangeAt(0);
+      if (range.toString().trim().length > 1) {
+        setSelectedRange(range);
+        setAnchorEl(event.currentTarget);
+        setMenuPosition({ mouseX: event.clientX, mouseY: event.clientY });
+      }
+    } else {
+      setAnchorEl(null);
+    }
+  };
+
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+      handleTextSelection(event);
+    };
+
+    const currentTextRef = textRef.current;
+    if (currentTextRef) {
+      currentTextRef.addEventListener("contextmenu", handleContextMenu);
+    }
+
+    return () => {
+      if (currentTextRef) {
+        currentTextRef.removeEventListener("contextmenu", handleContextMenu);
+      }
+    };
+  }, [textRef, handleTextSelection]);
+
+  const handleHighlight = () => {
+    if (selectedRange) {
+      const span = document.createElement("span");
+      span.style.backgroundColor = "yellow";
+      try {
+        selectedRange.surroundContents(span);
+      } catch (error) {
+        console.error("Highlighting failed:", error);
+      }
+      setSelectedRange(null);
+      setAnchorEl(null);
+      window.getSelection().removeAllRanges();
+    }
+  };
+
+  const handleClearHighlights = () => {
+    if (textRef.current) {
+      const spans = textRef.current.querySelectorAll(
+        "span[style='background-color: yellow;']"
+      );
+      spans.forEach((span) => {
+        const parent = span.parentNode;
+        while (span.firstChild) {
+          parent.insertBefore(span.firstChild, span);
+        }
+        parent.removeChild(span);
+        parent.normalize();
+      });
+    }
+    setAnchorEl(null);
+  };
+
+  const handleCloseHighlightMenu = () => {
+    setAnchorEl(null);
+  };
+
   const value = {
     volume,
     setVolume: handleVolumeChange,
     timeLeft,
-    formatTime,
+    isRunning,
     startTimer,
     resetTimer,
-    isRunning,
+    formatTime,
+    anchorEl,
+    menuPosition,
+    textRef,
+    handleHighlight,
+    handleClearHighlights,
+    handleCloseHighlightMenu,
   };
 
   return <ExamContext.Provider value={value}>{children}</ExamContext.Provider>;

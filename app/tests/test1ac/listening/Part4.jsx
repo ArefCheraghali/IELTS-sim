@@ -12,39 +12,37 @@ import {
 } from "@mui/material";
 
 export default function Part4({ answers, setAnswers, currentQuestion }) {
-  // Create refs for each text field
-  const inputRefs = useRef([]);
   const questionRefs = useRef([]);
+  const prevCurrentQuestionRef = useRef();
 
   useEffect(() => {
-    if (currentQuestion >= 31 && currentQuestion <= 40) {
-      const index = currentQuestion - 31;
-      if (questionRefs.current[index]) {
-        questionRefs.current[index].scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-        if (inputRefs.current[index]) {
-          if (currentQuestion <= 38) {
-            inputRefs.current[index].focus();
-          } else {
-            inputRefs.current[index].focus();
-            const radioButtons = questionRefs.current[index].querySelectorAll('input[type="radio"]');
-            if (radioButtons.length > 0) {
-              const selectedRadio = radioButtons[answers[currentQuestion - 1]] || radioButtons[0];
-              selectedRadio.focus();
+    if (prevCurrentQuestionRef.current !== currentQuestion) {
+      if (currentQuestion >= 31 && currentQuestion <= 40) {
+        const index = currentQuestion - 31;
+        const element = questionRefs.current[index];
+
+        if (element) {
+          setTimeout(() => {
+            element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+            const input = element.querySelector("input");
+            if (input) {
+              input.focus();
+              if (input.type === "text") {
+                input.select();
+              }
             }
-          }
+          }, 100);
         }
       }
     }
-  }, [currentQuestion, answers]);
+    prevCurrentQuestionRef.current = currentQuestion;
+  }, [currentQuestion]);
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
@@ -57,6 +55,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
         margin: "0 auto",
         maxWidth: "1200px",
         padding: "0 2rem",
+        pt: 2,
       }}
     >
       <Box
@@ -123,7 +122,6 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="31"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[0] = el)}
                 onChange={(e) => handleInputChange(30, e.target.value)}
                 value={answers[30]}
               />
@@ -138,7 +136,6 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="32"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[1] = el)}
                 onChange={(e) => handleInputChange(31, e.target.value)}
                 value={answers[31]}
               />{" "}
@@ -155,7 +152,6 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="33"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[2] = el)}
                 onChange={(e) => handleInputChange(32, e.target.value)}
                 value={answers[32]}
               />
@@ -198,12 +194,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
         >
           <List sx={{ listStyleType: "disc", ml: "3em", gap: 10 }}>
             <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                display: "list-item",
-                mb: 2,
-              }}
+              sx={{ display: "list-item", mb: 2 }}
               ref={(el) => (questionRefs.current[3] = el)}
             >
               Pieces of
@@ -212,19 +203,13 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="34"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[3] = el)}
                 onChange={(e) => handleInputChange(33, e.target.value)}
                 value={answers[33]}
               />
               were attached to lines as bait.
             </ListItem>
             <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                display: "list-item",
-                mb: 2,
-              }}
+              sx={{ display: "list-item", mb: 2 }}
               ref={(el) => (questionRefs.current[4] = el)}
             >
               The lines were
@@ -233,19 +218,13 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="35"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[4] = el)}
                 onChange={(e) => handleInputChange(34, e.target.value)}
                 value={answers[34]}
               />
               regularly.
             </ListItem>
             <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                display: "list-item",
-                mb: "0.5em",
-              }}
+              sx={{ display: "list-item", mb: "0.5em" }}
               ref={(el) => (questionRefs.current[5] = el)}
             >
               The hooked shark was brought to the
@@ -254,30 +233,17 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="36"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[5] = el)}
                 onChange={(e) => handleInputChange(35, e.target.value)}
                 value={answers[35]}
               />
               and secured.
             </ListItem>
-            <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                display: "list-item",
-                mb: "0.5em",
-              }}
-            >
+            <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
               The shark was measured and tagged, and tissue removed for
               research.
             </ListItem>
             <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                display: "list-item",
-                mb: "0.5em",
-              }}
+              sx={{ display: "list-item", mb: "0.5em" }}
               ref={(el) => (questionRefs.current[6] = el)}
             >
               Larger sharks: an acoustic tag was fitted or a
@@ -286,19 +252,13 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="37"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[6] = el)}
                 onChange={(e) => handleInputChange(36, e.target.value)}
                 value={answers[36]}
               />
               was attached.
             </ListItem>
             <ListItem
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                display: "list-item",
-                mb: "0.5em",
-              }}
+              sx={{ display: "list-item", mb: "0.5em" }}
               ref={(el) => (questionRefs.current[7] = el)}
             >
               The shark was released after its
@@ -307,7 +267,6 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
                 label="38"
                 variant="standard"
                 autoComplete="off"
-                inputRef={(el) => (inputRefs.current[7] = el)}
                 onChange={(e) => handleInputChange(37, e.target.value)}
                 value={answers[37]}
               />
@@ -345,10 +304,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
             sx={{ mt: 2, width: "100%" }}
             ref={(el) => (questionRefs.current[8] = el)}
           >
-            <Typography
-              ref={(el) => (inputRefs.current[8] = el)}
-              tabIndex={0}
-            >
+            <Typography>
               <b style={{ marginRight: "2em" }}>39</b> What was the most
               surprising finding about tiger sharks in the Raine Island area?
             </Typography>
@@ -378,10 +334,7 @@ export default function Part4({ answers, setAnswers, currentQuestion }) {
             sx={{ mt: 2, width: "100%" }}
             ref={(el) => (questionRefs.current[9] = el)}
           >
-            <Typography
-              ref={(el) => (inputRefs.current[9] = el)}
-              tabIndex={0}
-            >
+            <Typography>
               <b style={{ marginRight: "2em" }}>40</b> What does the speaker say
               about the future of the research project?
             </Typography>

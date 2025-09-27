@@ -50,6 +50,7 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
         margin: "0 auto",
         maxWidth: "1200px",
         padding: "0 2rem",
+        pt: 2,
       }}
     >
       <Box
@@ -328,7 +329,10 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
             fontSize: "18px",
           }}
         >
-          <Typography sx={{ mt: 2 }} ref={(el) => (questionRefs.current[7] = el)}>
+          <Typography
+            sx={{ mt: 2 }}
+            ref={(el) => (questionRefs.current[7] = el)}
+          >
             <b>28 - </b>
             Marco's tutor suggests that he should look at the
             <TextField
@@ -342,7 +346,10 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
             />
             for each course.
           </Typography>
-          <Typography sx={{ mt: 3 }} ref={(el) => (questionRefs.current[8] = el)}>
+          <Typography
+            sx={{ mt: 3 }}
+            ref={(el) => (questionRefs.current[8] = el)}
+          >
             <b>29 - </b>
             Marco's tutor advises him to check the
             <TextField
@@ -356,7 +363,10 @@ export default function Part3({ answers, setAnswers, currentQuestion }) {
             />
             for each course.
           </Typography>
-          <Typography sx={{ mt: 3 }} ref={(el) => (questionRefs.current[9] = el)}>
+          <Typography
+            sx={{ mt: 3 }}
+            ref={(el) => (questionRefs.current[9] = el)}
+          >
             <b>30 - </b>
             Marco's tutor suggests that he should look at the
             <TextField

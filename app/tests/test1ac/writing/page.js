@@ -1,5 +1,5 @@
 "use client";
-import TestPage from "@/app/components/TestPage";
+import TestPage from "@/components/TestPage";
 import { test1acWritingData } from "./data";
 
 const WritingTest1AC = () => {

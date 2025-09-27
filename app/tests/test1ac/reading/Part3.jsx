@@ -1,3 +1,5 @@
+// app/tests/test1ac/reading/Part3.jsx
+
 "use client";
 import React, { useRef, useEffect } from "react";
 import {
@@ -9,15 +11,13 @@ import {
   Radio,
   RadioGroup,
   Select,
-  TextField,
   Typography,
   Accordion,
   AccordionSummary,
 } from "@mui/material";
-import TwoColumnLayout from "@/app/components/TwoColumnLayout";
+import TwoColumnLayout from "@/components/TwoColumnLayout";
 import WritingText from "./text/WritingText";
 
-// Data for questions to make mapping easier
 const radioQuestions = [
   {
     num: 27,
@@ -26,17 +26,20 @@ const radioQuestions = [
     options: [
       {
         value: "A",
-        label: "writing probably developed independently of speech.",
+        label: "A) writing probably developed independently of speech.",
       },
-      { value: "B", label: "clay tablets had not been invented at that time." },
+      {
+        value: "B",
+        label: "B) clay tablets had not been invented at that time.",
+      },
       {
         value: "C",
-        label: "the distant ruler would have spoken another language.",
+        label: "C) the distant ruler would have spoken another language.",
       },
       {
         value: "D",
         label:
-          "evidence of writing has been discovered from an earlier period.",
+          "D) evidence of writing has been discovered from an earlier period.",
       },
     ],
   },
@@ -46,18 +49,18 @@ const radioQuestions = [
     options: [
       {
         value: "A",
-        label: "is a probable explanation of the origins of writing.",
+        label: "A) is a probable explanation of the origins of writing.",
       },
       {
         value: "B",
         label:
-          "proves that early writing had a different function to writing today.",
+          "B) proves that early writing had a different function to writing today.",
       },
-      { value: "C", label: "provides an example of symbolic writing." },
+      { value: "C", label: "C) provides an example of symbolic writing." },
       {
         value: "D",
         label:
-          "shows some awareness amongst Sumerians of the purpose of writing.",
+          "D) shows some awareness amongst Sumerians of the purpose of writing.",
       },
     ],
   },
@@ -66,10 +69,10 @@ const radioQuestions = [
     question:
       "There was disagreement among the researchers at the symposium about",
     options: [
-      { value: "A", label: "the area where writing began." },
-      { value: "B", label: "the nature of early writing materials." },
-      { value: "C", label: "the writing began." },
-      { value: "D", label: "the meaning of certain abstract images." },
+      { value: "A", label: "A) the area where writing began." },
+      { value: "B", label: "B) the nature of early writing materials." },
+      { value: "C", label: "C) the writing began." },
+      { value: "D", label: "D) the meaning of certain abstract images." },
     ],
   },
   {
@@ -77,12 +80,12 @@ const radioQuestions = [
     question:
       "The opponents of the theory that writing developed from tokens believe that it",
     options: [
-      { value: "A", label: "grew out of accountancy." },
-      { value: "B", label: "evolved from pictures." },
-      { value: "C", label: "was initially intended as decoration." },
+      { value: "A", label: "A) grew out of accountancy." },
+      { value: "B", label: "B) evolved from pictures." },
+      { value: "C", label: "C) was initially intended as decoration." },
       {
         value: "D",
-        label: "was unlikely to have been connected with commerce.",
+        label: "D) was unlikely to have been connected with commerce.",
       },
     ],
   },
@@ -112,31 +115,42 @@ const matchQuestions = [
   },
 ];
 
+// ✅ List of words for the new select inputs
+const wordList = [
+  "A) abstract",
+  "B) clay tablets",
+  "C) cuneiform",
+  "D) decorative",
+  "E) Egypt",
+  "F) grammatical",
+  "G) Mesopotamia",
+  "H) narrative",
+  "I) numerical",
+  "J) parchment",
+  "K) personal",
+  "L) pictograms",
+  "M) simple",
+  "N) Sumerians",
+];
+
 const Part3 = ({ answers, setAnswers, currentQuestion }) => {
   const questionRefs = useRef([]);
+  const isInitialMount = useRef(true);
 
-  // Effect to scroll to and focus the current question
   useEffect(() => {
-    // Questions 27-40, ref index 0-13
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     const questionIndex = currentQuestion - 27;
     if (questionIndex >= 0 && questionIndex < 14) {
       const element = questionRefs.current[questionIndex];
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "center" });
-
         setTimeout(() => {
-          // For accordions, focus the button to expand it
-          if (questionIndex < 4) {
-            const accordionButton = element.querySelector('[role="button"]');
-            if (accordionButton) accordionButton.focus();
-          } else {
-            // For other inputs, find the first focusable element
-            const input = element.querySelector('input, [role="button"]');
-            if (input) {
-              input.focus();
-              if (input.tagName === "INPUT") input.select();
-            }
-          }
+          const input = element.querySelector('input, [role="button"]');
+          if (input) input.focus();
         }, 300);
       }
     }
@@ -216,7 +230,6 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
       <Typography sx={{ ml: 2, mb: 1 }}>
         <b>NB</b> You may use any letter more than once.
       </Typography>
-
       {matchQuestions.map((q, index) => (
         <Typography key={q.num} sx={{ ml: 2, mb: 1 }}>
           <b>{q.num}</b> {q.text}
@@ -285,7 +298,6 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
         ))}
       </Box>
 
-      {/* Questions 37-40 */}
       <br />
       <Typography sx={{ ml: 2, mb: 1 }}>Questions 37 - 40</Typography>
       <Typography sx={{ ml: 2, mb: 1 }}>
@@ -294,85 +306,94 @@ const Part3 = ({ answers, setAnswers, currentQuestion }) => {
       <Typography sx={{ fontSize: "1.1em", ml: 20, mt: 1 }}>
         <b>The earliest form of writing</b>
       </Typography>
-      <Box sx={{ textAlign: "left", lineHeight: 2.5 }}>
+      <Box sx={{ textAlign: "left", lineHeight: 3.5, fontSize: "18px" }}>
         Most archeological evidence shows that the people of
-        <Box
+        <FormControl
+          variant="outlined"
+          sx={{ mx: 1, minWidth: 150, verticalAlign: "bottom" }}
           ref={(el) => (questionRefs.current[10] = el)}
-          sx={{ display: "inline-block", verticalAlign: "bottom" }}
         >
-          <TextField
-            sx={{ mt: -2.5, ml: 1, mr: 1, width: "9em" }}
-            label="37"
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(36, e.target.value)}
+          <InputLabel>37</InputLabel>
+          <Select
             value={answers[36] || ""}
-          />
-        </Box>
+            onChange={(e) => handleInputChange(36, e.target.value)}
+            label="37"
+          >
+            {wordList.map((word, i) => (
+              <MenuItem key={i} value={word}>
+                {word}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         invented writing in around 3,300 BC. Their script was written on
-        <Box
+        <FormControl
+          variant="outlined"
+          sx={{ mx: 1, minWidth: 150, verticalAlign: "bottom" }}
           ref={(el) => (questionRefs.current[11] = el)}
-          sx={{ display: "inline-block", verticalAlign: "bottom" }}
         >
-          <TextField
-            sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-            label="38"
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(37, e.target.value)}
+          <InputLabel>38</InputLabel>
+          <Select
             value={answers[37] || ""}
-          />
-        </Box>
+            onChange={(e) => handleInputChange(37, e.target.value)}
+            label="38"
+          >
+            {wordList.map((word, i) => (
+              <MenuItem key={i} value={word}>
+                {word}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         and was called
-        <Box
+        <FormControl
+          variant="outlined"
+          sx={{ mx: 1, minWidth: 150, verticalAlign: "bottom" }}
           ref={(el) => (questionRefs.current[12] = el)}
-          sx={{ display: "inline-block", verticalAlign: "bottom" }}
         >
-          <TextField
-            sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-            label="39"
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(38, e.target.value)}
+          <InputLabel>39</InputLabel>
+          <Select
             value={answers[38] || ""}
-          />
-        </Box>
+            onChange={(e) => handleInputChange(38, e.target.value)}
+            label="39"
+          >
+            {wordList.map((word, i) => (
+              <MenuItem key={i} value={word}>
+                {word}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         . Their script originally showed images related to political power and
         business, and later developed to become more
-        <Box
+        <FormControl
+          variant="outlined"
+          sx={{ mx: 1, minWidth: 150, verticalAlign: "bottom" }}
           ref={(el) => (questionRefs.current[13] = el)}
-          sx={{ display: "inline-block", verticalAlign: "bottom" }}
         >
-          <TextField
-            sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-            label="40"
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(39, e.target.value)}
+          <InputLabel>40</InputLabel>
+          <Select
             value={answers[39] || ""}
-          />
-        </Box>
+            onChange={(e) => handleInputChange(39, e.target.value)}
+            label="40"
+          >
+            {wordList.map((word, i) => (
+              <MenuItem key={i} value={word}>
+                {word}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         .
       </Box>
-      <Box sx={{ border: "1px solid black", p: 1, mt: 2, width: "100%" }}>
+      <Box sx={{ border: "1px solid black", p: 1, mt: 2, width: "95%" }}>
         <Typography variant="h6" sx={{ textAlign: "center", mb: 1 }}>
           List of Words
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: "0.5rem 2rem" }}>
-          <Typography>A) abstract</Typography>
-          <Typography>B) clay tablets</Typography>
-          <Typography>C) cuneiform</Typography>
-          <Typography>D) decorative</Typography>
-          <Typography>E) Egypt</Typography>
-          <Typography>F) grammatical</Typography>
-          <Typography>G) Mesopotamia</Typography>
-          <Typography>H) narrative</Typography>
-          <Typography>I) numerical</Typography>
-          <Typography>J) parchment</Typography>
-          <Typography>K) personal</Typography>
-          <Typography>L) pictograms</Typography>
-          <Typography>M) simple</Typography>
-          <Typography>N) Sumerians</Typography>
+          {wordList.map((word, i) => (
+            <Typography key={i}>{word}</Typography>
+          ))}
         </Box>
       </Box>
     </Box>

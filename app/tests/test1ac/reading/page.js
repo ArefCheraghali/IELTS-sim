@@ -1,5 +1,5 @@
 "use client";
-import TestPage from "@/app/components/TestPage";
+import TestPage from "@/components/TestPage";
 import { test1acReadingData } from "./data";
 
 const ReadingTest1AC = () => {
