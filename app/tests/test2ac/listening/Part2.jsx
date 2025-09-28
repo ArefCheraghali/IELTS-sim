@@ -1,17 +1,18 @@
 "use client";
+import React, { useRef, useEffect } from "react";
 import { Box, Typography } from "@mui/material";
-import DragDrop from "../../../components/DragDrop";
-import MultipleChoiceQuestion from "../../../components/MultipleChoiceQuestion";
-import { useRef, useEffect } from "react";
+import DragDrop from "@/components/DragDrop";
+import MultipleChoiceQuestion from "@/components/MultipleChoiceQuestion";
 
 const initialQuestions = [
-  { id: "10", text: "11 Superheroes", answerId: null },
-  { id: "11", text: "12 Just do it", answerId: null },
-  { id: "12", text: "13 Count on me", answerId: null },
-  { id: "13", text: "14 Speak up", answerId: null },
-  { id: "14", text: "15 Jump for joy", answerId: null },
-  { id: "15", text: "16 Sticks and stones", answerId: null },
+  { id: "q11", text: "11 Superheroes", answerId: null },
+  { id: "q12", text: "12 Just do it", answerId: null },
+  { id: "q13", text: "13 Count on me", answerId: null },
+  { id: "q14", text: "14 Speak up", answerId: null },
+  { id: "q15", text: "15 Jump for joy", answerId: null },
+  { id: "q16", text: "16 Sticks and stones", answerId: null },
 ];
+
 const initialAnswers = [
   { id: "A", text: "A) involves painting and drawing" },
   { id: "B", text: "B) will be led by a prize-winning author" },
@@ -24,39 +25,27 @@ const initialAnswers = [
 ];
 
 const Part2 = ({ answers, setAnswers, currentQuestion }) => {
-  const questionRefs = useRef(Array(10).fill(null));
-  const topOfPartRef = useRef(null); // Ref for the main container of this part
+  const questionRefs = useRef(
+    Array(10)
+      .fill(null)
+      .map(() => React.createRef())
+  );
 
-  // This new useEffect runs only once when the component mounts
   useEffect(() => {
-    // Scroll to the top of the component's container
-    if (topOfPartRef.current) {
-      // This targets the top of this specific component
-      topOfPartRef.current.scrollIntoView({ behavior: "auto" });
-    }
-  }, []); // The empty dependency array [] ensures this runs only on mount
-
-  // This useEffect handles scrolling to a specific question when currentQuestion changes
-  useEffect(() => {
-    // NOTE: We should prevent this from running on initial mount as well,
-    // to avoid a conflict with the scroll-to-top effect.
-    // However, since the parent effect scrolls to top instantly ('auto'),
-    // this one will trigger on the first meaningful question change.
     if (currentQuestion >= 11 && currentQuestion <= 20) {
       const index = currentQuestion - 11;
-      // Add a small delay to ensure the top-scroll has finished.
-      setTimeout(() => {
-        questionRefs.current[index]?.scrollIntoView({
+      const element = questionRefs.current[index]?.current;
+      if (element) {
+        element.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });
-      }, 50); // Small delay
+      }
     }
   }, [currentQuestion]);
 
   return (
     <Box
-      ref={topOfPartRef} // Attach the ref to the main container
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -70,10 +59,8 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
           justifyContent: "space-between",
           width: "100%",
-          maxWidth: "60rem",
         }}
       >
         <Typography variant="h5" gutterBottom>
@@ -83,15 +70,19 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
           Questions 11-20
         </Typography>
       </Box>
-      <Typography>Questions 11-16</Typography>
+
+      <Typography>
+        <b>Questions 11-16</b>
+      </Typography>
       <Typography>
         What information is given about each of the following festival
         workshops?
       </Typography>
       <Typography>
         Choose <b>SIX</b> answers from the box and write the correct letter,{" "}
-        <b>A-I</b>, next to the questions 11-17.
+        <b>A-H</b>, next to questions 11-16.
       </Typography>
+
       <DragDrop
         initialQuestions={initialQuestions}
         initialAnswers={initialAnswers}
@@ -101,36 +92,28 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
         title="Festival workshops"
         infoTitle="Information"
         questionRefs={questionRefs}
-        startIndex={10}
+        startIndex={10} // Corrected: Q11 is at index 10 of the main answers array
         startQuestionNumber={11}
       />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          maxWidth: "60rem",
-          mt: 3,
-          mb: 3,
-        }}
-      >
-        <Typography>Questions 17 and 18</Typography>
+
+      <Box sx={{ width: "100%", mt: 3, textAlign: "left" }}>
+        <Typography>
+          <b>Questions 17 and 18</b>
+        </Typography>
         <Typography>
           Choose <b>TWO</b> letters, <b>A-E</b>.
         </Typography>
-        <Typography>
-          Which <b>TWO</b> reasons does the speaker give for recommending{" "}
-          <i>Alive and Kicking</i>?
+        <Typography sx={{ fontWeight: "bold" }}>
+          Which TWO things can volunteers help with at the festival?
         </Typography>
-        <Box ref={(el) => (questionRefs.current[6] = el)}>
+        <Box ref={questionRefs.current[6]}>
           <MultipleChoiceQuestion
             options={[
-              { label: "their financial situation", value: "A" },
-              { label: "their level of commitment", value: "B" },
-              { label: "their work experience", value: "C" },
-              { label: "their ambition", value: "D" },
-              { label: "their availability", value: "E" },
+              { label: "issuing tickets", value: "A" },
+              { label: "taking photographs", value: "B" },
+              { label: "selling souvenirs", value: "C" },
+              { label: "directing traffic", value: "D" },
+              { label: "checking venues", value: "E" },
             ]}
             questionIndexes={[16, 17]}
             answers={answers}
@@ -139,41 +122,25 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
           />
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          maxWidth: "60rem",
-        }}
-      >
-        <Typography>Questions 19 and 20</Typography>
+
+      <Box sx={{ width: "100%", mt: 3, textAlign: "left" }}>
+        <Typography>
+          <b>Questions 19 and 20</b>
+        </Typography>
         <Typography>
           Choose <b>TWO</b> letters, <b>A-E</b>.
         </Typography>
-        <Typography>
-          Which <b>TWO</b> pieces of advice does the speaker give to parents
-          about reading?
+        <Typography sx={{ fontWeight: "bold" }}>
+          Which TWO things must volunteers have?
         </Typography>
-        <Box ref={(el) => (questionRefs.current[8] = el)}>
+        <Box ref={questionRefs.current[8]}>
           <MultipleChoiceQuestion
             options={[
-              {
-                label: "Encourage children to write down new vocabulary.",
-                value: "A",
-              },
-              { label: "Allow children to listen to audio books.", value: "B" },
-              { label: "Get reommendations from librarians.", value: "C" },
-              {
-                label: "Give children a choice about what they read.",
-                value: "D",
-              },
-              {
-                label:
-                  "Only read aloud to children until they can read independently.",
-                value: "E",
-              },
+              { label: "their financial situation", value: "A" },
+              { label: "their level of commitment", value: "B" },
+              { label: "their work experience", value: "C" },
+              { label: "their ambition", value: "D" },
+              { label: "their availability", value: "E" },
             ]}
             questionIndexes={[18, 19]}
             answers={answers}

@@ -7,21 +7,22 @@ const Task1 = ({ answers, setAnswers }) => {
   const wordLimit = 150;
 
   const getWordCount = (text) => {
-    return text.trim().split(/\s+/).length;
+    if (!text) return 0;
+    const words = text.trim().split(/\s+/);
+    return words.filter((word) => word.length > 0).length;
   };
 
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
     <Box
       sx={{
         display: "flex",
-        height: "calc(100vh - 120px - 26px )",
+        height: "calc(100vh - 120px - 26px)",
       }}
     >
       <Box
@@ -30,92 +31,73 @@ const Task1 = ({ answers, setAnswers }) => {
           overflowY: "auto",
           padding: 2,
           borderRight: "1px solid #ccc",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
         }}
       >
-        <Typography variant="h5" sx={{ ml: 4, mb: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>
           <b>Writing Task 1</b>
         </Typography>
-        <Typography sx={{ ml: 4, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           You should spend about 20 minutes on this task.
         </Typography>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            bgcolor: "lightgray",
-            borderStyle: "solid",
-            borderWidth: 1,
-            padding: "0.5em",
-            ml: 4,
-            mb: 1,
-            pl: 2,
-            textAlign: "left",
+            border: "1px solid #ccc",
+            p: 2,
+            bgcolor: "#f5f5f5",
+            borderRadius: 1,
+            mb: 2,
           }}
         >
-          <Typography
-            sx={{
-              fontSize: "1.1em",
-            }}
-          >
-            <b>
-              The diagrams below show the main reasons workers chose to work
-              from home and the hours males and females worked at home for the
-              year 2019.
-            </b>
+          <Typography sx={{ fontWeight: "bold" }}>
+            The diagrams below show the main reasons workers chose to work from
+            home and the hours males and females worked at home for the year
+            2019.
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "1.1em",
-            }}
-          >
-            <b>
-              Summarise the information by selecting and reporting the main
-              features, and make comparisons where relevant.
-            </b>
+          <Typography sx={{ mt: 1 }}>
+            Summarise the information by selecting and reporting the main
+            features, and make comparisons where relevant.
           </Typography>
         </Box>
-        <Typography sx={{ ml: 4, mb: 1 }}>Write at least 150 words.</Typography>
+        <Typography sx={{ mb: 2 }}>Write at least 150 words.</Typography>
         <img
           src={image1}
           alt="Work from home statistics graphs"
-          style={{ width: "100%" }}
+          style={{ width: "100%", borderRadius: "8px" }}
         />
       </Box>
 
       <Box
         sx={{
           width: "50%",
-          overflowY: "auto",
+          padding: 2,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          padding: 2,
         }}
       >
-        <Typography variant="body2">
-          Word Count: {getWordCount(answers[0])} / {wordLimit}
+        <Typography
+          variant="body2"
+          sx={{ mb: 1, textAlign: "right", color: "text.secondary" }}
+        >
+          Word Count: {getWordCount(answers[0] || "")} / {wordLimit}
         </Typography>
-        <Box sx={{ mt: 4, width: "100%", height: "100%" }}>
-          <TextField
-            fullWidth
-            multiline
-            rows={15}
-            variant="outlined"
-            placeholder="Start writing your essay here..."
-            autoComplete="off"
-            onChange={(e) => handleInputChange(0, e.target.value)}
-            spellCheck={false}
-            value={answers[0]}
-            sx={{ backgroundColor: "#fff", height: "50vh" }}
-          />
-        </Box>
+        <TextField
+          fullWidth
+          multiline
+          rows={20}
+          variant="outlined"
+          placeholder="Start writing your summary here..."
+          autoComplete="off"
+          onChange={(e) => handleInputChange(0, e.target.value)}
+          spellCheck={false}
+          value={answers[0] || ""}
+          sx={{
+            flexGrow: 1,
+            "& .MuiOutlinedInput-root": {
+              height: "100%",
+              alignItems: "flex-start",
+            },
+          }}
+        />
       </Box>
     </Box>
   );

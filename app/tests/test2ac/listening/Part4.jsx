@@ -1,28 +1,75 @@
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { Box, Typography, List, ListItem, TextField } from "@mui/material";
 
 const Part4 = ({ answers, setAnswers, currentQuestion }) => {
-  // Create refs for each text field
   const inputRefs = useRef([]);
 
   useEffect(() => {
-    // Focus on the text field corresponding to the current question
     if (currentQuestion >= 31 && currentQuestion <= 40) {
       const index = currentQuestion - 31;
       const element = inputRefs.current[index];
       if (element) {
-        element.focus();
-        element.select();
         element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          element.focus();
+          element.select();
+        }, 200);
       }
     }
   }, [currentQuestion]);
+
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
+
+  const questionsData = [
+    { qNum: 31, textBefore: "fibres from some", textAfter: "during washing" },
+    {
+      qNum: 32,
+      textBefore: "They cause injuries to the",
+      textAfter: "of wildlife and affect their digestive systems.",
+    },
+    {
+      qNum: 33,
+      textBefore: "They enter the food chain, e.g, in bottled and tap water,",
+      textAfter: ", and seafood.",
+    },
+    {
+      qNum: 34,
+      textBefore:
+        "They may not affect human health, but they are banned in skin cleaning products and",
+      textAfter: "in some countries.",
+    },
+    {
+      qNum: 35,
+      textBefore: "Microplastics enter the soil through air, rain and",
+      textAfter: ".",
+    },
+    {
+      qNum: 36,
+      textBefore: "Earthworms are important because they add",
+      textAfter: "to the soil.",
+    },
+    {
+      qNum: 37,
+      textBefore:
+        "The study aimed to find whether microplastics in earthworms affect the",
+      textAfter: "of plants.",
+    },
+    { qNum: 38, textBefore: "", textAfter: "loss in earthworms" },
+    {
+      qNum: 39,
+      textBefore: "a rise in the level of",
+      textAfter: "in the soil.",
+    },
+    {
+      qNum: 40,
+      textBefore: "changes to soil damage both ecosystem and",
+      textAfter: ".",
+    },
+  ];
 
   return (
     <Box
@@ -31,18 +78,14 @@ const Part4 = ({ answers, setAnswers, currentQuestion }) => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        maxWidth: "1200px",
+        maxWidth: "60rem",
         margin: "0 auto",
+        padding: "0 1rem",
+        fontSize: "19px",
       }}
     >
       <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "100%",
-          maxWidth: "60rem",
-        }}
+        sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}
       >
         <Typography variant="h5" gutterBottom>
           Part 4
@@ -51,189 +94,139 @@ const Part4 = ({ answers, setAnswers, currentQuestion }) => {
           Questions 31-40
         </Typography>
       </Box>
+
       <Typography>Complete the notes below.</Typography>
-      <Typography>
+      <Typography sx={{ mb: 2 }}>
         Write <b>ONE WORD ONLY</b> for each answer.
       </Typography>
 
       <Box
         sx={{
-          width: "100%",
-          height: "auto",
-          maxWidth: "60rem",
-          mt: 2,
-          display: "flex",
-          flexDirection: "column",
-          padding: "1em",
           textAlign: "left",
-          fontSize: "1.2rem",
+          width: "100%",
+          border: "1px solid #ccc",
+          p: 2,
+          borderRadius: 1,
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{ textAlign: "center", width: "100%", mb: 2 }}
-        >
+        <Typography variant="h6" sx={{ textAlign: "center", mb: 2 }}>
           <b>Microplastics</b>
         </Typography>
-        <List sx={{ listStyleType: "circle", ml: "3em" }}>
-          <Typography>
-            <b>Where microbplastics come from</b>
-          </Typography>
-          <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
-            fibres from some
+
+        <Typography>
+          <b>Where microplastics come from</b>
+        </Typography>
+        <List sx={{ listStyleType: "disc", pl: 4 }}>
+          <ListItem sx={{ display: "list-item", py: 1 }}>
+            {questionsData[0].textBefore}
             <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+              sx={{ mx: 1, width: "10em", mt: -2 }}
               label="31"
-              variant="standard"
+              variant="outlined"
               autoComplete="off"
+              value={answers[30] || ""}
               onChange={(e) => handleInputChange(30, e.target.value)}
-              value={answers[30]}
               inputRef={(el) => (inputRefs.current[0] = el)}
             />
-            during washing
+            {questionsData[0].textAfter}
           </ListItem>
           <ListItem sx={{ display: "list-item" }}>
             the breakdown of large pieces of plastic
           </ListItem>
           <ListItem sx={{ display: "list-item" }}>waste from industry</ListItem>
-          <ListItem sx={{ display: "list-item", mb: 3 }}>
+          <ListItem sx={{ display: "list-item" }}>
             the action of vehicle tyres on roads
           </ListItem>
-          <Typography>
-            <b>Effects of microplastics</b>
-          </Typography>
-          <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
-            They cause injuries to the
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="32"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(31, e.target.value)}
-              value={answers[31]}
-              inputRef={(el) => (inputRefs.current[1] = el)}
-            />
-            of wildlife and affect their digestive systems.
-          </ListItem>
-          <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
-            They enter the food chain, e.g, in bottled and tap water,
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="33"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(32, e.target.value)}
-              value={answers[32]}
-              inputRef={(el) => (inputRefs.current[2] = el)}
-            />
-            and seafood.
-          </ListItem>
-          <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
-            They may not affect human health, but they are banned in skin
-            cleaning products and
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="34"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(33, e.target.value)}
-              value={answers[33]}
-              inputRef={(el) => (inputRefs.current[3] = el)}
-            />
-            in some countries.
-          </ListItem>
-          <ListItem sx={{ display: "list-item", mb: 3 }}>
-            Microplastics enter the soil through air, rain and
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="35"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(34, e.target.value)}
-              value={answers[34]}
-              inputRef={(el) => (inputRefs.current[4] = el)}
-            />
-          </ListItem>
-          <Typography>
-            <b>
-              Microplastics in the soil - a study by Anglia Ruskin University
-            </b>
-          </Typography>
-          <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 3 }}>
-            Earthworms are important because they add
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="36"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(35, e.target.value)}
-              value={answers[35]}
-              inputRef={(el) => (inputRefs.current[5] = el)}
-            />
-            to the soil.
-          </ListItem>
-          <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
-            The study aimed to find whether microplastics in earthworms affect
-            the
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="37"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(36, e.target.value)}
-              value={answers[36]}
-              inputRef={(el) => (inputRefs.current[6] = el)}
-            />
-            of plants.
-          </ListItem>
-          <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+        </List>
+
+        <Typography sx={{ mt: 2 }}>
+          <b>Effects of microplastics</b>
+        </Typography>
+        <List sx={{ listStyleType: "disc", pl: 4 }}>
+          {questionsData.slice(1, 5).map((q, i) => (
+            <ListItem key={q.qNum} sx={{ display: "list-item", py: 1 }}>
+              {q.textBefore}
+              <TextField
+                sx={{ mx: 1, width: "10em", mt: -2 }}
+                label={q.qNum}
+                variant="outlined"
+                autoComplete="off"
+                value={answers[q.qNum - 1] || ""}
+                onChange={(e) => handleInputChange(q.qNum - 1, e.target.value)}
+                inputRef={(el) => (inputRefs.current[i + 1] = el)}
+              />
+              {q.textAfter}
+            </ListItem>
+          ))}
+        </List>
+
+        <Typography sx={{ mt: 2 }}>
+          <b>Microplastics in the soil - a study by Anglia Ruskin University</b>
+        </Typography>
+        <List sx={{ listStyleType: "disc", pl: 4 }}>
+          {questionsData.slice(5, 7).map((q, i) => (
+            <ListItem key={q.qNum} sx={{ display: "list-item", py: 1 }}>
+              {q.textBefore}
+              <TextField
+                sx={{ mx: 1, width: "10em", mt: -2 }}
+                label={q.qNum}
+                variant="outlined"
+                autoComplete="off"
+                value={answers[q.qNum - 1] || ""}
+                onChange={(e) => handleInputChange(q.qNum - 1, e.target.value)}
+                inputRef={(el) => (inputRefs.current[i + 5] = el)}
+              />
+              {q.textAfter}
+            </ListItem>
+          ))}
+          <ListItem sx={{ display: "list-item" }}>
             The study found that microplastics caused:
-            <List sx={{ listStyleType: "disc", ml: "3em" }}>
-              <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 1 }}>
+            <List sx={{ listStyleType: "square", pl: 4 }}>
+              <ListItem sx={{ display: "list-item", py: 1 }}>
                 <TextField
-                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  sx={{ mr: 1, width: "10em", mt: -2 }}
                   label="38"
-                  variant="standard"
+                  variant="outlined"
                   autoComplete="off"
+                  value={answers[37] || ""}
                   onChange={(e) => handleInputChange(37, e.target.value)}
-                  value={answers[37]}
                   inputRef={(el) => (inputRefs.current[7] = el)}
                 />
                 loss in earthworms
               </ListItem>
-              <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+              <ListItem sx={{ display: "list-item" }}>
                 fewer seeds to germinate
               </ListItem>
-              <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+              <ListItem sx={{ display: "list-item", py: 1 }}>
                 a rise in the level of
                 <TextField
-                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  sx={{ mx: 1, width: "10em", mt: -2 }}
                   label="39"
-                  variant="standard"
+                  variant="outlined"
                   autoComplete="off"
+                  value={answers[38] || ""}
                   onChange={(e) => handleInputChange(38, e.target.value)}
-                  value={answers[38]}
                   inputRef={(el) => (inputRefs.current[8] = el)}
                 />
                 in the soil.
               </ListItem>
             </List>
           </ListItem>
-          <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
+          <ListItem sx={{ display: "list-item" }}>
             <b>The study concluded:</b>
-            <List sx={{ listStyleType: "disc", ml: "3em" }}>
-              <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 1 }}>
-                soil should be seen as an important natural procecss.
+            <List sx={{ listStyleType: "square", pl: 4 }}>
+              <ListItem sx={{ display: "list-item" }}>
+                soil should be seen as an important natural process.
               </ListItem>
-              <ListItem sx={{ display: "list-item", mb: "0.5em", mt: 1 }}>
+              <ListItem sx={{ display: "list-item", py: 1 }}>
                 changes to soil damage both ecosystem and
                 <TextField
-                  sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
+                  sx={{ mx: 1, width: "10em", mt: -2 }}
                   label="40"
-                  variant="standard"
+                  variant="outlined"
                   autoComplete="off"
+                  value={answers[39] || ""}
                   onChange={(e) => handleInputChange(39, e.target.value)}
-                  value={answers[39]}
                   inputRef={(el) => (inputRefs.current[9] = el)}
                 />
                 .
