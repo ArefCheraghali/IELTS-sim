@@ -2,7 +2,6 @@ import { useRef, useEffect } from "react";
 import {
   Box,
   Divider,
-  Grid,
   List,
   ListItem,
   TextField,
@@ -45,6 +44,7 @@ export default function Part1({ answers, setAnswers, currentQuestion }) {
           margin: "0 auto",
           maxWidth: "1300px",
           padding: "0 2rem",
+          pt: 2,
         }}
       >
         <Box
