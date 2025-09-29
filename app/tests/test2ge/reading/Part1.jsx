@@ -10,10 +10,10 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-
+import TwoColumnLayout from "@/components/TwoColumnLayout";
 import M32Text from "./text/M32Text";
 
-// Define question data for easier mapping
+// Data array for questions
 const trueFalseQuestionsData = [
   {
     number: 1,
@@ -53,29 +53,30 @@ const matchingEventsQuestionsData = [
 ];
 
 const Part1 = ({ answers, setAnswers, currentQuestion }) => {
-  const possibleAnswersTFNG = ["TRUE", "FALSE", "NOT GIVEN"];
-  const possibleAnswersMatching = ["A", "B", "C", "D", "E", "F", "G"];
-
-  const questionRefs = React.useRef(Array(14).fill(null));
-  const prevCurrentQuestionRef = useRef(); // To store the previous currentQuestion
+  const questionRefs = useRef(
+    Array(14)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    const isQuestionInThisPart = currentQuestion >= 1 && currentQuestion <= 14;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
 
-    if (
-      isQuestionInThisPart &&
-      prevCurrentQuestionRef.current !== undefined &&
-      prevCurrentQuestionRef.current !== currentQuestion
-    ) {
-      const index = currentQuestion - 1; // 0-indexed ref array
-      if (questionRefs.current[index]) {
-        questionRefs.current[index].scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+    if (currentQuestion >= 1 && currentQuestion <= 14) {
+      const index = currentQuestion - 1;
+      const element = questionRefs.current[index]?.current;
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          const input = element.querySelector('input, [role="button"]');
+          if (input) input.focus();
+        }, 300);
       }
     }
-    prevCurrentQuestionRef.current = currentQuestion;
   }, [currentQuestion]);
 
   const handleInputChange = (index, value) => {
@@ -84,227 +85,103 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
     setAnswers(newAnswers);
   };
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "calc(100vh - 120px - 26px )",
-      }}
-    >
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          padding: 2,
-          borderRight: "1px solid #ccc",
-        }}
+  const rightContent = (
+    <Box>
+      <Typography sx={{ fontSize: "1.1em", mb: 1, fontWeight: "bold" }}>
+        READING PASSAGE 1
+      </Typography>
+      <Typography sx={{ mb: 2 }}>
+        You should spend about 20 minutes on <b>Questions 1-14</b>.
+      </Typography>
+
+      <Typography
+        variant="h6"
+        component="h3"
+        sx={{ mb: 1, fontSize: "1rem", fontWeight: "bold" }}
       >
-        <M32Text />
-      </Box>
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          padding: 2,
-        }}
+        Questions 1 - 7
+      </Typography>
+      <Typography sx={{ mb: 1 }}>
+        Do the following statements agree with the information in Reading
+        Passage 1?
+      </Typography>
+      <List dense sx={{ pl: 2, mb: 2 }}>
+        <ListItem>
+          <b>TRUE</b> if the statement agrees with the information
+        </ListItem>
+        <ListItem>
+          <b>FALSE</b> if the statement contradicts the information
+        </ListItem>
+        <ListItem>
+          <b>NOT GIVEN</b> if there is no information on this
+        </ListItem>
+      </List>
+
+      {trueFalseQuestionsData.map((q, index) => (
+        <Box
+          key={q.number}
+          ref={questionRefs.current[index]}
+          sx={{ display: "flex", alignItems: "center", mb: 1.5 }}
+        >
+          <FormControl sx={{ mr: 2, minWidth: "140px" }} size="small">
+            <InputLabel>{q.number}</InputLabel>
+            <Select
+              value={answers[q.number - 1] || ""}
+              onChange={(e) => handleInputChange(q.number - 1, e.target.value)}
+              label={`${q.number}`}
+            >
+              <MenuItem value="TRUE">TRUE</MenuItem>
+              <MenuItem value="FALSE">FALSE</MenuItem>
+              <MenuItem value="NOT GIVEN">NOT GIVEN</MenuItem>
+            </Select>
+          </FormControl>
+          <Typography variant="body2">{q.text}</Typography>
+        </Box>
+      ))}
+
+      <Typography
+        variant="h6"
+        component="h3"
+        sx={{ mt: 3, mb: 1, fontSize: "1rem", fontWeight: "bold" }}
       >
-        <Typography sx={{ fontSize: "1.1em", mb: 1, fontWeight: "bold" }}>
-          READING PASSAGE 1
-        </Typography>
-        <Typography sx={{ mb: 2 }}>
-          You should spend about 20 minutes on <b>Questions 1-14</b>, which are
-          based on Reading Passage 1.
-        </Typography>
+        Questions 8 - 14
+      </Typography>
+      <Typography sx={{ mb: 1 }}>
+        Look at the seven descriptions of events <b>A-G</b>.
+      </Typography>
+      <Typography sx={{ mb: 2 }}>
+        For which events are the following statements true? Pick the correct
+        letter in boxes 8-14.
+      </Typography>
 
-        {/* Questions 1 - 7: TRUE/FALSE/NOT GIVEN */}
-        <Typography
-          variant="h6"
-          component="h3"
-          sx={{ mb: 1, fontSize: "1rem", fontWeight: "bold" }}
+      {matchingEventsQuestionsData.map((q, index) => (
+        <Box
+          key={q.number}
+          ref={questionRefs.current[index + 7]}
+          sx={{ display: "flex", alignItems: "center", mb: 1.5 }}
         >
-          Questions 1 - 7
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          Do the following statements agree with the information given in
-          Reading Passage 1?
-        </Typography>
-        <Typography sx={{ mb: 1 }}>In boxes 1-7 below, select:</Typography>
-        <List
-          dense
-          sx={{ pl: 2, mb: 2, listStyleType: "none", paddingLeft: 0 }}
-        >
-          <ListItem
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              py: 0.2,
-              alignItems: "baseline",
-            }}
-          >
-            <Typography
-              component="span"
-              sx={{
-                fontWeight: "bold",
-                minWidth: "90px",
-                textAlign: "left",
-                mr: 3, // Added margin for spacing
-              }}
+          <FormControl sx={{ mr: 2, minWidth: "100px" }} size="small">
+            <InputLabel>{q.number}</InputLabel>
+            <Select
+              value={answers[q.number - 1] || ""}
+              onChange={(e) => handleInputChange(q.number - 1, e.target.value)}
+              label={`${q.number}`}
             >
-              TRUE
-            </Typography>
-            <Typography component="span" sx={{ fontSize: "0.9rem" }}>
-              if the statement agrees with the information
-            </Typography>
-          </ListItem>
-          <ListItem
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              py: 0.2,
-              alignItems: "baseline",
-            }}
-          >
-            <Typography
-              component="span"
-              sx={{
-                fontWeight: "bold",
-                minWidth: "90px",
-                textAlign: "left",
-                mr: 3, // Added margin for spacing
-              }}
-            >
-              FALSE
-            </Typography>
-            <Typography component="span" sx={{ fontSize: "0.9rem" }}>
-              if the statement contradicts the information
-            </Typography>
-          </ListItem>
-          <ListItem
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              py: 0.2,
-              alignItems: "baseline",
-            }}
-          >
-            <Typography
-              component="span"
-              sx={{
-                fontWeight: "bold",
-                minWidth: "90px",
-                textAlign: "left",
-                mr: 3, // Added margin for spacing
-              }}
-            >
-              NOT GIVEN
-            </Typography>
-            <Typography component="span" sx={{ fontSize: "0.9rem" }}>
-              if there is no information on this
-            </Typography>
-          </ListItem>
-        </List>
-
-        {trueFalseQuestionsData.map((q) => (
-          <Box
-            key={q.number}
-            ref={(el) => (questionRefs.current[q.number - 1] = el)}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              mb: 1.5,
-              width: "100%",
-            }}
-          >
-            <FormControl
-              sx={{ mr: 2, minWidth: { xs: "100px", sm: "160px" } }}
-              size="small"
-            >
-              <InputLabel id={`q${q.number}-label`}>{q.number}</InputLabel>
-              <Select
-                labelId={`q${q.number}-label`}
-                label={`${q.number}`}
-                value={answers[q.number - 1] || ""}
-                onChange={(e) =>
-                  handleInputChange(q.number - 1, e.target.value)
-                }
-              >
-                {possibleAnswersTFNG.map((answerOption) => (
-                  <MenuItem key={answerOption} value={answerOption}>
-                    {answerOption}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Typography
-              variant="body2"
-              sx={{ flexGrow: 1, textAlign: "left", fontSize: "1em" }}
-            >
-              {q.text}
-            </Typography>
-          </Box>
-        ))}
-
-        {/* Questions 8 - 14: Matching Events */}
-        <Typography
-          variant="h6"
-          component="h3"
-          sx={{ mt: 3, mb: 1, fontSize: "1rem", fontWeight: "bold" }}
-        >
-          Questions 8 - 14
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          Look at the seven descriptions of events <b>A-G</b> (in the reading
-          passage).
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          For which events are the following statements true? Pick the correct
-          letter in boxes 8-14.
-        </Typography>
-        <Typography sx={{ mb: 2 }}>
-          <b>NB</b> You may use any letter more than once.
-        </Typography>
-
-        {matchingEventsQuestionsData.map((q) => (
-          <Box
-            key={q.number}
-            ref={(el) => (questionRefs.current[q.number - 1] = el)}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              mb: 1.5,
-              width: "100%",
-            }}
-          >
-            <FormControl
-              sx={{ mr: 2, minWidth: { xs: "80px", sm: "100px" } }}
-              size="small"
-            >
-              <InputLabel id={`q${q.number}-label`}>{q.number}</InputLabel>
-              <Select
-                labelId={`q${q.number}-label`}
-                label={`${q.number}`}
-                value={answers[q.number - 1] || ""}
-                onChange={(e) =>
-                  handleInputChange(q.number - 1, e.target.value)
-                }
-              >
-                {possibleAnswersMatching.map((answerOption) => (
-                  <MenuItem key={answerOption} value={answerOption}>
-                    {answerOption}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Typography
-              variant="body2"
-              sx={{ flexGrow: 1, textAlign: "left", fontSize: "1em" }}
-            >
-              {q.text}
-            </Typography>
-          </Box>
-        ))}
-      </Box>
+              {["A", "B", "C", "D", "E", "F", "G"].map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Typography variant="body2">{q.text}</Typography>
+        </Box>
+      ))}
     </Box>
+  );
+
+  return (
+    <TwoColumnLayout leftContent={<M32Text />} rightContent={rightContent} />
   );
 };
 export default Part1;

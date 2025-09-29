@@ -5,20 +5,22 @@ const Task1 = ({ answers, setAnswers }) => {
   const wordLimit = 150;
 
   const getWordCount = (text) => {
-    return text.trim().split(/\s+/).length;
+    if (!text) return 0;
+    const words = text.trim().split(/\s+/);
+    return words.filter((word) => word.length > 0).length;
   };
+
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
     <Box
       sx={{
         display: "flex",
-        height: "calc(100vh - 120px - 26px )",
+        height: "calc(100vh - 120px - 26px)",
       }}
     >
       <Box
@@ -27,92 +29,84 @@ const Task1 = ({ answers, setAnswers }) => {
           overflowY: "auto",
           padding: 2,
           borderRight: "1px solid #ccc",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
         }}
       >
-        <Typography variant="h5" sx={{ ml: 1, mb: 2 }}>
+        <Typography variant="h5" sx={{ mb: 2 }}>
           <b>Writing Task 1</b>
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>
+        <Typography sx={{ mb: 1 }}>
           You should spend about 20 minutes on this task.
         </Typography>
         <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            bgcolor: "lightgray",
-            borderStyle: "solid",
-            borderWidth: 1,
-            padding: "0.5em",
-            ml: 1,
-            mb: 1,
-            pl: 2,
-            textAlign: "left",
+            border: "1px solid #ccc",
+            p: 2,
+            bgcolor: "#f5f5f5",
+            borderRadius: 1,
+            mb: 2,
           }}
         >
-          <Typography
-            sx={{
-              fontSize: "1.1em",
-            }}
-          >
+          <Typography>
             You recently took part in a training course. The organizer of the
             course has asked you for some feedback.
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "1.1em",
-            }}
-          >
+          <br />
+          <Typography>
             Write a letter to the organizer of the course. In your letter:
-            <br />
-            • give details of the course you took part in <br />
-            • say what you found useful on the course
-            <br />• suggest ways the course should be improved
+          </Typography>
+          <Typography>
+            <ul style={{ marginTop: "8px", fontSize: "18px" }}>
+              <li>give details of the course you took part in</li>
+              <li>say what you found useful on the course</li>
+              <li>suggest ways the course should be improved</li>
+            </ul>
           </Typography>
         </Box>
-        <Typography sx={{ ml: 1, mb: 2 }}>
-          <b>You do NOT need to write any addresses.</b>
+        <Typography sx={{ mb: 1 }}>
+          Write at least <b>150 words</b>.
         </Typography>
-        <Typography sx={{ ml: 1, mb: 4 }}>
-          Begin your letter as follows: <br />
-          {"\t"}Dear ........,
+        <Typography sx={{ mb: 2 }}>
+          You do <b>NOT</b> need to write any addresses.
         </Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>Write at least 150 words.</Typography>
+        <Typography>
+          Begin your letter as follows:
+          <br />
+          <b>Dear ........,</b>
+        </Typography>
       </Box>
 
       <Box
         sx={{
           width: "50%",
-          overflowY: "auto",
+          padding: 2,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          padding: 2,
         }}
       >
-        <Typography variant="body2">
-          Word Count: {getWordCount(answers[0])} / {wordLimit}
+        <Typography
+          variant="body2"
+          sx={{ mb: 1, textAlign: "right", color: "text.secondary" }}
+        >
+          Word Count: {getWordCount(answers[0] || "")} / {wordLimit}
         </Typography>
-        <Box sx={{ mt: 4, width: "100%", height: "100%" }}>
-          <TextField
-            fullWidth
-            multiline
-            rows={15}
-            variant="outlined"
-            placeholder="Start writing your essay here..."
-            autoComplete="off"
-            onChange={(e) => handleInputChange(0, e.target.value)}
-            spellCheck={false}
-            value={answers[0]}
-            sx={{ backgroundColor: "#fff", height: "50vh" }}
-          />
-        </Box>
+        <TextField
+          fullWidth
+          multiline
+          rows={20}
+          variant="outlined"
+          placeholder="Start writing your letter here..."
+          autoComplete="off"
+          onChange={(e) => handleInputChange(0, e.target.value)}
+          spellCheck={false}
+          value={answers[0] || ""}
+          sx={{
+            flexGrow: 1,
+            "& .MuiOutlinedInput-root": {
+              height: "100%",
+              alignItems: "flex-start",
+            },
+          }}
+        />
       </Box>
     </Box>
   );

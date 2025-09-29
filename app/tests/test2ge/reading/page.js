@@ -1,5 +1,5 @@
 "use client";
-import TestPage from "@/app/components/TestPage";
+import TestPage from "@/components/TestPage";
 import { test2geReadingData } from "./data";
 
 const ReadingTest2GE = () => {
