@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   FormControl,
@@ -10,53 +11,84 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
+import TwoColumnLayout from "@/components/TwoColumnLayout";
 import FoliesBarText from "./text/FoliesBarText";
 
-const Part1 = ({ answers, setAnswers, currentQuestion }) => {
-  const possibleAnswers = ["A", "B", "C", "D", "E", "F"];
-  const questionRefs = React.useRef(Array(13).fill(null));
-  const prevQuestionRef = React.useRef(null); // Add this line
+const paragraphMatchingQuestions = [
+  { qNum: 1, text: "a description of how Manet created the painting" },
+  {
+    qNum: 2,
+    text: "aspects of the painting that scholars are most interested in",
+  },
+  {
+    qNum: 3,
+    text: "the writer's view of the idea that Manet wants to communicate",
+  },
+  { qNum: 4, text: "examples to show why the bar scene is unrealistic" },
+  { qNum: 5, text: "a statement about the popularity of the painting" },
+];
 
-  React.useEffect(() => {
-    // Skip if it's the initial mount
-    if (prevQuestionRef.current === null) {
-      prevQuestionRef.current = currentQuestion;
+const shortAnswerQuestions = [
+  {
+    qNum: 6,
+    text: "Who was the first owner of A Bar at the Folies?",
+    answerIndex: 5,
+  },
+  { qNum: 7, text: "What is the barmaid wearing?", answerIndex: 6 },
+  {
+    qNum: 8,
+    text: "Which room is seen at the back of the painting?",
+    answerIndex: 7,
+  },
+  { qNum: 9, text: "Who is performing for the audience?", answerIndex: 8 },
+  {
+    qNum: 10,
+    text: "Where did most of the work on the painting take place?",
+    answerIndex: 9,
+  },
+];
+
+const sentenceCompletionOptions = [
+  {
+    value: "A",
+    text: "wanted to find out if the painting's perspective was realistic",
+  },
+  {
+    value: "B",
+    text: "felt they had to work very hard at boring and difficult jobs",
+  },
+  {
+    value: "C",
+    text: "wanted to understand the lives of ordinary people at the time",
+  },
+  { value: "D", text: "felt like they had to become different people" },
+  { value: "E", text: "wanted to manipulate our sense of reality" },
+  { value: "F", text: "wanted to focus on the detail in the painting" },
+];
+
+const Part1 = ({ answers, setAnswers, currentQuestion }) => {
+  const questionRefs = useRef(
+    Array(13)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
       return;
     }
-
-    // Only scroll if the question actually changed
-    if (prevQuestionRef.current !== currentQuestion) {
-      if (currentQuestion >= 1 && currentQuestion <= 13) {
-        const index = currentQuestion - 1;
-        const element = questionRefs.current[index];
-        if (element) {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-
-          // Add delay to ensure scroll completes before focus
-          setTimeout(() => {
-            // For questions 1-5 (Select)
-            if (index < 5) {
-              const select = element.querySelector("[role='button']");
-              if (select) {
-                select.focus();
-              }
-            }
-            // For questions 6-10 (TextField)
-            else {
-              const input = element.querySelector("input");
-              if (input) {
-                input.focus();
-                input.select();
-              }
-            }
-          }, 150);
-        }
+    if (currentQuestion >= 1 && currentQuestion <= 13) {
+      const index = currentQuestion - 1;
+      const element = questionRefs.current[index]?.current;
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          const input = element.querySelector('input, [role="button"]');
+          if (input) input.focus();
+        }, 300);
       }
-      prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
 
@@ -64,356 +96,190 @@ const Part1 = ({ answers, setAnswers, currentQuestion }) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "calc(100vh - 120px - 26px )",
-      }}
-    >
+  const rightContent = (
+    <Box>
+      <Typography sx={{ fontSize: "1.1em", mb: 1, fontWeight: "bold" }}>
+        READING PASSAGE 1
+      </Typography>
+      <Typography sx={{ mb: 2 }}>
+        You should spend about 20 minutes on <b>Questions 1-13</b>.
+      </Typography>
+
+      <Typography
+        variant="h6"
+        component="h3"
+        sx={{ mb: 1, fontSize: "1rem", fontWeight: "bold" }}
+      >
+        Questions 1-5
+      </Typography>
+      <Typography>Reading Passage 1 has six paragraphs, A-F.</Typography>
+      <Typography sx={{ mb: 2 }}>
+        Which paragraph contains the following information?
+      </Typography>
+
+      {paragraphMatchingQuestions.map((q, index) => (
+        <Box
+          key={q.qNum}
+          ref={questionRefs.current[index]}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            mb: 1.5,
+          }}
+        >
+          <Typography sx={{ mr: 2 }}>
+            <b>{q.qNum}</b>
+          </Typography>
+          <Typography variant="body2" sx={{ flexGrow: 1, fontSize: "16px" }}>
+            {q.text}
+          </Typography>
+          <FormControl size="small" sx={{ minWidth: "5em" }}>
+            <InputLabel>{q.qNum}</InputLabel>
+            <Select
+              label={`${q.qNum}`}
+              value={answers[q.qNum - 1] || ""}
+              onChange={(e) => handleInputChange(q.qNum - 1, e.target.value)}
+            >
+              {["A", "B", "C", "D", "E", "F"].map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      ))}
+
+      <Typography
+        variant="h6"
+        component="h3"
+        sx={{ mb: 1, mt: 3, fontSize: "1rem", fontWeight: "bold" }}
+      >
+        Questions 6-10
+      </Typography>
+      <Typography>Answer the questions below.</Typography>
+      <Typography>
+        Choose <b>NO MORE THAN THREE WORDS</b> from the passage for each answer.
+      </Typography>
+
+      {shortAnswerQuestions.map((q) => (
+        <Box
+          key={q.qNum}
+          ref={questionRefs.current[q.answerIndex]}
+          sx={{ my: 2 }}
+        >
+          <Typography>
+            <b>{q.qNum}</b> - {q.text}
+          </Typography>
+          <TextField
+            variant="outlined"
+            size="small"
+            sx={{ mt: 1, width: "100%" }}
+            value={answers[q.answerIndex] || ""}
+            onChange={(e) => handleInputChange(q.answerIndex, e.target.value)}
+          />
+        </Box>
+      ))}
+
+      <Typography
+        variant="h6"
+        component="h3"
+        sx={{ mb: 1, mt: 3, fontSize: "1rem", fontWeight: "bold" }}
+      >
+        Questions 11-13
+      </Typography>
+      <Typography>
+        Complete each sentence with the correct ending, A-F, below.
+      </Typography>
+
+      <List sx={{ mt: 2 }}>
+        <ListItem ref={questionRefs.current[10]}>
+          <Typography>
+            <b>11</b> Manet misrepresents the images in the mirror because he
+          </Typography>
+          <FormControl size="small" sx={{ minWidth: "120px", ml: 1 }}>
+            <InputLabel>11</InputLabel>
+            <Select
+              value={answers[10] || ""}
+              onChange={(e) => handleInputChange(10, e.target.value)}
+              label="11"
+            >
+              {sentenceCompletionOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.value}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </ListItem>
+        <ListItem ref={questionRefs.current[11]}>
+          <Typography>
+            <b>12</b> Manet felt modern workers were alienated because they
+          </Typography>
+          <FormControl size="small" sx={{ minWidth: "120px", ml: 1 }}>
+            <InputLabel>12</InputLabel>
+            <Select
+              value={answers[11] || ""}
+              onChange={(e) => handleInputChange(11, e.target.value)}
+              label="12"
+            >
+              {sentenceCompletionOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.value}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </ListItem>
+        <ListItem ref={questionRefs.current[12]}>
+          <Typography>
+            <b>13</b> Academics have re-constructed the painting in real life
+            because they
+          </Typography>
+          <FormControl size="small" sx={{ minWidth: "120px", ml: 1 }}>
+            <InputLabel>13</InputLabel>
+            <Select
+              value={answers[12] || ""}
+              onChange={(e) => handleInputChange(12, e.target.value)}
+              label="13"
+            >
+              {sentenceCompletionOptions.map((opt) => (
+                <MenuItem key={opt.value} value={opt.value}>
+                  {opt.value}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </ListItem>
+      </List>
+
       <Box
         sx={{
-          width: "50%",
-          overflowY: "auto",
-          padding: 2,
-          borderRight: "1px solid #ccc",
+          p: 2,
+          border: "1px solid #ccc",
+          borderRadius: 1,
+          bgcolor: "#f5f5f5",
         }}
       >
-        <FoliesBarText />
+        {sentenceCompletionOptions.map((opt) => (
+          <Typography key={opt.value}>
+            <b>{opt.value}</b> {opt.text}
+          </Typography>
+        ))}
       </Box>
       <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          padding: 2,
-        }}
-      >
-        <Typography sx={{ ml: 5, fontSize: "1.1em", mb: 1 }}>
-          <b>READING PASSAGE 1</b>
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          You should spend about 20 minutes on <b>Questions 1-13</b>, which are
-          based on Reading Passage 1.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 1-5</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Reading Passage 1 has six paragraphs, A-F.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Which paragraph contains the following information?
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Choose the correct letter, A-F, in boxes 1-5.
-        </Typography>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 1,
-            width: "90%",
-          }}
-        >
-          <ListItem
-            ref={(el) => (questionRefs.current[0] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>1 </Typography>
-            <Typography>
-              a description of how Manet created the painting
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[1] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>2 </Typography>
-            <Typography>
-              aspects of the painting that scholars are most interested in
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[2] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>3 </Typography>
-            <Typography>
-              the writer's view of the idea that Manet wants to communicate
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[3] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>4 </Typography>
-            <Typography>
-              examples to show why the bar scene is unrealistic
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>5 </Typography>
-            <Typography>
-              a statement about the popularity of the painting
-            </Typography>
-          </ListItem>
-        </List>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: 2,
-            width: "100%",
-            padding: 2,
-          }}
-        >
-          {Array.from({ length: 5 }).map((_, index) => (
-            <FormControl key={index}>
-              <InputLabel>{`${1 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "5em" }}
-                value={answers[index] || ""}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                label={`${1 + index}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ))}
-        </Box>
-        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>Questions 6-10</Typography>
-        <Typography>Answer the questions below.</Typography>
-        <Typography>
-          Choose <b>NO MORE THAN THREE WORDS</b> from the passage for each
-          answer.
-        </Typography>
-        <Typography>Write your answers in boxes 6-10.</Typography>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 1,
-            pl: "3rem",
-            width: "90%",
-            mt: 2,
-          }}
-        >
-          <ListItem
-            ref={(el) => (questionRefs.current[5] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>6 </Typography>
-            <Typography>
-              Who was the first owner of A Bar at the Folies?
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[6] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>7 </Typography>
-            <Typography>What is the barmaid wearing?</Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[7] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>8 </Typography>
-            <Typography>
-              Which room is seen at the back of the painting?
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[8] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>9 </Typography>
-            <Typography>Who is performing for the audience?</Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[9] = el)}
-            sx={{ display: "flex", flexDirection: "row", fontSize: "1.1em" }}
-          >
-            <Typography sx={{ width: "2rem" }}>10 </Typography>
-            <Typography>
-              Where did most of the work on the painting take place?
-            </Typography>
-          </ListItem>
-        </List>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: 2,
-            width: "100%",
-            padding: 2,
-          }}
-        >
-          {Array.from({ length: 5 }).map((_, index) => (
-            <FormControl key={index + 5}>
-              <TextField
-                sx={{ width: "15em" }}
-                label={`${6 + index}`}
-                variant="outlined"
-                autoComplete="off"
-                onChange={(e) => handleInputChange(5 + index, e.target.value)}
-                value={answers[5 + index] || ""}
-              />
-            </FormControl>
-          ))}
-        </Box>
-        <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>Questions 11-13</Typography>
-        <Typography>
-          Complete each sentence with the correct ending, A-F, below.
-        </Typography>
-        <Typography>Write the correct letter, A-F, in boxes 11-13.</Typography>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: 1,
-            pl: "3rem",
-            width: "90%",
-            mt: 2,
-          }}
-        >
-          <ListItem
-            ref={(el) => (questionRefs.current[10] = el)}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              fontSize: "1.1em",
-              gap: 2,
-              width: "100%",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ width: "2rem" }}>11 </Typography>
-              <Typography>
-                Manet misrepresents the images in the mirror because he
-              </Typography>
-            </Box>
-            <FormControl sx={{ ml: 3 }}>
-              <Select
-                value={answers[10] || ""}
-                onChange={(e) => handleInputChange(10, e.target.value)}
-                size="small"
-                sx={{ minWidth: 400 }}
-              >
-                {[
-                  "A. wanted to find out if the painting's perspective was realistic",
-                  "B. felt they had to work very hard at boring and difficult jobs",
-                  "C. wanted to understand the lives of ordinary people at the time",
-                  "D. felt like they had to become differnet people",
-                  "E. wanted to manipulate our sense of reality",
-                  "F. wanted to docus on the detail in the painting",
-                ].map((answer) => (
-                  <MenuItem key={answer} value={answer.charAt(0)}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[11] = el)}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              fontSize: "1.1em",
-              gap: 2,
-              width: "100%",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ width: "2rem" }}>12 </Typography>
-              <Typography>
-                Manet felt modern workers were alienated because they
-              </Typography>
-            </Box>
-            <FormControl sx={{ ml: 3 }}>
-              <Select
-                value={answers[11] || ""}
-                onChange={(e) => handleInputChange(11, e.target.value)}
-                size="small"
-                sx={{ minWidth: 400 }}
-              >
-                {[
-                  "A. wanted to find out if the painting's perspective was realistic",
-                  "B. felt they had to work very hard at boring and difficult jobs",
-                  "C. wanted to understand the lives of ordinary people at the time",
-                  "D. felt like they had to become differnet people",
-                  "E. wanted to manipulate our sense of reality",
-                  "F. wanted to docus on the detail in the painting",
-                ].map((answer) => (
-                  <MenuItem key={answer} value={answer.charAt(0)}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[12] = el)}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              fontSize: "1.1em",
-              gap: 2,
-              width: "100%",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography sx={{ width: "2rem" }}>13 </Typography>
-              <Typography>
-                Academics have re-constructed the painting in real life because
-                they
-              </Typography>
-            </Box>
-            <FormControl sx={{ ml: 3 }}>
-              <Select
-                value={answers[12] || ""}
-                onChange={(e) => handleInputChange(12, e.target.value)}
-                size="small"
-                sx={{ minWidth: 400 }}
-              >
-                {[
-                  "A. wanted to find out if the painting's perspective was realistic",
-                  "B. felt they had to work very hard at boring and difficult jobs",
-                  "C. wanted to understand the lives of ordinary people at the time",
-                  "D. felt like they had to become differnet people",
-                  "E. wanted to manipulate our sense of reality",
-                  "F. wanted to docus on the detail in the painting",
-                ].map((answer) => (
-                  <MenuItem key={answer} value={answer.charAt(0)}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </ListItem>
-        </List>
-      </Box>
+        sx={{ display: "flex", justifyContent: "space-around", mt: 2 }}
+      ></Box>
     </Box>
   );
-};
 
+  return (
+    <TwoColumnLayout
+      leftContent={<FoliesBarText />}
+      rightContent={rightContent}
+    />
+  );
+};
 export default Part1;

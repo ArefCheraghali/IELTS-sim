@@ -1,17 +1,95 @@
-import { useRef, useEffect } from "react";
-import { Box, Typography, TextField } from "@mui/material";
+import React, { useRef, useEffect } from "react";
+import { Box, Typography, List, ListItem, TextField } from "@mui/material";
+
+const questionsData = [
+  {
+    qNum: 31,
+    textBefore: "Deserts found in what is known as a",
+    textAfter: "(or dry area).",
+    answerIndex: 30,
+  },
+  {
+    qNum: 32,
+    textBefore: "Annual rainfall, if any, amounts to a",
+    textAfter: ".",
+    answerIndex: 31,
+  },
+  {
+    qNum: 33,
+    textBefore: "Soil contains a lot of salt and",
+    textAfter: ".",
+    answerIndex: 32,
+  },
+  {
+    qNum: 34,
+    textBefore: "They can",
+    textAfter: "and store water.",
+    answerIndex: 33,
+  },
+  {
+    qNum: 35,
+    textBefore: "Saguaro Cactus: stores water in its",
+    textAfter: ".",
+    answerIndex: 34,
+  },
+  {
+    qNum: 36,
+    textBefore: "Barrel Cactus: can",
+    textAfter: "or shrink according to weather.",
+    answerIndex: 35,
+  },
+  {
+    qNum: 37,
+    textBefore: "Old Man Cactus: has",
+    textAfter: "that reflect the sun.",
+    answerIndex: 36,
+  },
+  {
+    qNum: 38,
+    textBefore: "Prickly Pear Cactus: has",
+    textAfter: "to keep away animals.",
+    answerIndex: 37,
+  },
+  {
+    qNum: 39,
+    textBefore: "Desert Spoon: leaves are",
+    textAfter: "to reduce water loss.",
+    answerIndex: 38,
+  },
+  {
+    qNum: 40,
+    textBefore: "Aloe Plant: leaf surface acts like a",
+    textAfter: "covering and keeps water inside.",
+    answerIndex: 39,
+  },
+];
 
 const Part4 = ({ answers, setAnswers, currentQuestion }) => {
-  const inputRefs = useRef([]);
+  const questionRefs = useRef(
+    Array(10)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     if (currentQuestion >= 31 && currentQuestion <= 40) {
       const index = currentQuestion - 31;
-      const element = inputRefs.current[index];
+      const element = questionRefs.current[index]?.current;
       if (element) {
-        element.focus();
-        element.select();
         element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          const input = element.querySelector("input");
+          if (input) {
+            input.focus();
+            input.select();
+          }
+        }, 300);
       }
     }
   }, [currentQuestion]);
@@ -23,223 +101,96 @@ const Part4 = ({ answers, setAnswers, currentQuestion }) => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
+    <Box sx={{ maxWidth: "60rem", mx: "auto", px: 2, textAlign: "left" }}>
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
           justifyContent: "space-between",
-          width: "100%",
-          maxWidth: "60rem",
+          alignItems: "baseline",
         }}
       >
-        <Typography variant="h5" gutterBottom>
-          Part 4
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Questions 31-40
-        </Typography>
+        <Typography variant="h5">Part 4</Typography>
+        <Typography variant="h6">Questions 31-40</Typography>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          width: "100%",
-          maxWidth: "60rem",
-          mt: 3,
-          mb: 3,
-        }}
-      >
-        <Typography>Complete the notes below.</Typography>
-        <Typography>
-          Write <b>NO MORE THAN TWO WORDS</b> for each answer.
-        </Typography>
-        <Typography
-          variant="h6"
-          sx={{ mt: 2, mb: 2, textAlign: "center", width: "100%" }}
-        >
+
+      <Typography sx={{ mt: 2 }}>Complete the notes below.</Typography>
+      <Typography>
+        Write <b>NO MORE THAN TWO WORDS</b> for each answer.
+      </Typography>
+
+      <Box sx={{ border: "1px solid #ccc", p: 3, mt: 3, borderRadius: 1 }}>
+        <Typography variant="h6" align="center" sx={{ mb: 2 }}>
           DESERT PLANTS
         </Typography>
 
-        <Typography variant="subtitle1" sx={{ mt: 2, fontWeight: "bold" }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
           Background
         </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>31</b> Deserts found in what is
-            known as a
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(30, e.target.value)}
-            value={answers[30] || ""}
-            inputRef={(el) => (inputRefs.current[0] = el)}
-          />
-          <Typography sx={{ ml: 1 }}>(or dry area).</Typography>
-        </Box>
+        {questionsData.slice(0, 3).map((q, index) => (
+          <Box key={q.qNum} ref={questionRefs.current[index]} sx={{ my: 2.5 }}>
+            <Typography
+              component="div"
+              sx={{ display: "flex", alignItems: "baseline" }}
+            >
+              <b>{q.qNum}</b>. {q.textBefore}
+              <TextField
+                variant="standard"
+                sx={{ mx: 1, width: "12em" }}
+                value={answers[q.answerIndex] || ""}
+                onChange={(e) =>
+                  handleInputChange(q.answerIndex, e.target.value)
+                }
+              />
+              {q.textAfter}
+            </Typography>
+          </Box>
+        ))}
 
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>32</b> Annual rainfall, if any,
-            amounts to a
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(31, e.target.value)}
-            value={answers[31] || ""}
-            inputRef={(el) => (inputRefs.current[1] = el)}
-          />
-          <Typography>.</Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>33</b> Soil contains a lot of salt
-            and
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(32, e.target.value)}
-            value={answers[32] || ""}
-            inputRef={(el) => (inputRefs.current[2] = el)}
-          />
-          <Typography>.</Typography>
-        </Box>
-
-        <Typography variant="subtitle1" sx={{ mt: 2, fontWeight: "bold" }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: "bold", mt: 3 }}>
           General adaptations of desert plants
         </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>34</b> They can
+        <Box ref={questionRefs.current[3]} sx={{ my: 2.5 }}>
+          <Typography
+            component="div"
+            sx={{ display: "flex", alignItems: "baseline" }}
+          >
+            <b>34</b>. {questionsData[3].textBefore}
+            <TextField
+              variant="standard"
+              sx={{ mx: 1, width: "12em" }}
+              value={answers[33] || ""}
+              onChange={(e) => handleInputChange(33, e.target.value)}
+            />
+            {questionsData[3].textAfter}
           </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(33, e.target.value)}
-            value={answers[33] || ""}
-            inputRef={(el) => (inputRefs.current[3] = el)}
-          />
-          <Typography sx={{ ml: 1 }}>and store water.</Typography>
         </Box>
 
-        <Typography variant="subtitle1" sx={{ mt: 2, fontWeight: "bold" }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: "bold", mt: 3 }}>
           Examples of adaptations
         </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>35</b> <i>Saguaro Cactus</i>:
-            stores water in its
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(34, e.target.value)}
-            value={answers[34] || ""}
-            inputRef={(el) => (inputRefs.current[4] = el)}
-          />
-          <Typography>.</Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>36</b> <i>Barrel Cactus</i>: can
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(35, e.target.value)}
-            value={answers[35] || ""}
-            inputRef={(el) => (inputRefs.current[5] = el)}
-          />
-          <Typography sx={{ ml: 1 }}>
-            or shrink according to weather.
-          </Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>37</b> <i>Old Man Cactus</i>: has
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(36, e.target.value)}
-            value={answers[36] || ""}
-            inputRef={(el) => (inputRefs.current[6] = el)}
-          />
-          <Typography sx={{ ml: 1 }}>that reflect the sun.</Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>38</b> <i>Prickly Pear Cactus</i>:
-            has
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(37, e.target.value)}
-            value={answers[37] || ""}
-            inputRef={(el) => (inputRefs.current[7] = el)}
-          />
-          <Typography sx={{ ml: 1 }}>to keep away animals.</Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>39</b> <i>Desert Spoon</i>: leaves
-            are
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(38, e.target.value)}
-            value={answers[38] || ""}
-            inputRef={(el) => (inputRefs.current[8] = el)}
-          />
-          <Typography sx={{ ml: 1 }}>to reduce water loss.</Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-          <Typography>
-            <b style={{ marginRight: "1em" }}>40</b> <i>Aloe Plant</i>: leaf
-            surface acts like a
-          </Typography>
-          <TextField
-            sx={{ ml: 1, width: "10em" }}
-            variant="standard"
-            autoComplete="off"
-            onChange={(e) => handleInputChange(39, e.target.value)}
-            value={answers[39] || ""}
-            inputRef={(el) => (inputRefs.current[9] = el)}
-          />
-          <Typography sx={{ ml: 1 }}>
-            covering and keeps water inside.
-          </Typography>
-        </Box>
+        {questionsData.slice(4).map((q, index) => (
+          <Box
+            key={q.qNum}
+            ref={questionRefs.current[index + 4]}
+            sx={{ my: 2.5 }}
+          >
+            <Typography
+              component="div"
+              sx={{ display: "flex", alignItems: "baseline" }}
+            >
+              <b>{q.qNum}</b>. {q.textBefore}
+              <TextField
+                variant="standard"
+                sx={{ mx: 1, width: "12em" }}
+                value={answers[q.answerIndex] || ""}
+                onChange={(e) =>
+                  handleInputChange(q.answerIndex, e.target.value)
+                }
+              />
+              {q.textAfter}
+            </Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   );

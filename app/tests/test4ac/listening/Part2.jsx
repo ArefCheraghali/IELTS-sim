@@ -1,38 +1,88 @@
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
-  FormControl,
-  Select,
-  MenuItem,
+  Typography,
   List,
   ListItem,
   TextField,
-  Typography,
+  FormControl,
+  Select,
+  MenuItem,
+  Paper,
 } from "@mui/material";
 
+const sentenceCompletionQuestions = [
+  {
+    qNum: 11,
+    textBefore: "To enjoy the day, make sure you",
+    textAfter: "it first.",
+    answerIndex: 10,
+  },
+  {
+    qNum: 12,
+    textBefore: "Travel",
+    textAfter: "within the city centre.",
+    answerIndex: 11,
+  },
+  { qNum: 13, textBefore: "Wear", textAfter: "on the day.", answerIndex: 12 },
+  {
+    qNum: 14,
+    textBefore: "Check the",
+    textAfter: "the night before the marathon.",
+    answerIndex: 13,
+  },
+  {
+    qNum: 15,
+    textBefore: "Let the",
+    textAfter: "give drinks to runners.",
+    answerIndex: 14,
+  },
+  {
+    qNum: 16,
+    textBefore: "Stay on one side of the road to avoid",
+    textAfter: ".",
+    answerIndex: 15,
+  },
+  {
+    qNum: 17,
+    textBefore: "Don't arrange to meet runners near the",
+    textAfter: ".",
+    answerIndex: 16,
+  },
+];
+
+const matchingQuestions = [
+  { qNum: 18, transport: "taxis" },
+  { qNum: 19, transport: "trams" },
+  { qNum: 20, transport: "buses" },
+];
+
 const Part2 = ({ answers, setAnswers, currentQuestion }) => {
-  // Create refs for each question (both radio groups and text fields)
-  const inputRefs = useRef([]);
+  const questionRefs = useRef(
+    Array(10)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    // Focus on the element corresponding to the current question
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     if (currentQuestion >= 11 && currentQuestion <= 20) {
       const index = currentQuestion - 11;
-      const element = inputRefs.current[index];
+      const element = questionRefs.current[index]?.current;
       if (element) {
-        // For text fields (questions 11-17)
-        if (index <= 6) {
-          element.focus();
-          element.select();
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-        } else {
-          // For select fields (questions 18-20)
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-          const selectField = element.querySelector("select");
-          if (selectField) {
-            selectField.focus();
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          const input = element.querySelector('input, [role="button"]');
+          if (input) {
+            input.focus();
+            if (input.type === "text") input.select();
           }
-        }
+        }, 300);
       }
     }
   }, [currentQuestion]);
@@ -41,319 +91,104 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
-        maxWidth: "1200px",
-        margin: "0 auto",
-      }}
-    >
+    <Box sx={{ maxWidth: "60rem", mx: "auto", px: 2, textAlign: "left" }}>
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
           justifyContent: "space-between",
-          width: "100%",
-          maxWidth: "60rem",
+          alignItems: "baseline",
         }}
       >
-        <Typography variant="h5" gutterBottom>
-          Part 2
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Questions 11-20
-        </Typography>
+        <Typography variant="h5">Part 2</Typography>
+        <Typography variant="h6">Questions 11-20</Typography>
       </Box>
-      {
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-              width: "100%",
-              maxWidth: "60rem",
-              mt: 3,
-              mb: 3,
-            }}
+
+      <Typography sx={{ mt: 2 }}>
+        <b>Questions 11-17</b>
+      </Typography>
+      <Typography>Complete the sentences below.</Typography>
+      <Typography>
+        Write <b>NO MORE THAN TWO WORDS</b> for each answer.
+      </Typography>
+      <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
+        Marathon – tips for spectators
+      </Typography>
+
+      {sentenceCompletionQuestions.map((q, index) => (
+        <Box key={q.qNum} ref={questionRefs.current[index]} sx={{ my: 2.5 }}>
+          <Typography
+            component="div"
+            sx={{ display: "flex", alignItems: "baseline" }}
           >
-            <Typography>Complete the sentences below.</Typography>
-            <Typography>
-              Write <b>NO MORE THAN TWO WORDS</b> for each answer.
-            </Typography>
-            <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
-              Marathon – tips for spectators
-            </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "100%",
-                maxWidth: "60rem",
-                alignItems: "flex-start",
-                mt: 2,
-              }}
+            <b>{q.qNum}</b>. {q.textBefore}
+            <TextField
+              variant="standard"
+              sx={{ mx: 1, width: "12em" }}
+              value={answers[q.answerIndex] || ""}
+              onChange={(e) => handleInputChange(q.answerIndex, e.target.value)}
+            />
+            {q.textAfter}
+          </Typography>
+        </Box>
+      ))}
+
+      <Typography sx={{ mt: 3 }}>
+        <b>Questions 18-20</b>
+      </Typography>
+      <Typography>
+        What does the speaker say about the following forms of transport?
+      </Typography>
+      <Typography>
+        Write the correct letter, <b>A, B, C, D</b> or <b>E</b>, next to
+        questions 18-20.
+      </Typography>
+
+      <Paper sx={{ p: 2, my: 2, bgcolor: "#f5f5f5", fontSize: "18px" }}>
+        <List dense>
+          <ListItem>
+            <b>A- </b> will take more passengers than usual
+          </ListItem>
+          <ListItem>
+            <b>B- </b> will suit people who want to see the start of the race
+          </ListItem>
+          <ListItem>
+            <b>C- </b> waiting times will be longer than usual
+          </ListItem>
+          <ListItem>
+            <b>D- </b> will have fewer staff than usual
+          </ListItem>
+          <ListItem>
+            <b>E- </b> some work schedules will change
+          </ListItem>
+        </List>
+      </Paper>
+
+      {matchingQuestions.map((q, index) => (
+        <Box
+          key={q.qNum}
+          ref={questionRefs.current[index + 7]}
+          sx={{ display: "flex", alignItems: "center", my: 1.5 }}
+        >
+          <Typography sx={{ minWidth: "6em" }}>
+            <b>{q.qNum}</b> {q.transport}
+          </Typography>
+          <FormControl size="small" sx={{ minWidth: "80px" }}>
+            <Select
+              value={answers[q.qNum - 1] || ""}
+              onChange={(e) => handleInputChange(q.qNum - 1, e.target.value)}
             >
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>11</b> To enjoy the day,
-                  make sure you
-                </Typography>
-                <TextField
-                  sx={{ ml: 1, width: "10em" }}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(10, e.target.value)}
-                  value={answers[10]}
-                  inputRef={(el) => (inputRefs.current[0] = el)}
-                />
-                <Typography sx={{ ml: 1 }}>it first.</Typography>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>12</b> Travel
-                </Typography>
-                <TextField
-                  sx={{ ml: 1, width: "10em" }}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(11, e.target.value)}
-                  value={answers[11]}
-                  inputRef={(el) => (inputRefs.current[1] = el)}
-                />
-                <Typography sx={{ ml: 1 }}>within the city centre.</Typography>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>13</b> Wear
-                </Typography>
-                <TextField
-                  sx={{ ml: 1, width: "10em" }}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(12, e.target.value)}
-                  value={answers[12]}
-                  inputRef={(el) => (inputRefs.current[2] = el)}
-                />
-                <Typography sx={{ ml: 1 }}>on the day.</Typography>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>14</b> Check the
-                </Typography>
-                <TextField
-                  sx={{ ml: 1, width: "10em" }}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(13, e.target.value)}
-                  value={answers[13]}
-                  inputRef={(el) => (inputRefs.current[3] = el)}
-                />
-                <Typography sx={{ ml: 1 }}>
-                  the night before the marathon.
-                </Typography>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>15</b> Let the
-                </Typography>
-                <TextField
-                  sx={{ ml: 1, width: "10em" }}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(14, e.target.value)}
-                  value={answers[14]}
-                  inputRef={(el) => (inputRefs.current[4] = el)}
-                />
-                <Typography sx={{ ml: 1 }}>give drinks to runners.</Typography>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>16</b> Stay on one side of
-                  the road to avoid
-                </Typography>
-                <TextField
-                  sx={{ ml: 1, width: "10em" }}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(15, e.target.value)}
-                  value={answers[15]}
-                  inputRef={(el) => (inputRefs.current[5] = el)}
-                />
-                <Typography>.</Typography>
-              </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>17</b> Don't arrange to meet
-                  runners near the
-                </Typography>
-                <TextField
-                  sx={{ ml: 1, width: "10em" }}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(16, e.target.value)}
-                  value={answers[16]}
-                  inputRef={(el) => (inputRefs.current[6] = el)}
-                />
-                <Typography>.</Typography>
-              </Box>
-            </Box>
-          </Box>
-        </>
-      }
-      {
-        <>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              maxWidth: "60rem",
-              alignItems: "flex-start",
-              textAlign: "left",
-              mt: 2,
-              mb: 4,
-            }}
-          >
-            <Typography>Questions 18-20</Typography>
-            <Typography>
-              What does the speaker say about the following forms of transport?
-            </Typography>
-            <Typography>
-              Write the correct letter, A, B, C, D or E, next to questions
-              18-20.
-            </Typography>
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                mt: 2,
-              }}
-            >
-              <Box
-                sx={{
-                  width: "100%",
-                  maxWidth: "40rem",
-                  border: "1px solid #ccc",
-                  borderRadius: 1,
-                  p: 2,
-                  mb: 2,
-                }}
-              >
-                <List>
-                  <ListItem>
-                    <Typography>
-                      <b>A</b>&nbsp;&nbsp;&nbsp;will take more passengers than
-                      usual
-                    </Typography>
-                  </ListItem>
-                  <ListItem>
-                    <Typography>
-                      <b>B</b>&nbsp;&nbsp;&nbsp;will suit people who want to see
-                      the start of the race
-                    </Typography>
-                  </ListItem>
-                  <ListItem>
-                    <Typography>
-                      <b>C</b>&nbsp;&nbsp;&nbsp;waiting times will be longer
-                      than usual
-                    </Typography>
-                  </ListItem>
-                  <ListItem>
-                    <Typography>
-                      <b>D</b>&nbsp;&nbsp;&nbsp;will have fewer staff than usual
-                    </Typography>
-                  </ListItem>
-                  <ListItem>
-                    <Typography>
-                      <b>E</b>&nbsp;&nbsp;&nbsp;some work schedules will change
-                    </Typography>
-                  </ListItem>
-                </List>
-              </Box>
-            </Box>
-            <Box sx={{ mt: 2 }}>
-              <Box
-                sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                ref={(el) => (inputRefs.current[7] = el)}
-              >
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>18</b> taxis
-                </Typography>
-                <FormControl sx={{ ml: 2, minWidth: 120 }}>
-                  <Select
-                    variant="standard"
-                    value={answers[17] || ""}
-                    onChange={(e) => handleInputChange(17, e.target.value)}
-                  >
-                    {["A", "B", "C", "D", "E"].map((letter) => (
-                      <MenuItem key={letter} value={letter}>
-                        {letter}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-              <Box
-                sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                ref={(el) => (inputRefs.current[8] = el)}
-              >
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>19</b> trams
-                </Typography>
-                <FormControl sx={{ ml: 2, minWidth: 120 }}>
-                  <Select
-                    variant="standard"
-                    value={answers[18] || ""}
-                    onChange={(e) => handleInputChange(18, e.target.value)}
-                  >
-                    {["A", "B", "C", "D", "E"].map((letter) => (
-                      <MenuItem key={letter} value={letter}>
-                        {letter}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-              <Box
-                sx={{ display: "flex", alignItems: "center", mb: 2 }}
-                ref={(el) => (inputRefs.current[9] = el)}
-              >
-                <Typography>
-                  <b style={{ marginRight: "1em" }}>20</b> buses
-                </Typography>
-                <FormControl sx={{ ml: 2, minWidth: 120 }}>
-                  <Select
-                    variant="standard"
-                    value={answers[19] || ""}
-                    onChange={(e) => handleInputChange(19, e.target.value)}
-                  >
-                    {["A", "B", "C", "D", "E"].map((letter) => (
-                      <MenuItem key={letter} value={letter}>
-                        {letter}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-            </Box>
-          </Box>
-        </>
-      }
+              {["A", "B", "C", "D", "E"].map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      ))}
     </Box>
   );
 };

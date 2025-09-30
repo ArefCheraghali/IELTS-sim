@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   FormControl,
@@ -9,64 +10,72 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-
+import TwoColumnLayout from "@/components/TwoColumnLayout";
 import IconText from "./text/IconText";
 
-const possibleAnswersYesNo = ["Yes", "No", "Not Given"];
+const headingsData = [
+  { number: 14, paragraph: "A" },
+  { number: 15, paragraph: "B" },
+  { number: 16, paragraph: "C" },
+  { number: 17, paragraph: "D" },
+  { number: 18, paragraph: "E" },
+  { number: 19, paragraph: "F" },
+];
 
-const milesQuestions = [
-  "20. Davis' trumpet teacher wanted him to play with vibrato.",
-  "21. According to Davis, studying at Julliard helped him to improve his musical abilities.",
-  "22. Playing in jazz clubs in New York was the best way to become famous.",
-  "23. The Birth of Cool featured music that was faster and louder than most jazz at the time.",
-  "24. Davis' personal troubles had a negative effect on his trumpet playing.",
-  "25. Davis felt that his contribution to cool jazz had not been acknowledged.",
-  "26. Davis was a traditionalist who wanted to keep the jazz sound pure.",
+const yesNoQuestionsData = [
+  {
+    number: 20,
+    text: "Davis' trumpet teacher wanted him to play with vibrato.",
+  },
+  {
+    number: 21,
+    text: "According to Davis, studying at Julliard helped him to improve his musical abilities.",
+  },
+  {
+    number: 22,
+    text: "Playing in jazz clubs in New York was the best way to become famous.",
+  },
+  {
+    number: 23,
+    text: "The Birth of Cool featured music that was faster and louder than most jazz at the time.",
+  },
+  {
+    number: 24,
+    text: "Davis' personal troubles had a negative effect on his trumpet playing.",
+  },
+  {
+    number: 25,
+    text: "Davis felt that his contribution to cool jazz had not been acknowledged.",
+  },
+  {
+    number: 26,
+    text: "Davis was a traditionalist who wanted to keep the jazz sound pure.",
+  },
 ];
 
 const Part2 = ({ answers, setAnswers, currentQuestion }) => {
-  const possibleAnswers = [
-    "i",
-    "ii",
-    "iii",
-    "iv",
-    "v",
-    "vi",
-    "vii",
-    "viii",
-    "ix",
-  ];
-  const questionRefs = React.useRef(Array(13).fill(null));
-  const prevQuestionRef = React.useRef(null);
+  const questionRefs = useRef(
+    Array(13)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const isInitialMount = useRef(true);
 
-  React.useEffect(() => {
-    // Skip if it's the initial mount
-    if (prevQuestionRef.current === null) {
-      prevQuestionRef.current = currentQuestion;
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
       return;
     }
-
-    // Only scroll if the question actually changed
-    if (prevQuestionRef.current !== currentQuestion) {
-      if (currentQuestion >= 14 && currentQuestion <= 26) {
-        const index = currentQuestion - 14;
-        const element = questionRefs.current[index];
-        if (element) {
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-
-          // Add delay to ensure scroll completes before focus
-          setTimeout(() => {
-            const select = element.querySelector("[role='button']");
-            if (select) {
-              select.focus();
-            }
-          }, 150);
-        }
+    if (currentQuestion >= 14 && currentQuestion <= 26) {
+      const index = currentQuestion - 14;
+      const element = questionRefs.current[index]?.current;
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          const input = element.querySelector('input, [role="button"]');
+          if (input) input.focus();
+        }, 300);
       }
-      prevQuestionRef.current = currentQuestion;
     }
   }, [currentQuestion]);
 
@@ -74,169 +83,131 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "calc(100vh - 120px - 26px )",
-      }}
-    >
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          padding: 2,
-          borderRight: "1px solid #ccc",
-        }}
-      >
-        <IconText />
-      </Box>
+  const rightContent = (
+    <Box>
+      <Typography sx={{ fontSize: "1.1em", mb: 1, fontWeight: "bold" }}>
+        READING PASSAGE 2
+      </Typography>
+      <Typography sx={{ mb: 2 }}>
+        You should spend about 20 minutes on <b>Questions 14-26</b>.
+      </Typography>
 
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          padding: 2,
-        }}
-      >
-        <Typography sx={{ ml: 5, fontSize: "1.1em", mb: 1 }}>
-          <b>READING PASSAGE 2</b>
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          You should spend about 20 minutes on <b>Questions 14-26</b>, which are
-          based on Reading Passage 2.
-        </Typography>
-        <Typography sx={{ mb: 1 }}>Questions 14 - 19</Typography>
-        <Typography sx={{ mb: 1 }}>
-          Reading Passage 2 has six paragraphs, <b>A-F</b>.
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          Choose the correct heading for paragraphs A-F from the list of
-          headings below.
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          Write the correct number, <b>i-ix</b>, in boxes 14-19.
-        </Typography>
+      <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+        Questions 14 - 19
+      </Typography>
+      <Typography>
+        Reading Passage 2 has six paragraphs, <b>A-F</b>.
+      </Typography>
+      <Typography>
+        Choose the correct heading for paragraphs A-F from the list of headings
+        below.
+      </Typography>
 
-        <Box sx={{ border: "1px solid #ccc", p: 2, mb: 2, width: "90%" }}>
-          <Typography sx={{ mb: 1 }}>
-            <b>List of Headings</b>
-          </Typography>
-          <Typography>i. A legacy is established</Typography>
-          <Typography>ii. Formal education unhelpful</Typography>
-          <Typography>iii. An education in two parts</Typography>
-          <Typography>iv. Branching out in new directions</Typography>
-          <Typography>v. Childhood and family life</Typography>
-          <Typography>vi. Change necessary to stay creative</Typography>
-          <Typography>
-            vii. Conflicted opinions over Davis’ earlier work
-          </Typography>
-          <Typography>viii. Davis’ unique style of trumpet playing</Typography>
-          <Typography>ix. Personal and professional struggles</Typography>
-        </Box>
-
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            pl: "3rem",
-            width: "90%",
-          }}
+      {headingsData.map((item, index) => (
+        <Box
+          key={item.number}
+          ref={questionRefs.current[index]}
+          sx={{ display: "flex", alignItems: "center", my: 1.5 }}
         >
-          {Array.from({ length: 6 }).map((_, index) => (
-            <ListItem
-              key={index}
-              ref={(el) => (questionRefs.current[index] = el)}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-              }}
+          <Typography sx={{ mr: 2 }}>
+            <b>{item.number}</b> Paragraph {item.paragraph}
+          </Typography>
+          <FormControl size="small">
+            <Select
+              value={answers[item.number - 1] || ""}
+              onChange={(e) =>
+                handleInputChange(item.number - 1, e.target.value)
+              }
+              sx={{ minWidth: "5em" }}
             >
-              <Typography sx={{ marginRight: "1rem" }}>
-                <b>{14 + index}</b>
-              </Typography>
-              <Typography sx={{ minWidth: "100px" }}>
-                Paragraph {String.fromCharCode(65 + index)}
-              </Typography>
-              <FormControl>
-                <Select
-                  sx={{ width: "5em" }}
-                  value={answers[13 + index] || ""}
-                  onChange={(e) =>
-                    handleInputChange(13 + index, e.target.value)
-                  }
-                  size="small"
-                >
-                  {possibleAnswers.map((answer) => (
-                    <MenuItem key={answer} value={answer}>
-                      {answer}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </ListItem>
-          ))}
-        </List>
-
-        <Typography sx={{ mb: 1, mt: 5 }}>Questions 20 - 26</Typography>
-        <Typography sx={{ mb: 1 }}>
-          Do the following statements agree with the views of the writer in
-          Reading Passage 2?
-        </Typography>
-        <Typography sx={{ mb: 1 }}>
-          In boxes 20-26 on your answer sheet, write
-        </Typography>
-        <Box sx={{ mb: 2 }}>
-          <Typography>
-            <b>Yes</b> if the statement agrees with the views of the writer
-          </Typography>
-          <Typography>
-            <b>No</b> if the statement contradicts the views of the writer
-          </Typography>
-          <Typography>
-            <b>Not Given</b> if it is impossible to say what the writer thinks
-            about this
-          </Typography>
+              {["i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix"].map(
+                (opt) => (
+                  <MenuItem key={opt} value={opt}>
+                    {opt}
+                  </MenuItem>
+                )
+              )}
+            </Select>
+          </FormControl>
         </Box>
+      ))}
 
-        <List sx={{ width: "100%" }}>
-          {milesQuestions.map((question, index) => (
-            <ListItem
-              key={index}
-              ref={(el) => (questionRefs.current[index + 6] = el)}
-              sx={{ display: "flex", alignItems: "center", gap: 2 }}
-            >
-              <Typography>{question}</Typography>
-              <FormControl sx={{ minWidth: 120 }}>
-                <Select
-                  size="small"
-                  value={answers[index + 19] || ""}
-                  onChange={(e) =>
-                    handleInputChange(index + 19, e.target.value)
-                  }
-                >
-                  {possibleAnswersYesNo.map((answer) => (
-                    <MenuItem key={answer} value={answer}>
-                      {answer}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </ListItem>
-          ))}
-        </List>
+      <Box
+        sx={{
+          border: "1px solid #ccc",
+          p: 2,
+          my: 2,
+          borderRadius: 1,
+          bgcolor: "#f5f5f5",
+        }}
+      >
+        <Typography sx={{ mb: 1 }}>
+          <b>List of Headings</b>
+        </Typography>
+        <Typography>i. A legacy is established</Typography>
+        <Typography>ii. Formal education unhelpful</Typography>
+        <Typography>iii. An education in two parts</Typography>
+        <Typography>iv. Branching out in new directions</Typography>
+        <Typography>v. Childhood and family life</Typography>
+        <Typography>vi. Change necessary to stay creative</Typography>
+        <Typography>
+          vii. Conflicted opinions over Davis’ earlier work
+        </Typography>
+        <Typography>viii. Davis’ unique style of trumpet playing</Typography>
+        <Typography>ix. Personal and professional struggles</Typography>
       </Box>
+
+      <Typography
+        variant="h6"
+        sx={{ fontSize: "1rem", fontWeight: "bold", mt: 3 }}
+      >
+        Questions 20 - 26
+      </Typography>
+      <Typography>
+        Do the following statements agree with the views of the writer in
+        Reading Passage 2?
+      </Typography>
+      <List dense sx={{ pl: 2, mb: 2 }}>
+        <ListItem>
+          <b>YES-</b> if the statement agrees with the views of the writer
+        </ListItem>
+        <ListItem>
+          <b>NO-</b> if the statement contradicts the views of the writer
+        </ListItem>
+        <ListItem>
+          <b>NOT GIVEN-</b> if it is impossible to say what the writer thinks
+          about this
+        </ListItem>
+      </List>
+
+      {yesNoQuestionsData.map((q, index) => (
+        <Box
+          key={q.number}
+          ref={questionRefs.current[index + 6]}
+          sx={{ display: "flex", alignItems: "center", mb: 1.5 }}
+        >
+          <FormControl sx={{ mr: 2, minWidth: "140px" }} size="small">
+            <InputLabel>{q.number}</InputLabel>
+            <Select
+              value={answers[q.number - 1] || ""}
+              onChange={(e) => handleInputChange(q.number - 1, e.target.value)}
+              label={`${q.number}`}
+            >
+              <MenuItem value="YES">YES</MenuItem>
+              <MenuItem value="NO">NO</MenuItem>
+              <MenuItem value="NOT GIVEN">NOT GIVEN</MenuItem>
+            </Select>
+          </FormControl>
+          <Typography variant="body2">{q.text}</Typography>
+        </Box>
+      ))}
     </Box>
+  );
+
+  return (
+    <TwoColumnLayout leftContent={<IconText />} rightContent={rightContent} />
   );
 };
 
