@@ -6,7 +6,7 @@ import Part4 from "./Part4";
 export const test2acListeningData = {
   testName: "Test 2 AC",
   testType: "Listening",
-  timeLimit: 40,
+  timeLimit: 27,
   audioSrc: "/audio/Listening2.mp3",
   audioDelay: 27000, // 27 seconds
   sections: [Part1, Part2, Part3, Part4],
