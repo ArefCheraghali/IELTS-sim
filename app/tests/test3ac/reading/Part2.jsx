@@ -1,43 +1,65 @@
-import React from "react";
+"use client";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   FormControl,
   InputLabel,
-  List,
-  ListItem,
   MenuItem,
   Select,
   TextField,
   Typography,
 } from "@mui/material";
-
+import TwoColumnLayout from "@/components/TwoColumnLayout";
 import HumanLaughterText from "./text/HumanLaughterText";
 import DragDrop from "../../../components/DragDrop";
 
-const initialQuestions = [
+const paragraphMatchingQuestions = [
   {
-    id: "18",
-    text: "19. Research has confirmed personal experience by identifying the wide range of subjects and situations that people find funny. ",
+    qNum: 14,
+    text: "the claim that it is very hard for people to pretend to laugh",
+  },
+  {
+    qNum: 15,
+    text: "a reference to research showing that people do not know how often they laugh",
+  },
+  {
+    qNum: 16,
+    text: "the reason why people can sometimes stop themselves laughing",
+  },
+  {
+    qNum: 17,
+    text: "an outline of the health benefits experienced by people when laughing",
+  },
+  {
+    qNum: 18,
+    text: "a reference to a medical condition that stops some people making a noise when laughing",
+  },
+];
+
+const initialDragQuestions = [
+  {
+    id: "q19",
+    text: "19. Research has confirmed personal experience by identifying the wide range of subjects and situations that people find funny.",
     answerId: null,
   },
   {
-    id: "19",
-    text: "20. Ideas about what is amusing have changed considerably over time. ",
+    id: "q20",
+    text: "20. Ideas about what is amusing have changed considerably over time.",
     answerId: null,
   },
   {
-    id: "20",
+    id: "q21",
     text: "21. To intentionally make other people laugh requires an unusual combination of skills and characteristics.",
     answerId: null,
   },
   {
-    id: "21",
+    id: "q22",
     text: "22. The reasons why we laugh are sometimes misunderstood by ordinary people.",
     answerId: null,
   },
 ];
 
-const initialAnswers = [
+const initialDragAnswers = [
   { id: "A", text: "A) Dr Peter Shrimpton" },
   { id: "B", text: "B) Jocelyn Barnes" },
   { id: "C", text: "C) Heinrich Ahrends" },
@@ -45,17 +67,62 @@ const initialAnswers = [
   { id: "E", text: "E) Jake Gottlieb" },
 ];
 
-const Part2 = ({ answers, setAnswers, currentQuestion }) => {
-  const possibleAnswers = ["A", "B", "C", "D", "E"];
-  const questionRefs = React.useRef(Array(13).fill(null));
+const summaryCompletionQuestions = [
+  {
+    qNum: 23,
+    answerIndex: 22,
+    textBefore:
+      ". The French neurologist Guillaume Duchenne showed that if a smile is fake, the skin around a person’s",
+    textAfter: "does not change shape.",
+  },
+  {
+    qNum: 24,
+    answerIndex: 23,
+    textBefore: ". A",
+    textAfter:
+      "that was produced in ancient Rome contains early examples of attempts to be funny.",
+  },
+  {
+    qNum: 25,
+    answerIndex: 24,
+    textBefore:
+      ". In January 1962, an outbreak of mass laughter caused problems in a",
+    textAfter: "in Tanzania.",
+  },
+  {
+    qNum: 26,
+    answerIndex: 25,
+    textBefore: ". Neurologist Nikki Sokolov is investigating why",
+    textAfter: "is possible even when a person finds something funny.",
+  },
+];
 
-  React.useEffect(() => {
+const Part2 = ({ answers, setAnswers, currentQuestion }) => {
+  const questionRefs = useRef(
+    Array(13)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     if (currentQuestion >= 14 && currentQuestion <= 26) {
       const index = currentQuestion - 14;
-      questionRefs.current[index]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      const element = questionRefs.current[index]?.current;
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          const input = element.querySelector('input, [role="button"]');
+          if (input) {
+            input.focus();
+            if (input.tagName === "INPUT") input.select();
+          }
+        }, 300);
+      }
     }
   }, [currentQuestion]);
 
@@ -63,240 +130,112 @@ const Part2 = ({ answers, setAnswers, currentQuestion }) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        height: "calc(100vh - 120px - 26px )",
-      }}
-    >
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          padding: 2,
-          borderRight: "1px solid #ccc",
-        }}
-      >
-        <HumanLaughterText />
-      </Box>
+  const rightContent = (
+    <Box>
+      <Typography sx={{ fontSize: "1.1em", mb: 1, fontWeight: "bold" }}>
+        READING PASSAGE 2
+      </Typography>
+      <Typography sx={{ mb: 2 }}>
+        You should spend about 20 minutes on <b>Questions 14-26</b>.
+      </Typography>
 
-      <Box
-        sx={{
-          width: "50%",
-          overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignContent: "flex-start",
-          alignItems: "flex-start",
-          padding: 2,
-        }}
-      >
-        <Typography sx={{ ml: 5, fontSize: "1.1em", mb: 1 }}>
-          <b>READING PASSAGE 2</b>
-        </Typography>
-        <Typography sx={{ ml: 1, mb: 1 }}>
-          You should spend about 20 minutes on <b>Questions 14-26</b>, which are
-          based on Reading Passage 2.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 14 - 18</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Reading Passage 2 has five paragraphs, <b>A-E</b>.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Which paragraph contains the following information?
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Pick the correct letter in boxes 14-18.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          <b>NB </b>You may use any letter more than once.
-        </Typography>
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            pl: "3rem",
-            width: "90%",
-          }}
+      <Typography variant="h6" sx={{ fontSize: "1rem", fontWeight: "bold" }}>
+        Questions 14 - 18
+      </Typography>
+      <Typography>
+        Reading Passage 2 has five paragraphs, <b>A-E</b>.
+      </Typography>
+      <Typography>
+        Which paragraph contains the following information?
+      </Typography>
+      <Typography>
+        <b>NB</b> You may use any letter more than once.
+      </Typography>
+
+      {paragraphMatchingQuestions.map((q, index) => (
+        <Box
+          key={q.qNum}
+          ref={questionRefs.current[index]}
+          sx={{ display: "flex", alignItems: "center", my: 1.5 }}
         >
-          <ListItem
-            ref={(el) => (questionRefs.current[0] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem" }}>
-              <b>14</b>
-            </Typography>
-            <Typography sx={{ ml: 2 }}>
-              the claim that it is very hard for people to pretend to laugh
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[1] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem" }}>
-              <b>15</b>
-            </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              a reference to research showing that people do not know how often
-              they laugh
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[2] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem" }}>
-              <b>16</b>
-            </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              the reason why people can sometimes stop themselves laughing
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[3] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem" }}>
-              <b>17</b>
-            </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              an outline of the health benefits experienced by people when
-              laughing
-            </Typography>
-          </ListItem>
-          <ListItem
-            ref={(el) => (questionRefs.current[4] = el)}
-            sx={{ display: "flex", flexDirection: "row" }}
-          >
-            <Typography sx={{ marginRight: "3rem" }}>
-              <b>18</b>
-            </Typography>
-            <Typography sx={{ ml: 2, mb: 1 }}>
-              a reference to a medical condition that stops some people making a
-              noise when laughing
-            </Typography>
-          </ListItem>
-        </List>
-        <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }}>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <FormControl sx={{ mt: 2, margin: "2em" }} key={index}>
-              <InputLabel>{`${14 + index}`}</InputLabel>
-              <Select
-                sx={{ width: "5em" }}
-                value={answers[13 + index] || ""}
-                onChange={(e) => handleInputChange(13 + index, e.target.value)}
-                label={`${14 + index}`}
-              >
-                {possibleAnswers.map((answer) => (
-                  <MenuItem key={answer} value={answer}>
-                    {answer}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          ))}
+          <FormControl size="small" sx={{ mr: 2, minWidth: "80px" }}>
+            <InputLabel>{q.qNum}</InputLabel>
+            <Select
+              value={answers[q.qNum - 1] || ""}
+              onChange={(e) => handleInputChange(q.qNum - 1, e.target.value)}
+              label={`${q.qNum}`}
+            >
+              {["A", "B", "C", "D", "E"].map((opt) => (
+                <MenuItem key={opt} value={opt}>
+                  {opt}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Typography variant="body2">{q.text}</Typography>
         </Box>
-        <Typography sx={{ ml: 2, mb: 1, mt: 5 }}>Questions 19 - 22</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Look at the statements (Questions 19-22) and the list of people below.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Match each statement with the correct person, A-E.
-        </Typography>
-        <DragDrop
-          initialQuestions={initialQuestions}
-          initialAnswers={initialAnswers}
-          setAnswers={setAnswers}
-          answers={answers}
-          title=""
-          infoTitle="List of People"
-          questionRefs={questionRefs}
-          startIndex={5}
-        />
-        <Typography sx={{ ml: 2, mb: 1 }}>Questions 23 - 26</Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Complete the sentences below.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 1 }}>
-          Choose <b>ONE WORD ONLY</b> from the text for each answer.
-        </Typography>
-        <Typography sx={{ ml: 2, mb: 2 }} gutterBottom>
-          Write your answers in boxes 23-26.
-        </Typography>
-        <Box sx={{ textAlign: "left", fontSize: "0.9rem" }}>
-          <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-            <b>23 - </b> The French neurologist Guillaume Duchenne showed that
-            if a smile is
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            fake, the skin around a person’s
+      ))}
+
+      <Typography
+        variant="h6"
+        sx={{ fontSize: "1rem", fontWeight: "bold", mt: 3 }}
+      >
+        Questions 19 - 22
+      </Typography>
+      <Typography>
+        Match each statement with the correct person, A-E.
+      </Typography>
+      <DragDrop
+        initialQuestions={initialDragQuestions}
+        initialAnswers={initialDragAnswers}
+        setAnswers={setAnswers}
+        answers={answers}
+        questionRefs={questionRefs}
+        startIndex={18}
+        refStartIndex={5}
+        startQuestionNumber={19}
+      />
+
+      <Typography
+        variant="h6"
+        sx={{ fontSize: "1rem", fontWeight: "bold", mt: 3 }}
+      >
+        Questions 23 - 26
+      </Typography>
+      <Typography>Complete the sentences below.</Typography>
+      <Typography>
+        Choose <b>ONE WORD ONLY</b> from the text for each answer.
+      </Typography>
+
+      {summaryCompletionQuestions.map((q, index) => (
+        <Box
+          key={q.qNum}
+          ref={questionRefs.current[index + 9]}
+          sx={{ my: 2.5 }}
+        >
+          <Typography component="div">
+            <b>{q.qNum}</b>
+            {q.textBefore}
             <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="23"
               variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(22, e.target.value)}
-              value={answers[22]}
-              ref={(el) => (questionRefs.current[9] = el)}
+              sx={{ mx: 1, width: "12em", verticalAlign: "baseline" }}
+              value={answers[q.answerIndex] || ""}
+              onChange={(e) => handleInputChange(q.answerIndex, e.target.value)}
             />
-            does not change shape.
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            <b>24 - </b> A
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="24"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(23, e.target.value)}
-              value={answers[23]}
-              ref={(el) => (questionRefs.current[10] = el)}
-            />
-            that was produced in ancient Rome contains early examples of
-            attempts to be funny.
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            <b>25 - </b>In January 1962, an outbreak of mass laughter caused
-            problems
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            in a
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="25"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(24, e.target.value)}
-              value={answers[24]}
-              ref={(el) => (questionRefs.current[11] = el)}
-            />
-            in Tanzania.
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 3 }}>
-            <b>26 - </b>Neurologist Nikki Sokolov is investigating why
-            <TextField
-              sx={{ mt: -3, ml: 1, mr: 1, width: "10em" }}
-              label="26"
-              variant="standard"
-              autoComplete="off"
-              onChange={(e) => handleInputChange(25, e.target.value)}
-              value={answers[25]}
-              ref={(el) => (questionRefs.current[12] = el)}
-            />
-          </Typography>
-          <Typography sx={{ ml: 2, mb: 1, mt: 1 }}>
-            is possible even when a person finds something funny.
+            {q.textAfter}
           </Typography>
         </Box>
-      </Box>
+      ))}
     </Box>
+  );
+
+  return (
+    <TwoColumnLayout
+      leftContent={<HumanLaughterText />}
+      rightContent={rightContent}
+    />
   );
 };
 

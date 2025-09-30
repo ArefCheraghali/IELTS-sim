@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -6,344 +6,240 @@ import {
   ListItem,
   TextField,
   Divider,
+  Paper,
+  FormControl,
 } from "@mui/material";
 
+const flowchartSteps = [
+  { qNum: 21, textBefore: "Step 1: go over", textAfter: "", answerIndex: 20 },
+  {
+    qNum: 22,
+    textBefore: "Step 2: think about research",
+    textAfter: "",
+    answerIndex: 21,
+  },
+  {
+    qNum: 23,
+    textBefore: "consider the kind of research, e.g.",
+    textAfter: "from other projects",
+    answerIndex: 22,
+  },
+  {
+    qNum: 24,
+    textBefore: "Step 3: develop an",
+    textAfter: "",
+    answerIndex: 23,
+  },
+];
+
+const summaryQuestions = [
+  {
+    qNum: 25,
+    textBefore: "...to reduce the pressure on the water",
+    textAfter: "in a Cameroon village.",
+    answerIndex: 24,
+  },
+  {
+    qNum: 26,
+    textBefore: "Grey-water is wastewater from household",
+    textAfter: ".",
+    answerIndex: 25,
+  },
+  {
+    qNum: 27,
+    textBefore:
+      "...recycle it to use for purposes such as watering plants, flushing toilets and doing",
+    textAfter: ".",
+    answerIndex: 26,
+  },
+];
+
+const researchTipsQuestions = [
+  {
+    qNum: 28,
+    textBefore: "Avoid websites where",
+    textAfter: "try to sell their products.",
+    answerIndex: 27,
+  },
+  {
+    qNum: 29,
+    textBefore: "e.g. grey-water treatment systems /",
+    textAfter: "use",
+    answerIndex: 28,
+  },
+  {
+    qNum: 30,
+    textBefore: "Check examples from the",
+    textAfter: "last year.",
+    answerIndex: 29,
+  },
+];
+
 const Part3 = ({ answers, setAnswers, currentQuestion }) => {
-  // Create refs for each text field
-  const inputRefs = useRef([]);
+  const questionRefs = useRef(
+    Array(10)
+      .fill(null)
+      .map(() => React.createRef())
+  );
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    // Focus on the text field corresponding to the current question
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     if (currentQuestion >= 21 && currentQuestion <= 30) {
       const index = currentQuestion - 21;
-      const element = inputRefs.current[index];
+      const element = questionRefs.current[index]?.current;
       if (element) {
-        element.focus();
         element.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          const input = element.querySelector("input");
+          if (input) {
+            input.focus();
+            input.select();
+          }
+        }, 300);
       }
     }
   }, [currentQuestion]);
+
   const handleInputChange = (index, value) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
     setAnswers(newAnswers);
-    console.log(newAnswers);
   };
 
   return (
-    <>
+    <Box sx={{ maxWidth: "60rem", mx: "auto", px: 2, textAlign: "left" }}>
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          maxWidth: "1200px",
-          margin: "0 auto",
+          justifyContent: "space-between",
+          alignItems: "baseline",
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "100%",
-            maxWidth: "60rem",
-          }}
-        >
-          <Typography variant="h5" gutterBottom>
-            Part 3
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            Questions 21-30
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "100%",
-            maxWidth: "60rem",
-            mt: 3,
-            mb: 3,
-          }}
-        >
-          <Typography>Questions 21-24</Typography>
-          <Typography>Complete the flowchart below.</Typography>
-          <Typography>
-            Write <b>NO MORE THAN TWO WORDS</b> for each answer
-          </Typography>
-          <Box
-            sx={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "row",
-            }}
-          >
-            <Box
-              sx={{
-                width: "100%",
-                height: "auto",
-                maxWidth: "40rem",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "left",
-                alignItems: "flex-start",
-                padding: "1em",
-                textAlign: "left",
-              }}
-            >
-              <List sx={{ listStyleType: "disc", ml: "3em" }}>
-                <Typography variant="h6">
-                  <b>Session outline:</b>
-                </Typography>
-                <Typography sx={{ mt: 2 }}>
-                  <b>Project topic:</b> design a water treatment system
-                </Typography>
-                <Divider sx={{ mt: 2 }} />
-                <Typography sx={{ mt: 2 }}>Toturial structure:</Typography>
-                <Typography sx={{ mt: 3 }}>
-                  <b>Step 1: </b>go over
-                  <TextField
-                    sx={{ mt: -2.5, ml: 1, mr: 1, mb: 2, width: "10em" }}
-                    label="21"
-                    variant="standard"
-                    autoComplete="off"
-                    onChange={(e) => handleInputChange(20, e.target.value)}
-                    value={answers[20]}
-                    inputRef={(el) => (inputRefs.current[0] = el)}
-                  />
-                </Typography>
-                <Typography sx={{ mt: 2 }}>
-                  <b>Step 2: </b>think about research
-                  <TextField
-                    sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                    label="22"
-                    variant="standard"
-                    autoComplete="off"
-                    onChange={(e) => handleInputChange(21, e.target.value)}
-                    value={answers[21]}
-                    inputRef={(el) => (inputRefs.current[1] = el)}
-                  />
-                </Typography>
-                <ListItem sx={{ display: "list-item" }}>
-                  <Typography>
-                    search online databases using good search terms
-                  </Typography>
-                </ListItem>
-                <ListItem sx={{ display: "list-item", mb: "0.5em" }}>
-                  <Typography>
-                    consider the kind of research, e.g.
-                    <TextField
-                      sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                      label="23"
-                      variant="standard"
-                      spellCheck={false}
-                      autoComplete="off"
-                      onChange={(e) => handleInputChange(22, e.target.value)}
-                      value={answers[22]}
-                      inputRef={(el) => (inputRefs.current[2] = el)}
-                    />
-                    from other projects
-                  </Typography>
-                </ListItem>
-                <Typography sx={{ mt: 2, mb: 2 }}>
-                  <b>Step 3:</b> develop an
-                  <TextField
-                    sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                    label="24"
-                    variant="standard"
-                    spellCheck={false}
-                    autoComplete="off"
-                    onChange={(e) => handleInputChange(23, e.target.value)}
-                    value={answers[23]}
-                    inputRef={(el) => (inputRefs.current[3] = el)}
-                  />
-                </Typography>
-                <Divider />
-              </List>
-            </Box>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "100%",
-            maxWidth: "60rem",
-            mt: 3,
-            mb: 3,
-          }}
-        >
-          <Typography>Questions 25-27</Typography>
-          <Typography>Complete the summary below.</Typography>
-          <Typography>
-            Write <b>NO MORE THAN ONE WORD</b> for each answer.
-          </Typography>
-          <Box
-            sx={{ width: "100%", display: "flex", flexDirection: "row", mb: 4 }}
-          >
-            <Box
-              sx={{
-                width: "100%",
-                height: "auto",
-                maxWidth: "40rem",
-                mt: 2,
-                ml: 20,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "left",
-                alignItems: "flex-start",
-                padding: "1em",
-                textAlign: "left",
-              }}
-            >
-              <Typography variant="h6">Project description:</Typography>
-              <Typography>
-                You need to design a grey-water treatment system to reduce the
-                pressure on the water
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                <TextField
-                  sx={{ mt: -2.5, mr: 1, width: "10em" }}
-                  label="25"
-                  spellCheck={false}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(24, e.target.value)}
-                  value={answers[24]}
-                  inputRef={(el) => (inputRefs.current[4] = el)}
-                />
-                in a Cameroon village. Grey-water is wastewater from household
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                <TextField
-                  sx={{ mt: -2.5, width: "10em" }}
-                  label="26"
-                  spellCheck={false}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(25, e.target.value)}
-                  value={answers[25]}
-                  inputRef={(el) => (inputRefs.current[5] = el)}
-                />
-                . The system needs to treat this water to remove bacteria, and
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                recycle it to use for purposes such as watering plants, flushing
-                toilets and doing{" "}
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                <TextField
-                  sx={{ mt: -2.5, width: "10em" }}
-                  label="27"
-                  spellCheck={false}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(26, e.target.value)}
-                  value={answers[26]}
-                  inputRef={(el) => (inputRefs.current[6] = el)}
-                />
-                .
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            width: "100%",
-            maxWidth: "60rem",
-            mt: 3,
-            mb: 3,
-          }}
-        >
-          <Typography>Questions 28-30</Typography>
-          <Typography>Complete the notes below.</Typography>
-          <Typography>
-            Write <b>NO MORE THAN TWO WORD</b> for each answer.
-          </Typography>
-          <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
-            <Box
-              sx={{
-                width: "100%",
-                height: "auto",
-                maxWidth: "40rem",
-                mt: 2,
-                ml: 20,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "left",
-                alignItems: "flex-start",
-                padding: "1em",
-                textAlign: "left",
-              }}
-            >
-              <Typography>
-                <b>Reseach tips</b>
-              </Typography>
-              <Typography>General internet searches:</Typography>
-
-              <Typography sx={{ mt: 3 }}>
-                Avoid websites where
-                <TextField
-                  sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                  label="28"
-                  spellCheck={false}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(27, e.target.value)}
-                  value={answers[27]}
-                  inputRef={(el) => (inputRefs.current[7] = el)}
-                />
-                try to sell their products.
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                <b>Engineering library:</b>
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                Use key words when searching the catalogue
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                e.g. grey-water treatment systems /
-                <TextField
-                  sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                  label="29"
-                  spellCheck={false}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(28, e.target.value)}
-                  value={answers[28]}
-                  inputRef={(el) => (inputRefs.current[8] = el)}
-                />
-                use
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                <b>EWB website:</b>
-              </Typography>
-              <Typography sx={{ mt: 3 }}>
-                Check examples from the
-                <TextField
-                  sx={{ mt: -2.5, ml: 1, mr: 1, width: "10em" }}
-                  label="30"
-                  spellCheck={false}
-                  variant="standard"
-                  autoComplete="off"
-                  onChange={(e) => handleInputChange(29, e.target.value)}
-                  value={answers[29]}
-                  inputRef={(el) => (inputRefs.current[9] = el)}
-                />
-                last year.
-              </Typography>
-            </Box>
-          </Box>
-        </Box>
+        <Typography variant="h5">Part 3</Typography>
+        <Typography variant="h6">Questions 21-30</Typography>
       </Box>
-    </>
+
+      <Typography sx={{ mt: 2 }}>
+        <b>Questions 21-24</b>
+      </Typography>
+      <Typography>Complete the flowchart below.</Typography>
+      <Typography>
+        Write <b>NO MORE THAN TWO WORDS</b> for each answer.
+      </Typography>
+      <Paper sx={{ p: 2, mt: 2, border: "1px solid #ccc" }}>
+        <Typography variant="h6">Session outline:</Typography>
+        <Typography sx={{ mt: 1 }}>
+          <b>Project topic:</b> design a water treatment system
+        </Typography>
+        <Divider sx={{ my: 2 }} />
+        <Typography>
+          <b>Tutorial structure:</b>
+        </Typography>
+        <List>
+          {flowchartSteps.map((step, index) => (
+            <ListItem key={step.qNum} ref={questionRefs.current[index]}>
+              <Typography
+                component="div"
+                sx={{ display: "flex", alignItems: "baseline" }}
+              >
+                {step.textBefore}
+                <TextField
+                  variant="standard"
+                  label={step.qNum}
+                  sx={{ mx: 1, width: "10em" }}
+                  value={answers[step.answerIndex] || ""}
+                  onChange={(e) =>
+                    handleInputChange(step.answerIndex, e.target.value)
+                  }
+                />
+                {step.textAfter}
+              </Typography>
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
+
+      <Typography sx={{ mt: 3 }}>
+        <b>Questions 25-27</b>
+      </Typography>
+      <Typography>Complete the summary below.</Typography>
+      <Typography>
+        Write <b>NO MORE THAN ONE WORD</b> for each answer.
+      </Typography>
+      <Paper sx={{ p: 2, mt: 2, border: "1px solid #ccc" }}>
+        <Typography variant="h6">Project description:</Typography>
+        <Typography component="div" sx={{ lineHeight: 2.8 }}>
+          You need to design a grey-water treatment system
+          {summaryQuestions.map((q, index) => (
+            <React.Fragment key={q.qNum}>
+              <span ref={questionRefs.current[index + 4]}>
+                {q.textBefore}
+                <TextField
+                  variant="standard"
+                  label={q.qNum}
+                  sx={{ mx: 1, width: "10em", mt: -1 }}
+                  value={answers[q.answerIndex] || ""}
+                  onChange={(e) =>
+                    handleInputChange(q.answerIndex, e.target.value)
+                  }
+                />
+                {q.textAfter}
+              </span>
+            </React.Fragment>
+          ))}
+        </Typography>
+      </Paper>
+
+      <Typography sx={{ mt: 3 }}>
+        <b>Questions 28-30</b>
+      </Typography>
+      <Typography>Complete the notes below.</Typography>
+      <Typography>
+        Write <b>NO MORE THAN TWO WORDS</b> for each answer.
+      </Typography>
+      <Paper sx={{ p: 2, mt: 2, border: "1px solid #ccc" }}>
+        <Typography>
+          <b>Research tips</b>
+        </Typography>
+        <List>
+          <ListItem>
+            <b>General internet searches:</b>
+          </ListItem>
+          {researchTipsQuestions.map((tip, index) => (
+            <ListItem key={tip.qNum} ref={questionRefs.current[index + 7]}>
+              <Typography
+                component="div"
+                sx={{ display: "flex", alignItems: "baseline" }}
+              >
+                {tip.textBefore}
+                <TextField
+                  variant="standard"
+                  label={tip.qNum}
+                  sx={{ mx: 1, width: "10em" }}
+                  value={answers[tip.answerIndex] || ""}
+                  onChange={(e) =>
+                    handleInputChange(tip.answerIndex, e.target.value)
+                  }
+                />
+                {tip.textAfter}
+              </Typography>
+            </ListItem>
+          ))}
+          <ListItem>
+            <b>Engineering library:</b>
+          </ListItem>
+          <ListItem>Use key words when searching the catalogue</ListItem>
+          <ListItem>
+            <b>EWB website:</b>
+          </ListItem>
+        </List>
+      </Paper>
+    </Box>
   );
 };
 export default Part3;
